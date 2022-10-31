@@ -22,7 +22,9 @@ def main():
 def login(username, password, mydb):
     cursor = mydb.cursor(buffered=True,named_tuple=True)
 
-    cursor.execute(f'SELECT username, password FROM Utilizador WHERE username="{username}"')
+    # por testar
+    dbq.getLoginInfo(cursor, username)
+    #cursor.execute(f'SELECT username, password FROM Utilizador WHERE username="{username}"')
     
     lines = cursor.fetchall()
     
