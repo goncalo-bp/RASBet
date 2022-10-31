@@ -1,9 +1,14 @@
 # pip install mysql-connector-python
 import mysql.connector
-import constantes
+import DBConstants
+import DBQueries
 
 def main():
-    with mysql.connector.connect(host="127.0.0.1",port=3306,user=constantes.username_rasbet,password=constantes.password_rasbet,database="rasbet") as mydb:
+    with mysql.connector.connect(host = DBConstants.host, 
+                                 port = DBConstants.port, 
+                                 user = DBConstants.username, 
+                                 password = DBConstants.password, 
+                                 database = DBConstants.database) as mydb:
         print(register("a","a","teste@meu.com",mydb))
         print(login("a","ad",mydb))
         print(register("b","b","teste2@meu.com",mydb))
