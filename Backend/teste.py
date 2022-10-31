@@ -20,6 +20,7 @@ def main():
 
 
 def login(username, password, mydb):
+    dbq = DBQueries()
     cursor = mydb.cursor(buffered=True,named_tuple=True)
 
     # por testar
