@@ -1,0 +1,56 @@
+[{
+    "id": "dea07a1d7131d5cf4bddd9a77c5f998c",
+    "awayTeam": "Chaves",
+    "bookmakers": [
+      {
+        "key": "betsson",
+        "lastUpdate": "2022-10-29T18:49:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Benfica",
+                "price": 1
+              },
+              {
+                "name": "Chaves",
+                "price": 34
+              },
+              {
+                "name": "Draw",
+                "price": 29
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "williamhill",
+        "lastUpdate": "2022-10-29T18:59:17Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              {
+                "name": "Benfica",
+                "price": 1.12
+              },
+              {
+                "name": "Chaves",
+                "price": 19
+              },
+              {
+                "name": "Draw",
+                "price": 7.5
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "commenceTime": "2022-10-29T17:01:12.000Z",
+    "completed": true,
+    "homeTeam": "Benfica",
+    "scores": "5x0"
+  }]
