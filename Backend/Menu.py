@@ -3,10 +3,29 @@
 import time
 import re
 from traceback import print_tb
+import datetime
+from dateutil.relativedelta import relativedelta
 
 from simple_term_menu import TerminalMenu
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+
+class Menu:
+    def __init__(self,title,items):
+        self.exit = False
+        self.items = items
+        self.menu = TerminalMenu(
+                    menu_entries=items,
+                    title=title,
+                    menu_cursor="> ",
+                    menu_cursor_style=("fg_green", "bold"),
+                    menu_highlight_style=("bg_green", "fg_green"),
+                    cycle_cursor=True,
+                    clear_screen=True,
+                    )
+
+    
+
 
 def check(email):
     if(re.fullmatch(regex, email)):
@@ -14,128 +33,182 @@ def check(email):
     else:
         return False
 
-def main():
-    main_menu_title = "  RASBET.\n"
-    main_menu_items = ["Login", "Registo", "Sair"]
-    main_menu_cursor = "> "
-    main_menu_cursor_style = ("fg_green", "bold")
-    main_menu_style = ("bg_green", "fg_green")
-    main_menu_exit = False
+mail = "ola@123.com"
+pasw = "123"
 
-    main_menu = TerminalMenu(
-        menu_entries=main_menu_items,
-        title=main_menu_title,
-        menu_cursor=main_menu_cursor,
-        menu_cursor_style=main_menu_cursor_style,
-        menu_highlight_style=main_menu_style,
-        cycle_cursor=True,
-        clear_screen=True,
-    )
+#### ACESSO À BD ####
+def check_credentials(email,password):
+    if email == mail and password == pasw:
+        return True
+    else:
+        return False
 
-    edit_menu_title = "  Edit Menu.\n"
-    edit_menu_items = ["Edit Config", "Save Settings", "Back to Main Menu"]
-    edit_menu_back = False
-    edit_menu = TerminalMenu(
-        edit_menu_items,
-        title=edit_menu_title,
-        menu_cursor=main_menu_cursor,
-        menu_cursor_style=main_menu_cursor_style,
-        menu_highlight_style=main_menu_style,
-        cycle_cursor=True,
-        clear_screen=True,
-    )
-
-    login_menu_title = "  Bem Vindo à RASBET.\n"
-    login_menu_items = ["Desporto", "Carteira", "Sair"]
-    login_menu_back = False
-    login_menu = TerminalMenu(
-        login_menu_items,
-        title=login_menu_title,
-        menu_cursor=main_menu_cursor,
-        menu_cursor_style=main_menu_cursor_style,
-        menu_highlight_style=main_menu_style,
-        cycle_cursor=True,
-        clear_screen=True,
-    )
-
-    desporto_menu_title = "  Desportos.\n"
-    desporto_menu_items = ["Futebol"] + ["Sair"]   #teste.getListaDesportos()
-    desporto_menu_back = False
-    desporto_menu = TerminalMenu(
-        desporto_menu_items,
-        title=desporto_menu_title,
-        menu_cursor=main_menu_cursor,
-        menu_cursor_style=main_menu_cursor_style,
-        menu_highlight_style=main_menu_style,
-        cycle_cursor=True,
-        clear_screen=True,
-    )
-
-    while not main_menu_exit:
-        main_sel = main_menu.show()
-        if main_sel == 0:
-
-            back = False
-            while not back:
-                print("Email")
-                email = input()
-                
-                if(check(email)):
-                    print("Password")
-                    password = input()
-
-                else:
-                    print("Invalid Email")
-                    time.sleep(1)
-                    back = True
-
-                while not login_menu_back:
-                    login_sel = login_menu.show()
-
-                    if login_sel == 0:
-
-                        while not desporto_menu_back:
-                            desporto_sel = desporto_menu.show()
-
-                            if desporto_sel == 0:
-                                print("Futebol")
-                                time.sleep(1)
-
-                            elif desporto_sel == 1:
-                                print("Saindo...")
-                                time.sleep(1)
-                                desporto_menu_back = True
-
-                    elif login_sel == 1:
-                        print("Carteira")
-
-                    elif login_sel == 2:
-                        login_menu_back = True
-                        back = True
-        elif main_sel == 1:
-            back = False
-            while not back:
-                print("Email")
-                email = input()
-                if(check(email)):
-                    print("Palavra-passe")
-                    palavra_passe = input()
-                    print("Data de nascimento")
-                    data_nascimento = input()
-                    print("NIF")
-                    nif = input()
-
-                else:
-                    print("Email Invalido!! Saindo...")
-                    time.sleep(1)
-                    back = True
-                print("Saindo...")
-                time.sleep(1)
+def menu_login():
+    try:
+        print("Email")
+        email = input()
+        error = False
+        back = False
+        if(check(email)):
+            print("Password")
+            password = input()
+            if check_credentials(email,password):
+                print("-> Sessão iniciada")
                 back = True
+                time.sleep(2)
+                return back,error
+            else:
+                print("Aviso -> Credenciais Inválidas")
+                time.sleep(2)
+                error = True
+                return back,error
+        else:
+            print("Aviso -> Email inválido")
+            time.sleep(2)
+            back = True
+            error = True
+            return back,error
+
+    except EOFError as e:
+        return True,True
+
+def check_data(data):
+    if re.fullmatch(r'\d{4}-\d{2}-\d{2}', data):
+        A,M,D = data.split("-")
+        data = datetime.date(int(A),int(M),int(D))
+        if relativedelta(datetime.date.today(),data).years >= 18:
+            return data # maior de idade
+        else:
+            return False # menor de idade
+    else:
+        return True # data invalida
+
+def check_registo(email,passw,data_nascimento,nif):
+    if check(email):
+        if len(nif) == 9 and nif.isdigit():
+            data = check_data(data_nascimento)
+            if data == True:
+                print("-> Data de nascimento inválida")
+                time.sleep(2)
+            elif data == False:
+                print("-> Menor de idade")
+                time.sleep(2)
+            else:
+                print("-> Registado com sucesso")
+                time.sleep(2)
+                
+        else:
+            print("-> NIF inválido")
+            time.sleep(2)
+    else:
+        print("-> Email inválido")
+        time.sleep(2)
+
+def menu_registar():
+    try:
+        print("Email")
+        email = input()
+        print("Palavra-passe")
+        palavra_passe = input()
+        print("NIF")
+        nif = input()
+        print("Data de nascimento (AAAA-MM-DD)")
+        data_nascimento = input()
+        check_registo(email,palavra_passe,data_nascimento,nif)
+
+    except EOFError as e:
+        print("-> Saindo...")
+        time.sleep(1)
+        
+
+
+
+def menu_inicial():
+    pag_inicial = Menu("  Bem Vindo à RASBET.\n",["Desportos", "Carteira","Histórico de Apostas","Histórico de transações","Depositar dinheiro","Levantar dinheiro","Sair"])
+
+    while not pag_inicial.exit:
+        sel = pag_inicial.menu.show()
+        if sel == 0:
+            menu_desportos()
+        elif sel == 1:
+            print("Carteira")
+            #menu_carteira()
+
+        elif sel == 2:
+            print("Histórico de Apostas")
+            time.sleep(2)
+            #menu_historico_apostas()
+        
+        elif sel == 3:
+            print("Histórico de transações")
+            time.sleep(2)
+            #menu_historico_transacoes()
+
+        elif sel == 4:
+            print("Depositar dinheiro")
+            time.sleep(2)
+            #menu_depositar_dinheiro()
+        
+        elif sel == 5:
+            print("Levantar dinheiro")
+            time.sleep(2)
+            #menu_levantar_dinheiro()
+        elif sel == 6:
+            pag_inicial.exit = True
+        
+def menu_desportos():
+    desportos = Menu("  Desportos.\n",["Futebol","Ténis","Basquetebol","MotoGP"] + ["Sair"])
+
+    while not desportos.exit:
+        sel = desportos.menu.show()
+        if sel == 0:
+            print("Futebol")
+            time.sleep(2)
+        elif sel == 1:
+            print("Ténis")
+            time.sleep(2)
+        elif sel == 2:
+            print("Basquetebol")
+            time.sleep(2)
+        elif sel == 3:
+            print("MotoGP")
+            time.sleep(2)
+        elif sel == 4:
+            desportos.exit = True
+
+
+def main():
+    main = Menu("  RASBET.\n",["Login", "Registo", "Sair"])
+
+    while not main.exit:
+        main_sel = main.menu.show()
+        if main_sel == 0:
+            ##### LOGIN #######
+            while not main.exit:
+                main.exit,error = menu_login()           
+
+            #if apostador:
+            # ...
+            #if admin:
+            # ...
+            #if especialista:
+            # ...
+            
+            if not error:
+                menu_inicial()
+
+
+            main.exit = False
+
+        elif main_sel == 1:
+            ##### REGISTO #######
+            menu_registar()
+
         elif main_sel == 2:
+            ###### SAIR #######
             print("Saindo...")
             time.sleep(1)
-            main_menu_exit = True
+            main.exit = True
             
 
 
