@@ -1,5 +1,5 @@
 import mysql.connector
-from DBConnection import DBConnection
+from .DBConnection import DBConnection
 
 class Database:
     def __init__(self):

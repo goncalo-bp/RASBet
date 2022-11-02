@@ -1,6 +1,6 @@
 import mysql.connector # pip install mysql-connector-python
-from DBConstants import DBConstants
-from Database import Database
+from .DBConstants import DBConstants
+from .Database import Database
 
 class DBQueries:
 
@@ -35,11 +35,6 @@ class DBQueries:
             r = 0
         return r
 
-    def addSport(self, name):
-        self.mydb.execute(DBConstants.add_sport, (name,))
-        self.mydb.commit()
-        self.cursor.close()
-
     #NOTE - fazer sem home também ?
     def addTeam(self, name, gameId, odd, home):
         self.mydb.execute(DBConstants.add_team, (name, gameId, odd, home))
@@ -69,6 +64,28 @@ class DBQueries:
         for elem in data[0]:
             l.append(elem[0])        
         return l
+
+    # Adicionar promoção 
+    def addPromotion(self, gameId, value):
+        try:
+            self.mydb.execute(DBConstants.create_promotion,(gameId, 1+value,))
+            self.mydb.execute(DBConstants.update_odds,(1+value, gameId,))
+            self.mydb.commit()
+        except Exception:
+            #erro
+            pass
+    # Remover promoção 
+    def removePromotion(self, idProm):
+        prom = self.mydb.query(DBConstants.get_promotion, (idProm,))
+        print(prom)
+        
+        if len(prom) == 0:
+            #Não existe
+            pass
+        else:
+            self.mydb.execute(DBConstants.update_odds,(1/float(prom[0][1]), prom[0][2],))
+            self.mydb.execute(DBConstants.remove_promotion,(idProm,))
+            self.mydb.commit()
 
 
 

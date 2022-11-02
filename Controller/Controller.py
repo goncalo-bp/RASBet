@@ -1,19 +1,21 @@
+import datetime
 from Backend.DBQueries import DBQueries
 from Utilities.LoginMsgs import LoginMsgs
+from Utilities.RegisterMsgs import RegisterMsgs
 
 class Controller:
     def __init__(self):
         self.dbq = DBQueries()
 
     def login(self):
-        email = "a"
-        password = "a"
+        email = "private@gmail.com"
+        password = "jotinha53"
 
-        code = self.dbq.loginUser(email, "b")
+        code = self.dbq.loginUser(email, "cskdn")
         # Coordenar com a view quando houver
         print(LoginMsgs.getLoginMsg(code))
 
-        code = self.dbq.loginUser("b", password)
+        code = self.dbq.loginUser("sdknc", "skdnc")
         # Coordenar com a view quando houver
         print(LoginMsgs.getLoginMsg(code))
 
@@ -26,12 +28,7 @@ class Controller:
         return True
 
     def allSports(self):
-        self.dbq.addSport("Futebol")
-        self.dbq.addSport("Basquetebol")
-        self.dbq.addSport("MotoGP")
-        self.dbq.addSport("Ténis")
         l = self.dbq.getSports()
-
         print(l)
         
     def gamesBySport(self):
@@ -49,3 +46,14 @@ class Controller:
 
         # Coordenar com a view quando houver
         print(info)
+    
+    def register(self):
+        email = "private@gmail.com"
+        password = "jotinha53"
+
+        code = self.dbq.registerUser(email, password, 530_053_530, datetime.date(2001, 6, 1))
+        print(RegisterMsgs.getRegisterMsgs(code))
+
+        if code != 1:
+            return False
+        return True

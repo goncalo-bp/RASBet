@@ -3,7 +3,7 @@ class LoginMsgs:
     wrong_password = "Password incorreta"
     login_success  = "Login efetuado com sucesso"
 
-    @staticmethod
+    @classmethod
     def getLoginMsg(cls, code):
         if code == 0:
             return cls.wrong_password
