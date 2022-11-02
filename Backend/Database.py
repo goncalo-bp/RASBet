@@ -1,13 +1,13 @@
 import mysql.connector
-from DBConstants import DBConstants
+from DBConnection import DBConnection
 
 class Database:
     def __init__(self):
-        self._conn = mysql.connector.connect(host = DBConstants.host, 
-                                             port = DBConstants.port, 
-                                             user = DBConstants.username, 
-                                             password = DBConstants.password, 
-                                             database = DBConstants.database) 
+        self._conn = mysql.connector.connect(host = DBConnection.host, 
+                                             port = DBConnection.port, 
+                                             user = DBConnection.username, 
+                                             password = DBConnection.password, 
+                                             database = DBConnection.database) 
         self._cursor = self._conn.cursor(buffered=True,named_tuple=True)
 
     def __enter__(self):

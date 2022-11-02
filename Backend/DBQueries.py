@@ -1,6 +1,6 @@
 import mysql.connector # pip install mysql-connector-python
-from Database import Database
 from DBConstants import DBConstants
+from Database import Database
 
 class DBQueries:
 
@@ -10,15 +10,12 @@ class DBQueries:
     def __exit__(self):
         self.mydb.close()
 
-
     def alreadyExists(self, email):
         lines = self.mydb.query(DBConstants.get_log_info,(email,))
         return len(lines) > 0
 
-    def register(self, email, password, nif, date):
-
-        temp = "Conta criada com êxito"
-
+    def registerUser(self, email, password, nif, date):
+        r = 1
         alreadyExists = self.alreadyExists(email)
 
         if not alreadyExists:
@@ -26,32 +23,20 @@ class DBQueries:
             self.mydb.execute(DBConstants.register_user,(email, password, self.mydb.lastrowid(), date, nif,))     
             self.mydb.commit()
         else:
-            temp = "Email já existe"
-        
-        return temp
-
-
-    def registerUser(self, username, password, walletId, email):
-        self.mydb.execute(DBConstants.register_user, (username,
-                                             password, 
-                                             walletId, 
-                                             email,))
-        self.mydb.commit()
-        self.mydb.close()
+            r = 0 
+        return r
     
-    def loginUser(self, username, password):
-        data = self.mydb.query(DBConstants.get_log_info, username)
-
+    def loginUser(self, email, password):
+        data = self.mydb.query(DBConstants.get_log_info, (email,))
         r = 1
         if len(data) == 0:
             r = -1
         elif password != data[0][1]:
             r = 0
-        
         return r
 
     def addSport(self, name):
-        self.mydb.execute(DBConstants.add_sport, (name))
+        self.mydb.execute(DBConstants.add_sport, (name,))
         self.mydb.commit()
         self.cursor.close()
 
@@ -66,29 +51,23 @@ class DBQueries:
 
     def getSports(self):
         data = self.mydb.query(DBConstants.get_sports)
-        
         l = []
         for elem in data:
             l.append(elem[0])
-
         return l
 
     def getBySport(self, sport):
-        data = self.mydb.query(DBConstants.get_by_sport, (sport))
-
+        data = self.mydb.query(DBConstants.get_by_sport, (sport,))
         l = []
         for gameId in data:
             l.append(gameId[0])
-
         return l
 
     def getGameInfo(self, gameId):
-        data = self.mydb.query(DBConstants.get_game_info, (gameId))
-
+        data = self.mydb.query(DBConstants.get_game_info, (gameId,))
         l = []
         for elem in data[0]:
             l.append(elem[0])        
-
         return l
 
 
