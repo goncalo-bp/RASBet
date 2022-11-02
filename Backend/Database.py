@@ -1,5 +1,5 @@
 import mysql.connector
-from .DBConstants import DBConstants
+from DBConstants import DBConstants
 
 class Database:
     def __init__(self):
@@ -27,6 +27,9 @@ class Database:
     def commit(self):
         self.connection.commit()
 
+    def lastrowid(self):
+        return self.cursor.lastrowid
+
     def close(self, commit=True):
         if commit:
             self.commit()
@@ -34,7 +37,7 @@ class Database:
         self.connection.close()
 
     def execute(self, sql, params=None):
-        self.cursor.execute(sql, params or ())
+        self.cursor.execute(sql, params)
 
     def fetchall(self):
         return self.cursor.fetchall()
@@ -43,5 +46,5 @@ class Database:
         return self.cursor.fetchone()
 
     def query(self, sql, params=None):
-        self.cursor.execute(sql, params or ())
+        self.cursor.execute(sql, params)
         return self.fetchall()
