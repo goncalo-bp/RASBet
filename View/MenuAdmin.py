@@ -2,6 +2,8 @@ import Menu
 import time
 
 
+jogosfutebol = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
+
 def menu_inicial_administrador():
     pag_inicial = Menu.Menu("  Bem Vindo à RASBET.\n",["Desportos","Promoções", "Gestão de contas com privilégios", "Sair"])
 
@@ -24,29 +26,30 @@ def menu_desportos():
         sel = desportos.menu.show()
         if sel == 0:
             menu_futebol()
-            time.sleep(2)
         elif sel == 1:
             menu_tenis()
-            time.sleep(2)
         elif sel == 2:
             menu_tenis()
-            time.sleep(2)
         elif sel == 3:
             menu_motogp()
-            time.sleep(2)
         elif sel == 4:
             desportos.exit = True
 
 def menu_futebol():
-    futebol = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
+   # jogos = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
+    futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
 
     while not futebol.exit:
+        futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
         sel = futebol.menu.show()
-        if sel == 0:
-            print("Benfica - Chaves")
-            menu_abrirfechar()
-            time.sleep(2)
-        elif sel == 1:
+        for i in range(len(jogosfutebol)):
+            if sel == i:
+                menu_abrirfechar(jogosfutebol[sel])
+
+        if sel == len(jogosfutebol):
+            menu_criarjogo()
+
+        if sel == len(jogosfutebol)+1:
             futebol.exit = True
 
 def menu_tenis():
@@ -57,7 +60,6 @@ def menu_tenis():
         if sel == 0:
             print("Benfica - Chaves")
             menu_abrirfechar()
-            time.sleep(2)
         elif sel == 1:
             tenis.exit = True
 
@@ -85,20 +87,43 @@ def menu_motogp():
         elif sel == 1:
             motogp.exit = True
 
-def menu_abrirfechar():
-    abrirfechar = Menu.Menu("Jogo.\n" , ["Abrir"] + ["Fechar"] + ["Sair"])
+def menu_abrirfechar(jogo):
+    opcoes = ["Abrir", "Fechar"]
+    abrirfechar = Menu.Menu(f" {jogo}\n" , opcoes + ["Sair"])
 
     while not abrirfechar.exit:
         sel = abrirfechar.menu.show()
-        if sel == 2:
+        for i in range(len(opcoes)):
+            if sel == i:
+                print(f"<3{sel}\n")
+                time.sleep(1)
+        
+        if sel == len(opcoes):
             abrirfechar.exit = True
+
+def menu_criarjogo():
+    criar = Menu.Menu("Criar novo jogo.\n", ["Inserir Equipas"] + ["Sair"])
+
+    while not criar.exit:
+        sel = criar.menu.show()
+        if sel == 0:
+            print("Inserir Equipa da Casa:")
+            equipaCasa = input()
+            print("Inserir Equipa Visitante:")
+            equipaFora = input()
+            novoJogo = (equipaCasa + " - " + equipaFora)
+            print(novoJogo)
+            jogosfutebol.append(novoJogo)
+            criar.exit = True
+        elif sel == 1:
+            criar.exit = True
+        
 
 
 def menu_promocoes():
     #receber promoções
     promotions = ["Promoção 1","Promoção 2","Promoção 3","Promoção 4"]
-
-    promocoes = Menu.Menu("  Promoções.\n", promotions + ["Adiciona Promoção","Sair"])
+    promocoes = Menu.Menu("  Promoções\n", promotions + ["Adiciona Promoção","Sair"])
 
     while not promocoes.exit:
         promocoes = Menu.Menu("  Promoções.\n", promotions + ["Adiciona Promoção","Sair"])

@@ -3,11 +3,12 @@ import time
 
 def menu_inicial_apostador():
     pag_inicial = Menu.Menu("  Bem Vindo à RASBET.\n",["Desportos", "Carteira","Notificações","Boletim","Alterar informações de perfil","Sair"])
-
+    # (id,nome,aposta,odd)
+    boletim = []
     while not pag_inicial.exit:
         sel = pag_inicial.menu.show()
         if sel == 0:
-            menu_desportos()
+            menu_desportos(boletim)
             
         elif sel == 1:
             menu_carteira()
@@ -17,7 +18,7 @@ def menu_inicial_apostador():
 
         elif sel == 3:
             print("Boletim")
-            #menu_boletim()
+            menu_boletim(boletim)
 
         elif sel == 4:
             print("Editar perfil")
@@ -29,6 +30,10 @@ def menu_inicial_apostador():
 def menu_editar():
     ol = 1
 
+def menu_boletim(boletim):
+    
+    boletim = Menu.Menu("  Bem Vindo à RASBET.\n",["Apostar","Sair"])
+    
 
 def menu_carteira():
     ### receber o saldo ####
