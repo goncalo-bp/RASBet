@@ -1,104 +1,73 @@
 import mysql.connector # pip install mysql-connector-python
-from .DBConstants import DBConstants
+from DBConstants import DBConstants
+from Database import Database
 
 class DBQueries:
-    add_sport       = 'INSERT INTO Jogo(nomeDesporto) VALUES(":name"); '
-    add_team        = 'INSERT INTO EquipasPorJogo(nomeEquipa, idJogo, Odd, jogaEmCasa) VALUES(":name",:gameId,:odd,:home)'
-    register_user   = 'INSERT INTO Utilizador (username,password,idCarteira,email) VALUES (":username",":password",walletId,":email")'
-    get_log_info    = 'SELECT username, password FROM Utilizador WHERE username=":username"'
-    add_wallet      = 'INSERT INTO Carteira (saldoCarteira) VALUES(0.00)'
-    get_sports      = 'SELECT DISTINCT nomeDesporto FROM Jogo'
-    get_by_sport    = 'SELECT idJogo FROM Jogo WHERE nomeDesporto = ":sport"'
-    get_game_info   = 'SELECT nomeEquipa, Odd, jogaEmCasa FROM EquipasPorJogo WHERE idJogo = :gameId'
-
 
     def __init__(self):
-        self.mydb = mysql.connector.connect(host = DBConstants.host, 
-                                            port = DBConstants.port, 
-                                            user = DBConstants.username, 
-                                            password = DBConstants.password, 
-                                            database = DBConstants.database) 
-    
-    def registerUser(self, cls, username, password, walletId, email):
-        cursor = self.mydb.cursor()
-        cursor.execute(cls.register_user, {"username" : username}, 
-                                          {"password" : password}, 
-                                          {"walletId" : walletId}, 
-                                          {"email" : email})
-        self.mydb.commit()
-        cursor.close()
-    
-    def loginUser(self, cls, username, password):
-        cursor = self.mydb.cursor()
-        cursor.execute(cls.get_log_info, {"username" : username})
+        self.mydb = Database()
 
-        data = cursor.fetchall()
+    def __exit__(self):
+        self.mydb.close()
 
-        r = "Entrou"
-        if cursor.rowcount() == 0:
-            r = "Conta não existente"
+    def alreadyExists(self, email):
+        lines = self.mydb.query(DBConstants.get_log_info,(email,))
+        return len(lines) > 0
+
+    def registerUser(self, email, password, nif, date):
+        r = 1
+        alreadyExists = self.alreadyExists(email)
+
+        if not alreadyExists:
+            self.mydb.execute(DBConstants.add_wallet)
+            self.mydb.execute(DBConstants.register_user,(email, password, self.mydb.lastrowid(), date, nif,))     
+            self.mydb.commit()
+        else:
+            r = 0 
+        return r
+    
+    def loginUser(self, email, password):
+        data = self.mydb.query(DBConstants.get_log_info, (email,))
+        r = 1
+        if len(data) == 0:
+            r = -1
         elif password != data[0][1]:
-            r = "Password incorreta"
-        
-        cursor.close()
+            r = 0
         return r
 
-    def addSport(self, cls, name):
-        cursor = self.mydb.cursor()
-        cursor.execute(cls.add_sport, {"name" : name})
+    def addSport(self, name):
+        self.mydb.execute(DBConstants.add_sport, (name,))
         self.mydb.commit()
-        cursor.close()
+        self.cursor.close()
 
     #NOTE - fazer sem home também ?
-    def addTeam(self, cls, name, gameId, odd, home):
-        cursor = self.mydb.cursor()
-        cursor.execute(cls.add_team, {"name" : name}, 
-                                     {"gameId" : gameId}, 
-                                     {"odd" : odd}, 
-                                     {"home" : home})
+    def addTeam(self, name, gameId, odd, home):
+        self.mydb.execute(DBConstants.add_team, (name, gameId, odd, home))
         self.mydb.commit()
-        cursor.close()
 
-    def addWallet(self, cls):
-        cursor = self.mydb.cursor()
-        cursor.execute(cls.add_wallet)
+    def addWallet(self):
+        self.mydb.execute(self.mydb.add_wallet)
         self.mydb.commit()
-        cursor.close()
 
-    def getSports(self, cls):
-        cursor = self.mydb.cursor()
-        cursor.execute(cls.get_sports)
-        
-        data = cursor.fetchall()
+    def getSports(self):
+        data = self.mydb.query(DBConstants.get_sports)
         l = []
         for elem in data:
             l.append(elem[0])
-
-        cursor.close()
         return l
 
-    def getBySport(self, cls, sport):
-        cursor = self.mydb.cursor()
-        cursor.execute(cls.get_by_sport, {"sport" : sport})
-
-        data = cursor.fetchall()
+    def getBySport(self, sport):
+        data = self.mydb.query(DBConstants.get_by_sport, (sport,))
         l = []
         for gameId in data:
             l.append(gameId[0])
-
-        cursor.close()
         return l
 
-    def getGameInfo(self, cls, gameId):
-        cursor = self.mydb.cursor()
-        cursor.execute(cls.get_game_info, {"gameId" : gameId})
-
-        data = cursor.fetchall()
+    def getGameInfo(self, gameId):
+        data = self.mydb.query(DBConstants.get_game_info, (gameId,))
         l = []
         for elem in data[0]:
             l.append(elem[0])        
-
-        cursor.close()
         return l
 
 
