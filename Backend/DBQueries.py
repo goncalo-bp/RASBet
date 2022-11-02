@@ -1,6 +1,6 @@
 import mysql.connector # pip install mysql-connector-python
-from .Database import Database
-from .DBConstants import DBConstants
+from Database import Database
+from DBConstants import DBConstants
 
 class DBQueries:
 
@@ -12,36 +12,42 @@ class DBQueries:
 
 
     def alreadyExists(self, email):
-        lines = self.mydb.query(DBConstants.get_log_info,(email))
+        lines = self.mydb.query(DBConstants.get_log_info,(email,))
         return len(lines) > 0
 
     def register(self, email, password, nif, date):
-        r = 1
+
+        temp = "Conta criada com êxito"
+
         alreadyExists = self.alreadyExists(email)
+
         if not alreadyExists:
             self.mydb.execute(DBConstants.add_wallet)
-            self.mydb.execute(DBConstants.register_user,(email, password, date, nif))     
+            self.mydb.execute(DBConstants.register_user,(email, password, self.mydb.lastrowid(), date, nif,))     
             self.mydb.commit()
         else:
-            r = 0 
-        return r
+            temp = "Email já existe"
+        
+        return temp
 
 
     def registerUser(self, username, password, walletId, email):
-        self.mydb.execute(DBConstants.register_user, username,
+        self.mydb.execute(DBConstants.register_user, (username,
                                              password, 
                                              walletId, 
-                                             email)
+                                             email,))
         self.mydb.commit()
         self.mydb.close()
     
     def loginUser(self, username, password):
         data = self.mydb.query(DBConstants.get_log_info, username)
+
         r = 1
         if len(data) == 0:
             r = -1
         elif password != data[0][1]:
-            r = 0     
+            r = 0
+        
         return r
 
     def addSport(self, name):
