@@ -3,6 +3,8 @@
 import time
 import re
 from traceback import print_tb
+import datetime
+from dateutil.relativedelta import relativedelta
 
 from simple_term_menu import TerminalMenu
 
@@ -51,12 +53,12 @@ def menu_login():
             print("Password")
             password = input()
             if check_credentials(email,password):
-                print("-> Logged in")
+                print("-> Sessão iniciada")
                 back = True
                 time.sleep(2)
                 return back,error
             else:
-                print("Invalid Credentials")
+                print("Aviso -> Credenciais Inválidas")
                 time.sleep(2)
                 error = True
                 return back,error
@@ -70,24 +72,50 @@ def menu_login():
     except EOFError as e:
         return True,True
 
+def check_data(data):
+    if re.fullmatch(r'\d{4}-\d{2}-\d{2}', data):
+        A,M,D = data.split("-")
+        data = datetime.date(int(A),int(M),int(D))
+        if relativedelta(datetime.date.today(),data).years >= 18:
+            return data # maior de idade
+        else:
+            return False # menor de idade
+    else:
+        return True # data invalida
+
+def check_registo(email,passw,data_nascimento,nif):
+    if check(email):
+        if len(nif) == 9 and nif.isdigit():
+            data = check_data(data_nascimento)
+            if data == True:
+                print("-> Data de nascimento inválida")
+                time.sleep(2)
+            elif data == False:
+                print("-> Menor de idade")
+                time.sleep(2)
+            else:
+                print("-> Registado com sucesso")
+                time.sleep(2)
+                
+        else:
+            print("-> NIF inválido")
+            time.sleep(2)
+    else:
+        print("-> Email inválido")
+        time.sleep(2)
 
 def menu_registar():
     try:
         print("Email")
         email = input()
-        if(check(email)):
-            print("Palavra-passe")
-            palavra_passe = input()
-            print("Data de nascimento (AAAA-MM-DD)")
-            data_nascimento = input()
-            print("NIF")
-            nif = input()
-            print("-> Registado com sucesso")
-            time.sleep(2)
-        else:
-            print("Aviso -> Email Invalido!")
-            time.sleep(2)
-            back = True
+        print("Palavra-passe")
+        palavra_passe = input()
+        print("NIF")
+        nif = input()
+        print("Data de nascimento (AAAA-MM-DD)")
+        data_nascimento = input()
+        check_registo(email,palavra_passe,data_nascimento,nif)
+
     except EOFError as e:
         print("-> Saindo...")
         time.sleep(1)
@@ -101,16 +129,31 @@ def menu_inicial():
     while not pag_inicial.exit:
         sel = pag_inicial.menu.show()
         if sel == 0:
-            print("Desportos")
-            time.sleep(2)
             menu_desportos()
         elif sel == 1:
             print("Carteira")
-            time.sleep(2)
             #menu_carteira()
 
-        
         elif sel == 2:
+            print("Histórico de Apostas")
+            time.sleep(2)
+            #menu_historico_apostas()
+        
+        elif sel == 3:
+            print("Histórico de transações")
+            time.sleep(2)
+            #menu_historico_transacoes()
+
+        elif sel == 4:
+            print("Depositar dinheiro")
+            time.sleep(2)
+            #menu_depositar_dinheiro()
+        
+        elif sel == 5:
+            print("Levantar dinheiro")
+            time.sleep(2)
+            #menu_levantar_dinheiro()
+        elif sel == 6:
             pag_inicial.exit = True
         
 def menu_desportos():
@@ -135,7 +178,6 @@ def menu_desportos():
 
 
 def main():
-
     main = Menu("  RASBET.\n",["Login", "Registo", "Sair"])
 
     while not main.exit:
@@ -145,8 +187,16 @@ def main():
             while not main.exit:
                 main.exit,error = menu_login()           
 
+            #if apostador:
+            # ...
+            #if admin:
+            # ...
+            #if especialista:
+            # ...
+            
             if not error:
                 menu_inicial()
+
 
             main.exit = False
 
