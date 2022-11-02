@@ -6,6 +6,11 @@ from traceback import print_tb
 import datetime
 from dateutil.relativedelta import relativedelta
 
+import MenuAdmin
+import MenuEspecialista
+import MenuApostador
+
+
 from simple_term_menu import TerminalMenu
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -24,8 +29,6 @@ class Menu:
                     clear_screen=True,
                     )
 
-    
-
 
 def check(email):
     if(re.fullmatch(regex, email)):
@@ -35,13 +38,21 @@ def check(email):
 
 mail = "ola@123.com"
 pasw = "123"
+mail_administrador = "nigga@123.com"
+pass_administrador = "123"
+mail_especialista = "mister@123.com"
+pass_especialista = "123"
 
 #### ACESSO À BD ####
 def check_credentials(email,password):
     if email == mail and password == pasw:
-        return True
+        return 1
+    elif email == mail_administrador and password == pass_administrador:
+        return 2
+    elif email == mail_especialista and password == pass_especialista:
+        return 3
     else:
-        return False
+        return 0
 
 def menu_login():
     try:
@@ -49,25 +60,28 @@ def menu_login():
         email = input()
         error = False
         back = False
+        tipo = 0
         if(check(email)):
             print("Password")
             password = input()
-            if check_credentials(email,password):
-                print("-> Sessão iniciada")
-                back = True
-                time.sleep(2)
-                return back,error
-            else:
+            tipo = check_credentials(email,password)
+            if tipo == 0:
                 print("Aviso -> Credenciais Inválidas")
                 time.sleep(2)
                 error = True
-                return back,error
+                return back,error,tipo
+            else:
+                print(f"-> Sessão iniciada com {tipo}")
+                back = True
+                apostador = True
+                time.sleep(2)
+                return back,error,tipo                
         else:
             print("Aviso -> Email inválido")
             time.sleep(2)
             back = True
             error = True
-            return back,error
+            return back,error,tipo
 
     except EOFError as e:
         return True,True
@@ -119,63 +133,7 @@ def menu_registar():
     except EOFError as e:
         print("-> Saindo...")
         time.sleep(1)
-        
-
-
-
-def menu_inicial():
-    pag_inicial = Menu("  Bem Vindo à RASBET.\n",["Desportos", "Carteira","Histórico de Apostas","Histórico de transações","Depositar dinheiro","Levantar dinheiro","Sair"])
-
-    while not pag_inicial.exit:
-        sel = pag_inicial.menu.show()
-        if sel == 0:
-            menu_desportos()
-        elif sel == 1:
-            print("Carteira")
-            #menu_carteira()
-
-        elif sel == 2:
-            print("Histórico de Apostas")
-            time.sleep(2)
-            #menu_historico_apostas()
-        
-        elif sel == 3:
-            print("Histórico de transações")
-            time.sleep(2)
-            #menu_historico_transacoes()
-
-        elif sel == 4:
-            print("Depositar dinheiro")
-            time.sleep(2)
-            #menu_depositar_dinheiro()
-        
-        elif sel == 5:
-            print("Levantar dinheiro")
-            time.sleep(2)
-            #menu_levantar_dinheiro()
-        elif sel == 6:
-            pag_inicial.exit = True
-        
-def menu_desportos():
-    desportos = Menu("  Desportos.\n",["Futebol","Ténis","Basquetebol","MotoGP"] + ["Sair"])
-
-    while not desportos.exit:
-        sel = desportos.menu.show()
-        if sel == 0:
-            print("Futebol")
-            time.sleep(2)
-        elif sel == 1:
-            print("Ténis")
-            time.sleep(2)
-        elif sel == 2:
-            print("Basquetebol")
-            time.sleep(2)
-        elif sel == 3:
-            print("MotoGP")
-            time.sleep(2)
-        elif sel == 4:
-            desportos.exit = True
-
+              
 
 def main():
     main = Menu("  RASBET.\n",["Login", "Registo", "Sair"])
@@ -185,17 +143,15 @@ def main():
         if main_sel == 0:
             ##### LOGIN #######
             while not main.exit:
-                main.exit,error = menu_login()           
+                main.exit,error,tipo = menu_login()         
 
-            #if apostador:
-            # ...
-            #if admin:
-            # ...
-            #if especialista:
-            # ...
-            
             if not error:
-                menu_inicial()
+                if tipo == 1:
+                    MenuApostador.menu_inicial_apostador()
+                elif tipo == 2:
+                    MenuAdmin.menu_inicial_administrador()
+                elif tipo == 3:
+                    MenuEspecialista.menu_inicial_especialista()
 
 
             main.exit = False

@@ -14,13 +14,11 @@ class JsonToData:
         headers = {
         'accept': 'application/json',
         }
-        #api_url = "http://ucras.di.uminho.pt/v1/games/"
-        #response = requests.get(api_url, headers=headers)
-        #self.data = response.json()
-        #self.headers = response.headers
-        json_object = json.dumps(self.data)
-        with open("sample.json", "w") as outfile: 
-            outfile.write(json_object)
+        api_url = "http://ucras.di.uminho.pt/v1/games/"
+        response = requests.get(api_url, headers=headers)
+        self.data = response.json()
+        self.headers = response.headers
+
     
     @staticmethod
     def parse_header(header):
