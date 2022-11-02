@@ -1,6 +1,6 @@
 import mysql.connector # pip install mysql-connector-python
-from DBConstants import DBConstants
-from Database import Database
+from .DBConstants import DBConstants
+from .Database import Database
 
 class DBQueries:
 
@@ -34,11 +34,6 @@ class DBQueries:
         elif password != data[0][1]:
             r = 0
         return r
-
-    def addSport(self, name):
-        self.mydb.execute(DBConstants.add_sport, (name,))
-        self.mydb.commit()
-        self.cursor.close()
 
     #NOTE - fazer sem home também ?
     def addTeam(self, name, gameId, odd, home):

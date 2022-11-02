@@ -1,5 +1,4 @@
 class DBConstants:
-    add_sport        = 'INSERT INTO Jogo(nomeDesporto) VALUES((%s));'
     add_team         = 'INSERT INTO EquipasPorJogo(nomeEquipa, idJogo, Odd, jogaEmCasa) VALUES((%s),(%s),(%s),(%s));'
     register_user    = 'INSERT INTO Utilizador (email,password,idCarteira,dataNascimento,nif) VALUES ((%s),(%s),(%s),(%s),(%s));'
     get_log_info     = 'SELECT email, password FROM Utilizador WHERE email=(%s);'
