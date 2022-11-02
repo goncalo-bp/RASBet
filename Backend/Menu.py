@@ -2,7 +2,7 @@
 
 import time
 import re
-import teste
+from traceback import print_tb
 
 from simple_term_menu import TerminalMenu
 
@@ -15,7 +15,7 @@ def check(email):
         return False
 
 def main():
-    main_menu_title = "  RASBET.\n  Press Q or Esc to quit. \n"
+    main_menu_title = "  RASBET.\n"
     main_menu_items = ["Login", "Registo", "Sair"]
     main_menu_cursor = "> "
     main_menu_cursor_style = ("fg_green", "bold")
@@ -32,7 +32,7 @@ def main():
         clear_screen=True,
     )
 
-    edit_menu_title = "  Edit Menu.\n  Press Q or Esc to back to main menu. \n"
+    edit_menu_title = "  Edit Menu.\n"
     edit_menu_items = ["Edit Config", "Save Settings", "Back to Main Menu"]
     edit_menu_back = False
     edit_menu = TerminalMenu(
@@ -45,7 +45,7 @@ def main():
         clear_screen=True,
     )
 
-    login_menu_title = "  Bem Vindo à RASBET.\n  Pressione Q ou Esc para voltar ao menu anterior. \n"
+    login_menu_title = "  Bem Vindo à RASBET.\n"
     login_menu_items = ["Desporto", "Carteira", "Sair"]
     login_menu_back = False
     login_menu = TerminalMenu(
@@ -58,7 +58,7 @@ def main():
         clear_screen=True,
     )
 
-    desporto_menu_title = "  Desportos.\n  Pressione Q ou Esc para voltar ao menu anterior. \n"
+    desporto_menu_title = "  Desportos.\n"
     desporto_menu_items = ["Futebol"] + ["Sair"]   #teste.getListaDesportos()
     desporto_menu_back = False
     desporto_menu = TerminalMenu(
@@ -126,11 +126,15 @@ def main():
                     nif = input()
 
                 else:
-                    print("Invalid Email")
+                    print("Email Invalido!! Saindo...")
                     time.sleep(1)
                     back = True
+                print("Saindo...")
+                time.sleep(1)
                 back = True
         elif main_sel == 2:
+            print("Saindo...")
+            time.sleep(1)
             main_menu_exit = True
             
 
