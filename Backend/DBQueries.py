@@ -70,6 +70,28 @@ class DBQueries:
             l.append(elem[0])        
         return l
 
+    # Adicionar promoção 
+    def addPromotion(self, gameId, value):
+        try:
+            self.mydb.execute(DBConstants.create_promotion,(gameId, 1+value,))
+            self.mydb.execute(DBConstants.update_odds,(1+value, gameId,))
+            self.mydb.commit()
+        except Exception:
+            #erro
+            pass
+    # Remover promoção 
+    def removePromotion(self, idProm):
+        prom = self.mydb.query(DBConstants.get_promotion, (idProm,))
+        print(prom)
+        
+        if len(prom) == 0:
+            #Não existe
+            pass
+        else:
+            self.mydb.execute(DBConstants.update_odds,(1/float(prom[0][1]), prom[0][2],))
+            self.mydb.execute(DBConstants.remove_promotion,(idProm,))
+            self.mydb.commit()
+
 
 
 #Problema aqui, podemos criar a carteira e depois não dar para criar o utilizador ... o que fazer?
