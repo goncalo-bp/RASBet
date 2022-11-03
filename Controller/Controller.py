@@ -3,9 +3,9 @@ from Backend.DBQueries import DBQueries
 from Utilities.LoginMsgs import LoginMsgs
 from Utilities.CheckStructure import *
 from View.Menu import *
-from View.MenuAdmin import *
-from View.MenuEspecialista import *
-from View.MenuApostador import *
+from View.MenuAdmin import MenuAdmin
+from View.MenuEspecialista import MenuEspecialista
+from View.MenuApostador import MenuApostador
 
 class Controller:
     def __init__(self):
@@ -20,9 +20,9 @@ class Controller:
             main_sel = self.view.menu.show()
             if main_sel == 0:
                 ##### LOGIN #######
-                tipo, email = self.execLogIn()
+                tipo,usrId = self.execLogIn()
                 if tipo == 1:
-                    self.execApostador(email)
+                    self.execApostador(usrId)
                 elif tipo == 2:
                     self.execAdmin()
                 elif tipo == 3:
@@ -50,11 +50,11 @@ class Controller:
             error,email,password = self.view.menu_login()
             if error:
                 return -1, None
-            code = self.dbq.loginUser(email, password)
+            code,usrId = self.dbq.loginUser(email, password)
             self.view.showMessage(LoginMsgs.getLoginMsg(code), 2)
             if code == 0:
                 self.view.exit = False
-        return code, email
+        return code,usrId
 
     # ==============================================================================
     # ==============================   REGISTER   ==================================
@@ -92,25 +92,111 @@ class Controller:
     # =============================   APOSTADOR   ==================================
     # ==============================================================================
 
-    def execApostador(email):
-        MenuApostador.menu_inicial_apostador(email)
-        pass
+    def execApostador(self, usrId):
+        menuApostador = MenuApostador()
+        while not menuApostador.obj.exit:
+            sel = menuApostador.obj.menu.show()
+            if sel == 0:
+                self.execDesportos(menuApostador, usrId)
+            elif sel == 1:
+                self.execCarteira(menuApostador, usrId)
+            elif sel == 2:
+                self.execNotif(menuApostador, usrId)
+            elif sel == 3:
+                balance = self.dbq.getBalance(usrId)[0][0]
+                #menuApostador.menu_boletim(boletim,email,balance)
+            elif sel == 4:
+                self.execEdit(menuApostador, usrId)
+            elif sel == 5:
+                menuApostador.exit = True
+
+    # =============================   DESPORTOS   ==================================
+    def execDesportos(self, ma, usrId):
+        sportsList = self.dbq.getSports()
+        desporto = ma.menuDesportos(sportsList)
+        jogos = self.dbq.getBySport(desporto)
+        names = []
+        info = []
+        for idJogo in jogos:
+            data = self.dbq.getTeamsGame(idJogo)
+
+            if desporto == "Futebol":
+                for i in range(3):
+                    if data[i][1] == "Draw":
+                        draw = i
+                    elif data[i][3]:
+                        home = i
+                names.append(f"{data[home][1]} X {data[3-draw-home][1]}")
+            elif desporto == "Basquetebol":
+                for i in range(2):
+                    if data[i][4]:
+                        home = i
+                names.append(f"{data[home][1]} - {data[2-draw-home][1]}")
+                info.append(data) # id ; nome ; odd ; joga_em_casa
+            elif desporto == "Ténis":
+                names.append(f"{data[home][1]} - {data[2][1]}")
+                info.append(data) # id ; nome ; odd ; joga_em_casa
+            elif desporto == "MotoGP":
+                date = self.dbq.getGameDate[0]
+                names.append(f"GP : {date}")
+            info.append(data) # id ; nome ; odd ; joga_em_casa
+        boletim = ma.menuJogos(names, info)
+
+        #add apostas e etc
+
+
+    # ===============================   EDITAR   ===================================
+    def execEdit(self, ma, email):
+        sels, data = ma.menuEditar() # 0=email ; 1=nome
+        for i in range(len(sels)):
+            self.dbq.updateUserField(sels[i], data[i], email)
+        self.view.showMessage(" -> Informação atualizada", 2)
+
+    # ==============================   CARTEIRA   ==================================
+    def execCarteira(self, ma, usrId):
+        balance = self.dbq.getBalance(usrId)[0][0]
+        ma.menuCarteira(usrId,balance)
+
+    # ============================   NOTIFICACAO   =================================
+    def execNotif(self, ma, email):
+        notifs = ["Not1","Not2","Not3","Not4"] # SACAR DA BD
+        ma.menuNotif(email, notifs)
+
+    # ==============================   BOLETIM   ===================================
+
 
     # ==============================================================================
     # ===============================   ADMIN   ====================================
     # ==============================================================================
 
     def execAdmin():
-        #MenuAdmin.menu_inicial_administrador()
-        pass
+        
+        menuAdmin = MenuAdmin()
+
+        while not menuAdmin.exit:
+            sel = menuAdmin.menu.show()
+            if sel == 0:
+                MenuAdmin.menu_desportos()
+            elif sel == 1:
+                MenuAdmin.menu_promocoes()
+            elif sel == 2:
+                MenuAdmin.menu_gestao_contas()
+            elif sel == 3:
+                MenuAdmin.menuAdmi.exit = True
 
     # ==============================================================================
     # ============================   ESPECIALISTA   ================================
     # ==============================================================================
 
     def execEspecialista():
-        #MenuEspecialista.menu_inicial_especialista()
-        pass
+        menuEspecialista = MenuEspecialista()
+        
+        while not menuEspecialista.exit:
+            sel = menuEspecialista.menu.show()
+            if sel == 0:
+                MenuEspecialista.menu_desportos()
+            elif sel == 1:
+                menuEspecialista.exit = True
 
     # ==============================================================================
     # ==============================   EXTRAS   ====================================
