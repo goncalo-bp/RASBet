@@ -14,13 +14,13 @@ class DBQueries:
         lines = self.mydb.query(DBConstants.get_log_info,(email,))
         return len(lines) > 0
 
-    def registerUser(self, email, password, nif, date, isAdmin, isEspecialista):
+    def registerUser(self, email, password, nome, nif, date, isAdmin, isEspecialista):
         r = 1
         alreadyExists = self.alreadyExists(email)
 
         if not alreadyExists:
             self.mydb.execute(DBConstants.add_wallet)
-            self.mydb.execute(DBConstants.register_user,(email, password, self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
+            self.mydb.execute(DBConstants.register_user,(email, password, nome, self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
             self.mydb.commit()
         else:
             r = 0 
@@ -29,17 +29,19 @@ class DBQueries:
     def loginUser(self, email, password):
         data = self.mydb.query(DBConstants.get_log_info, (email,))
         r = 1
+        usrId = data[0][2]
         if len(data) == 0:
             r = -1
+            usrId = False
         elif password != data[0][1]:
-            r = 0
-        elif data[0][2]:
-            r = 2
+            r = 0 
+            usrId = False
         elif data[0][3]:
+            r = 2
+        elif data[0][4]:
             r = 3
-        return r
+        return r, usrId
 
-    # NOTE - fazer sem home também ?
     def addTeam(self, name, gameId, odd, home):
         self.mydb.execute(DBConstants.add_team, (name, gameId, odd, home))
         self.mydb.commit()
@@ -65,8 +67,8 @@ class DBQueries:
             l.append(elem[0])        
         return l
 
-    def getBalance(self,email):
-        return self.mydb.execute(DBConstants.get_balance, (email,))
+    def getBalance(self, usrId):
+        return self.mydb.query(DBConstants.get_balance, (usrId,))
 
     # TODO Definir o erro
     def addPromotion(self, gameId, value):
@@ -92,16 +94,15 @@ class DBQueries:
             self.mydb.commit()
 
     # Históricos
-    def getHistoricoApostas(self, email):
-        return self.mydb.query(DBConstants.get_history_bets, (email,))
+    def getHistoricoApostas(self, usrId):
+        return self.mydb.query(DBConstants.get_history_bets, (usrId,))
         
-    def getHistoricoTransacoes(self, email):
-        return self.mydb.query(DBConstants.get_history_trans, (email,))
+    def getHistoricoTransacoes(self, usrId):
+        return self.mydb.query(DBConstants.get_history_trans, (usrId,))
 
-    def registerTransaction(self, email, valorApostado, descricao):
-        bal = self.getBalance(email)
-        self.mydb.execute(DBConstants.reg_transaction,((bal,valorApostado,email,descricao)))
-        self.mydb.execute(DBConstants.update_wallet,(valorApostado,))
+    def registerTransaction(self, usrId, valorApostado):
+        bal = self.getBalance(usrId)
+        self.mydb.execute(DBConstants.reg_transaction,((bal,valorApostado,usrId)))
         self.mydb.commit()
 
     #Jogos Apostados = [(idJogo, resultadoApostado)]
@@ -130,46 +131,21 @@ class DBQueries:
     def updateOdds(self, idJogo, nomeEquipa, odd):
         self.mydb.execute(DBConstants.update_odds,(odd,idJogo,nomeEquipa))
         self.mydb.commit()
+    def registerTransaction(self, usrId, valorApostado):
+        bal = self.getBalance(usrId)
+        self.mydb.execute(DBConstants.reg_transaction,((bal,valorApostado,usrId)))
+        self.mydb.commit()
 
+    def updateUserField(self, index, value, usrId): #atualizar
+        if index == 0:
+            name = "email"
+        elif index == 1:
+            name = "nome"
+        self.mydb.execute(DBConstants.update_user_field, (name, value, usrId))
 
+    def getTeamsGame(self, gameId):
+        return self.mydb.query(DBConstants.get_teams_by_game, (gameId, ))
 
+    def getGameDate(self, gameId):
+        return self.mydb.query(DBConstants.get_game_date, (gameId, ))
 
-#Problema aqui, podemos criar a carteira e depois não dar para criar o utilizador ... o que fazer?
-#def register(username, password, email, mydb):
-#    cursor = mydb.cursor(buffered=True)
-#    temp = "Conta criada com êxito"
-#    try:
-#        cursor.execute("INSERT INTO Carteira (saldoCarteira) VALUES(0.00)")
-#        cursor.execute(f'INSERT INTO Utilizador (username,password,idCarteira,email) VALUES ("{username}","{password}","{cursor.lastrowid}","{email}")')     
-#        # Make sure data is committed to the database
-#        mydb.commit()
-#    except Exception:
-#        temp = "Username ou email já existe"
-#    
-#    cursor.close()
-#    
-#    return temp
-#
-#def getListaEventos(mydb, desporto):
-#    eventos = []
-#    cursor = mydb.cursor(buffered=True,named_tuple=True)
-#
-#    #Lista de IdJogos do desporto
-#    cursor.execute(f'SELECT idJogo FROM Jogo WHERE nomeDesporto = "{desporto}"')
-#    listaIdJogo = cursor.fetchall()
-#
-#    for id in listaIdJogo:
-#        cursor.execute(f'SELECT nomeEquipa, Odd, jogaEmCasa FROM EquipasPorJogo WHERE idJogo = {id[0]}')
-#        evento = cursor.fetchall()
-#        eventos.append(evento)
-#
-#    cursor.close()
-#
-#    return eventos
-#
-#def getAllAccounts(mydb):
-#    cursor = mydb.cursor()
-#    cursor.execute(f'SELECT username, password FROM Utilizador')
-#    for i in cursor.fetchall():
-#        print(i[0] + " - " + i[1])
-#    cursor.close()

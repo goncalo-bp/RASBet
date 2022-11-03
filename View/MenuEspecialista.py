@@ -1,104 +1,100 @@
-import Menu
+from View.Menu import Menu
 import time
 
 jogosfutebol = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
 
-def menu_inicial_especialista():
-    pag_inicial = Menu.Menu("  Bem Vindo à RASBET.\n",["Desportos","Sair"])
 
-    while not pag_inicial.exit:
-        sel = pag_inicial.menu.show()
-        if sel == 0:
-            menu_desportos()
-        elif sel == 1:
-            pag_inicial.exit = True
+class MenuEspecialista:
 
-def menu_desportos():
-    desportos = Menu("  Desportos.\n",["Futebol","Ténis","Basquetebol","MotoGP"] + ["Sair"])
+    def __init__(self):
+        self.menuEspecialista = Menu("  Bem Vindo à RASBET.\n",["Desportos","Sair"])
 
-    while not desportos.exit:
-        sel = desportos.menu.show()
-        if sel == 0:
-            menu_futebol()
-        elif sel == 1:
-            menu_tenis()
-        elif sel == 2:
-            menu_basquetebol()
-        elif sel == 3:
-            menu_motogp()
-        elif sel == 4:
-            desportos.exit = True
+    def menu_desportos(self):
+        desportos = Menu("  Desportos.\n",["Futebol","Ténis","Basquetebol","MotoGP"] + ["Sair"])
+
+        while not desportos.exit:
+            sel = desportos.menu.show()
+            if sel == 0:
+                self.menu_futebol()
+            elif sel == 1:
+                self.menu_tenis()
+            elif sel == 2:
+                self.menu_basquetebol()
+            elif sel == 3:
+                self.menu_motogp()
+            elif sel == 4:
+                desportos.exit = True
 
 
-def menu_futebol():
-   # jogos = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
-    futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
-
-    while not futebol.exit:
+    def menu_futebol(self):
+    # jogos = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
         futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
-        sel = futebol.menu.show()
-        for i in range(len(jogosfutebol)):
-            if sel == i:
-                menu_evento(jogosfutebol[sel])
 
-        if sel == len(jogosfutebol):
-            futebol.exit = True
+        while not futebol.exit:
+            futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
+            sel = futebol.menu.show()
+            for i in range(len(jogosfutebol)):
+                if sel == i:
+                    self.menu_evento(jogosfutebol[sel])
 
-def menu_tenis():
-    tenis = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
+            if sel == len(jogosfutebol):
+                futebol.exit = True
 
-    while not tenis.exit:
-        sel = tenis.menu.show()
-        if sel == 0:
-            print("Benfica - Chaves")
-            menu_evento()
-        elif sel == 1:
-            tenis.exit = True
+    def menu_tenis(self):
+        tenis = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
 
-def menu_basquetebol():
-    basquetebol = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
+        while not tenis.exit:
+            sel = tenis.menu.show()
+            if sel == 0:
+                print("Benfica - Chaves")
+                self.menu_evento()
+            elif sel == 1:
+                tenis.exit = True
 
-    while not basquetebol.exit:
-        sel = basquetebol.menu.show()
-        if sel == 0:
-            print("Benfica - Chaves")
-            menu_evento()
-            time.sleep(2)
-        elif sel == 1:
-            basquetebol.exit = True
+    def menu_basquetebol(self):
+        basquetebol = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
 
-def menu_motogp():
-    motogp = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
+        while not basquetebol.exit:
+            sel = basquetebol.menu.show()
+            if sel == 0:
+                print("Benfica - Chaves")
+                self.menu_evento()
+                time.sleep(2)
+            elif sel == 1:
+                basquetebol.exit = True
 
-    while not motogp.exit:
-        sel = motogp.menu.show()
-        if sel == 0:
-            print("Benfica - Chaves")
-            menu_evento()
-            time.sleep(2)
-        elif sel == 1:
-            motogp.exit = True
-            
+    def menu_motogp(self):
+        motogp = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
+
+        while not motogp.exit:
+            sel = motogp.menu.show()
+            if sel == 0:
+                print("Benfica - Chaves")
+                self.menu_evento()
+                time.sleep(2)
+            elif sel == 1:
+                motogp.exit = True
+                
 
 
-def menu_evento(desp):
+    def menu_evento(desp):
 
-    #verificar se o jogo já começou
-    jogo_comecou = False
-    if jogo_comecou:
-        opcao = ["Suspender jogo e alterar Odd"]
-    else:
-        opcao = ["Alterar Odd"]
+        #verificar se o jogo já começou
+        jogo_comecou = False
+        if jogo_comecou:
+            opcao = ["Suspender jogo e alterar Odd"]
+        else:
+            opcao = ["Alterar Odd"]
 
-    jogo = Menu.Menu("  Jogo.\n", opcao + ["Sair"])
+        jogo = Menu.Menu("  Jogo.\n", opcao + ["Sair"])
 
-    while not jogo.exit:
-        sel = jogo.menu.show()
-        if sel == 0:
-            print("Odd")
-            time.sleep(2)
-        elif sel == 2:
-            jogo.exit = True
+        while not jogo.exit:
+            sel = jogo.menu.show()
+            if sel == 0:
+                print("Odd")
+                time.sleep(2)
+            elif sel == 2:
+                jogo.exit = True
 
 
 
