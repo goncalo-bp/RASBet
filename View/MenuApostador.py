@@ -36,10 +36,12 @@ def menu_editar():
 def menu_boletim(boletim,email):
     txt = []
     saldo = 10 #### IR BUSCAR SALDO
+    odd_total = 1
     for aposta in boletim:
         txt += [f"{aposta[0]} {aposta[1]} {aposta[2]} {aposta[3]}"]
+        odd_total *= float(aposta[3])
 
-    boletim = Menu.Menu("  Boletim.\n", txt + ["Apostar","Sair"])
+    boletim = Menu.Menu(f"  Boletim -> {odd_total}.\n", txt + ["Apostar","Sair"])
 
     while not boletim.exit:
         sel = boletim.menu.show()
