@@ -33,15 +33,16 @@ class DBQueries:
             r = -1
         elif password != data[0][1]:
             r = 0
+        elif data[0][2]:
+            r = 2
+        elif data[0][3]:
+            r = 3
         return r
 
-    #NOTE - fazer sem home também ?
+    # NOTE - fazer sem home também ?
     def addTeam(self, name, gameId, odd, home):
         self.mydb.execute(DBConstants.add_team, (name, gameId, odd, home))
         self.mydb.commit()
-
-    def getBalance(self,email):
-        return self.mydb.execute(self.mydb.get_balance, (email,))
 
     def getSports(self):
         data = self.mydb.query(DBConstants.get_sports)
@@ -63,6 +64,9 @@ class DBQueries:
         for elem in data[0]:
             l.append(elem[0])        
         return l
+
+    def getBalance(self,email):
+        return self.mydb.execute(DBConstants.get_balance, (email,))
 
     # TODO Definir o erro
     def addPromotion(self, gameId, value):
@@ -99,7 +103,7 @@ class DBQueries:
         self.mydb.execute(DBConstants.reg_transaction,((bal,valorApostado,email)))
         self.mydb.commit()
 
-    def register
+
 
 #Problema aqui, podemos criar a carteira e depois não dar para criar o utilizador ... o que fazer?
 #def register(username, password, email, mydb):
