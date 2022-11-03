@@ -98,9 +98,26 @@ class DBQueries:
     def getHistoricoTransacoes(self, email):
         return self.mydb.query(DBConstants.get_history_trans, (email,))
 
-    def registerTransaction(self, email, valorApostado):
+    def registerTransaction(self, email, valorApostado, descricao):
         bal = self.getBalance(email)
-        self.mydb.execute(DBConstants.reg_transaction,((bal,valorApostado,email)))
+        self.mydb.execute(DBConstants.reg_transaction,((bal,valorApostado,email,descricao)))
+        self.mydb.execute(DBConstants.update_wallet,(valorApostado,))
+        self.mydb.commit()
+
+    #Jogos Apostados = [(idJogo, resultadoApostado)]
+    def criarAposta(self, email, valor, jogosApostados):
+        self.mydb.execute(DBConstants.reg_aposta, (email,valor))
+        numAposta = self.mydb.lastrowid()
+        for (idJogo, resultadoApostado) in jogosApostados:
+            odd = self.mydb.query(DBConstants.get_odd_by_game,(idJogo, resultadoApostado))
+            self.mydb.execute(DBConstants.add_game_to_bet, (numAposta,idJogo,odd,resultadoApostado))
+        self.mydb.commit()
+        self.registerTransaction(email,(-1)*valor,'A')
+
+    def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes):
+        self.mydb.execute(DBConstants.create_game, (idJogo, nomeDesporto, dataJogo))
+        for (nomeEquipa,odd,jogaEmCasa) in equipasPresentes:
+            self.mydb.execute(DBConstants.add_team, (nomeEquipa,idJogo,odd,jogaEmCasa))
         self.mydb.commit()
 
 
