@@ -14,13 +14,13 @@ class DBQueries:
         lines = self.mydb.query(DBConstants.get_log_info,(email,))
         return len(lines) > 0
 
-    def registerUser(self, email, password, nif, date):
+    def registerUser(self, email, password, nif, date, isAdmin, isEspecialista):
         r = 1
         alreadyExists = self.alreadyExists(email)
 
         if not alreadyExists:
             self.mydb.execute(DBConstants.add_wallet)
-            self.mydb.execute(DBConstants.register_user,(email, password, self.mydb.lastrowid(), date, nif,))     
+            self.mydb.execute(DBConstants.register_user,(email, password, self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
             self.mydb.commit()
         else:
             r = 0 
@@ -40,9 +40,8 @@ class DBQueries:
         self.mydb.execute(DBConstants.add_team, (name, gameId, odd, home))
         self.mydb.commit()
 
-    def addWallet(self):
-        self.mydb.execute(self.mydb.add_wallet)
-        self.mydb.commit()
+    def getBalance(self,email):
+        return self.mydb.execute(self.mydb.get_balance, (email,))
 
     def getSports(self):
         data = self.mydb.query(DBConstants.get_sports)
@@ -65,7 +64,7 @@ class DBQueries:
             l.append(elem[0])        
         return l
 
-    # Adicionar promoção 
+    # TODO Definir o erro
     def addPromotion(self, gameId, value):
         try:
             self.mydb.execute(DBConstants.create_promotion,(gameId, 1+value,))
@@ -74,7 +73,8 @@ class DBQueries:
         except Exception:
             #erro
             pass
-    # Remover promoção 
+    
+    # TODO Definir o erro
     def removePromotion(self, idProm):
         prom = self.mydb.query(DBConstants.get_promotion, (idProm,))
         print(prom)
@@ -87,7 +87,19 @@ class DBQueries:
             self.mydb.execute(DBConstants.remove_promotion,(idProm,))
             self.mydb.commit()
 
+    # Históricos
+    def getHistoricoApostas(self, email):
+        return self.mydb.query(DBConstants.get_history_bets, (email,))
+        
+    def getHistoricoTransacoes(self, email):
+        return self.mydb.query(DBConstants.get_history_trans, (email,))
 
+    def registerTransaction(self, email, valorApostado):
+        bal = self.getBalance(email)
+        self.mydb.execute(DBConstants.reg_transaction,((bal,valorApostado,email)))
+        self.mydb.commit()
+
+    def register
 
 #Problema aqui, podemos criar a carteira e depois não dar para criar o utilizador ... o que fazer?
 #def register(username, password, email, mydb):
