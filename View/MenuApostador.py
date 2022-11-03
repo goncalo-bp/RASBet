@@ -148,7 +148,6 @@ def menu_levantar(email):
                     print("Aviso -> IBAN inválido!\n")
             else:
                 print("Aviso -> Valor inválido.\n")
-                time.sleep(1)
     except EOFError as e:
         return
 
