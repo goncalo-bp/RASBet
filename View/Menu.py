@@ -69,22 +69,22 @@ def menu_login():
                 print("Aviso -> Credenciais Inválidas")
                 time.sleep(2)
                 error = True
-                return back,error,tipo
+                return back,error,tipo,email
             else:
                 print(f"-> Sessão iniciada com {tipo}")
                 back = True
                 apostador = True
                 time.sleep(2)
-                return back,error,tipo                
+                return back,error,tipo,email                
         else:
             print("Aviso -> Email inválido")
             time.sleep(2)
             back = True
             error = True
-            return back,error,tipo
+            return back,error,tipo,email
 
     except EOFError as e:
-        return True,True
+        return True,True,0,0
 
 def check_data(data):
     if re.fullmatch(r'\d{4}-\d{2}-\d{2}', data):
@@ -143,11 +143,11 @@ def main():
         if main_sel == 0:
             ##### LOGIN #######
             while not main.exit:
-                main.exit,error,tipo = menu_login()         
+                main.exit,error,tipo,email = menu_login()         
 
             if not error:
                 if tipo == 1:
-                    MenuApostador.menu_inicial_apostador()
+                    MenuApostador.menu_inicial_apostador(email)
                 elif tipo == 2:
                     MenuAdmin.menu_inicial_administrador()
                 elif tipo == 3:
