@@ -166,6 +166,7 @@ def menu_notif(email):
 
 ### O QUE FAZER COM AS NOTIFICACOES ????
 
+
     while not notif.exit:
         sel = notif.menu.show()
 
