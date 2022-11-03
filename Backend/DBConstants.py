@@ -22,5 +22,8 @@ class DBConstants:
     get_last_update   = 'SELECT lastUpdate FROM EquipasPorJogo WHERE idJogo=%s;'
     get_game          = 'SELECT idJogo FROM Jogo WHERE idJogo=%s;'
     update_odds       = 'UPDATE EquipasPorJogo SET Odd=%s WHERE idJogo=%s AND nomeEquipa=%s'
+    update_user_field = 'UPDATE Utilizador SET %s=%s WHERE idUser=%s;'
+    get_teams_by_game = 'SELECT idJogo, nomeEquipa, Odd, jogaEmCasa from EquipasPorJogo WHERE idJogo=%s'
+    get_game_date     = 'SELECT dataJogo FROM Jogo WHERE idJogo=%s'
     
 

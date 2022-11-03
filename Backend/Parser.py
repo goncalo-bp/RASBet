@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 def parse_api_element(data):
     id = data["id"]
@@ -10,9 +11,10 @@ def parse_api_element(data):
     scores = data["scores"]
     odds = {}
     num_odds = 0
+    last_update = []
     for j in bookmakers:
         #key = j["key"]  # nome da casa de apostas
-        last_update = last_update + j["lastUpdate"]
+        last_update.append(datetime.strptime(j["lastUpdate"], "%Y-%m-%dT%H:%M:%S%fZ"))
         markets = j["markets"]
         #print("-" + key)
         #print("-" + last_update)
@@ -28,7 +30,7 @@ def parse_api_element(data):
                 else:
                     odds[name] = price          
             num_odds += 1
-    last_update.max()
+    most_recent = max(last_update)
     for odd in odds.keys():
             odds[odd] = round(odds[odd]/num_odds,2)
 

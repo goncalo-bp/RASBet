@@ -31,12 +31,12 @@ def atualiza():
         data = response.json()
         for i in data:
             jogo = ps.parse_api_element(i)
+            equipasPresentes = [(jogo[1],float(jogo[6][jogo[1]]),1),(jogo[2],float(jogo[6][jogo[2]]),0),('Draw',float(jogo[6]['Draw']),0)]
             if dbq.existingGame(jogo[0]):
                 lastUpdate = dbq.getLastUpdate(jogo[0]) 
-                equipasPresentes = [(jogo[1],float(jogo[6][jogo[1]]),1),(jogo[2],float(jogo[6][jogo[2]]),0),('Draw',float(jogo[6]['Draw']),0)]
-                if lastUpdate == datetime.strptime(jogo[7], "%Y-%m-%dT%H:%M:%S.%fZ"):
+                if lastUpdate != datetime.strptime(jogo[7], "%Y-%m-%dT%H:%M:%S.%fZ"):
                     for equipa in equipasPresentes:
-                        dbq.updateOdds(jogo[0],equipa[0],equipa[1]) 
+                        dbq.updateOdds(jogo[0],equipa[0],equipa[1])
                         #TODO: Atualizar Estado Do Jogo e Vencedor         
             else:
                 dbq.criarJogo(jogo[0],'Futebol',datetime.strptime(jogo[5], "%Y-%m-%dT%H:%M:%S.%fZ"),equipasPresentes)
