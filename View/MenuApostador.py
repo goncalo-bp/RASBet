@@ -29,8 +29,36 @@ def menu_inicial_apostador(email):
         elif sel == 5:
             pag_inicial.exit = True
 
-def menu_editar():
-    ol = 1
+
+#INCOMPLETO
+def menu_editar(email, nome, password):
+
+    dados_default = email + nome + password
+
+    
+    editar = Menu.Menu(f"  Editar Conta\n", dados_default  + ["Sair"])
+
+    while not editar.exit:
+        sel = editar.menu.show()
+        if sel == 0:
+            print("Insira o novo email: ")
+            novo_email = input()
+            if Menu.check_email(novo_email):
+                print("Email gravado com sucesso.\n")
+                time.sleep(1)
+            else:
+                print("Email inválido.\n")
+                time.sleep(1)
+        elif sel == 1:
+            print("Insira o novo nome: ")
+            novo_nome = input()
+        elif sel == 2:
+            print("Insira a nova password: ")
+            nova_password = input()
+        elif sel == 3:
+            editar.exit = True
+
+        
 
 # (id,nome,aposta,odd)
 def menu_boletim(boletim,email):
