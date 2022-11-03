@@ -69,6 +69,8 @@ def menu_carteira(email):
     carteira = Menu.Menu(f"  Saldo :: {saldo} .\n",["Histórico de Apostas","Histórico de transações","Depositar dinheiro","Levantar dinheiro","Sair"])
 
     while not carteira.exit:
+        carteira = Menu.Menu(f"  Saldo :: {saldo} .\n",["Histórico de Apostas","Histórico de transações","Depositar dinheiro","Levantar dinheiro","Sair"])
+
         sel = carteira.menu.show()
 
         if sel == 0:
@@ -78,10 +80,12 @@ def menu_carteira(email):
             menu_hist_transac(email)
 
         elif sel == 2:
-            menu_depositar(email)
+            valor = menu_depositar(email)
+            if valor != -1:
+                saldo += float(valor)
         
         elif sel == 3:
-            menu_levantar(email)
+            saldo = menu_levantar(email,saldo)
 
         elif sel == 4:
             carteira.exit = True
@@ -117,21 +121,22 @@ def menu_depositar(email):
             metodo = menu_transf() 
             time.sleep(1)
             print("Transferência realizada com sucesso!")
+            return valor
         else:
             print("Aviso -> Valor inválido.")
-            time.sleep(1)
+            return -1
     except EOFError as e:
-        return
+        return -1
 
 def check_IBAN(iban):
-    if re.fullmatch(r'\d{4}-\d{2}-\d{2}', iban):
+    if re.fullmatch(r'PT50\d{21}', iban):
         return True
     else:
         return False
     
 
-def menu_levantar(email):
-    saldo = 10 ### IR BUSCAR À BD ######
+def menu_levantar(email,saldo):
+    ### IR BUSCAR À BD ######
     print("Prima Ctr+D para cancelar\n\n")
     print("-- Levantar Dinheiro  \n")
     try:
@@ -141,22 +146,25 @@ def menu_levantar(email):
             print("Instira IBAN")
             iban = input()
             if valor.isdecimal or valor < saldo:
-                if check_IBAN(iban):
-                    metodo = menu_transf() 
-                    time.sleep(1)
+                if check_IBAN(iban): 
                     print("Transferência realizada com sucesso!\n")
-                    return
+                    time.sleep(1)
+                    return saldo - float(valor)
                 else:
                     print("Aviso -> IBAN inválido!\n")
+                    time.sleep(1)
+                    return saldo
             else:
                 print("Aviso -> Valor inválido.\n")
+                time.sleep(1)
+                return saldo
     except EOFError as e:
-        return
+        return saldo
 
 # 0 -> MBWay , 1 -> Transferencia
 def menu_transf():
     metodos = ["MBWay","Transferência Bancária"]
-    metodo = Menu.Menu(f" Método de Transferência.\n",metodo+["Sair"])
+    metodo = Menu.Menu(f" Método de Transferência.\n",metodos+["Sair"])
 
     return metodo.menu.show()
 
