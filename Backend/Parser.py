@@ -8,12 +8,11 @@ def parse_api_element(data):
     completed = data["completed"]
     home_team = data["homeTeam"]
     scores = data["scores"]
-    print(id,away_team,completed,home_team,scores, data_inicio)
     odds = {}
     num_odds = 0
     for j in bookmakers:
         #key = j["key"]  # nome da casa de apostas
-        #last_update = j["lastUpdate"]
+        last_update = last_update + j["lastUpdate"]
         markets = j["markets"]
         #print("-" + key)
         #print("-" + last_update)
@@ -25,11 +24,12 @@ def parse_api_element(data):
                 name = o["name"]
                 price = o["price"]
                 if name in odds.keys():
-                    odds[name] += price
+                    odds[name] = odds[name] + price
                 else:
-                    odds[name] = price        
+                    odds[name] = price          
             num_odds += 1
+    last_update.max()
     for odd in odds.keys():
-            odds[odd] = odds[odd]/num_odds
+            odds[odd] = round(odds[odd]/num_odds,2)
 
     return id,home_team,away_team,completed,scores,data_inicio,odds

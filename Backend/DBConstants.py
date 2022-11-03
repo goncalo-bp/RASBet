@@ -7,7 +7,7 @@ class DBConstants:
     get_by_sport      = 'SELECT idJogo FROM Jogo WHERE nomeDesporto = (%s);'
     get_game_info     = 'SELECT nomeEquipa, Odd, jogaEmCasa FROM EquipasPorJogo WHERE idJogo = (%s);'
     create_promotion  = 'INSERT INTO Promoção(idJogo, percentagemAumento) Values(%s,%s);'
-    update_odds       = 'UPDATE EquipasPorJogo SET Odd = Odd * %s WHERE idJogo=%s;'
+    boosted_odds      = 'UPDATE EquipasPorJogo SET Odd = Odd * %s WHERE idJogo=%s;'
     get_promotion     = 'SELECT idPromoçao, percentagemAumento, idJogo FROM Promoção WHERE idPromoçao=%s'
     remove_promotion  = 'DELETE FROM Promoção WHERE idPromoçao=%s;'
     get_history_bets  = 'SELECT idAposta, dataAposta, valorApostado FROM Aposta WHERE emailConta=%s;'
@@ -19,3 +19,8 @@ class DBConstants:
     get_odd_by_game   = 'SELECT Odd FROM EquipasPorJogo WHERE idJogo=%s AND nomeEquipa=%s'
     create_game       = 'INSERT INTO Jogo(idJogo, nomeDesporto, dataJogo) VALUES(%s, %s, %s);'
     add_team          = 'INSERT INTO EquipasPorJogo(nomeEquipa, idJogo, Odd, jogaEmCasa) VALUES(%s,%s,%s,%s);'
+    get_last_update   = 'SELECT lastUpdate FROM EquipasPorJogo WHERE idJogo=%s;'
+    get_game          = 'SELECT idJogo FROM Jogo WHERE idJogo=%s;'
+    update_odds       = 'UPDATE EquipasPorJogo SET Odd=%s WHERE idJogo=%s AND nomeEquipa=%s'
+    
+

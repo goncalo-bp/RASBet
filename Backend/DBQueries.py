@@ -1,6 +1,6 @@
 import mysql.connector # pip install mysql-connector-python
-from .DBConstants import DBConstants
-from .Database import Database
+from DBConstants import DBConstants
+from Database import Database
 
 class DBQueries:
 
@@ -72,7 +72,7 @@ class DBQueries:
     def addPromotion(self, gameId, value):
         try:
             self.mydb.execute(DBConstants.create_promotion,(gameId, 1+value,))
-            self.mydb.execute(DBConstants.update_odds,(1+value, gameId,))
+            self.mydb.execute(DBConstants.boosted_odds,(1+value, gameId,))
             self.mydb.commit()
         except Exception:
             #erro
@@ -87,7 +87,7 @@ class DBQueries:
             #Não existe
             pass
         else:
-            self.mydb.execute(DBConstants.update_odds,(1/float(prom[0][1]), prom[0][2],))
+            self.mydb.execute(DBConstants.boosted_odds,(1/float(prom[0][1]), prom[0][2],))
             self.mydb.execute(DBConstants.remove_promotion,(idProm,))
             self.mydb.commit()
 
@@ -119,6 +119,18 @@ class DBQueries:
         for (nomeEquipa,odd,jogaEmCasa) in equipasPresentes:
             self.mydb.execute(DBConstants.add_team, (nomeEquipa,idJogo,odd,jogaEmCasa))
         self.mydb.commit()
+    
+    def existingGame(self, idJogo):
+        listaJogos = self.mydb.query(DBConstants.get_game,(idJogo,))
+        return len(listaJogos) == 1
+
+    def getLastUpdate(self, idJogo):
+        return self.mydb.query(DBConstants.get_last_update,(idJogo,))[0]
+
+    def updateOdds(self, idJogo, nomeEquipa, odd):
+        self.mydb.execute(DBConstants.update_odds,(odd,idJogo,nomeEquipa))
+        self.mydb.commit()
+
 
 
 
