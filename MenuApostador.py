@@ -42,6 +42,7 @@ class MenuApostador:
         sel = desportos.menu.show()
         if sel == len(sportsList):
             desportos.exit = True
+            return False
         else:
             return sportsList[sel]
 
@@ -51,16 +52,17 @@ class MenuApostador:
         while not jogos.exit:
             sel = jogos.menu.show()
 
-            for i in range(len(names)):
-                if sel == i:
-                    res,odd = self.menuEvento(info[sel], names[sel])
-                    boletim += [(info[sel][0],names[sel],res,odd)]
             if sel == len(names):
                 jogos.exit = True
+            else:
+                res,odd = self.menuEvento(info[sel], names[sel])
+                boletim += [(info[sel][0],names[sel],res,odd)]
+            
         return boletim
 
+# (id,nome,odd,jogaEmcasa)
     def menuEvento(self, gameInfo, name):
-        opcoes = f"{gameInfo[1]} : {gameInfo[2]}"
+        opcoes = [f"{gameInfo[0][1]} : {gameInfo[0][2]}",f"{gameInfo[1][1]} : {gameInfo[1][2]}", f"{gameInfo[2][1]} : {gameInfo[2][2]}",]
         evento = Menu(f" {name}\n" , opcoes + ["Sair"])
 
         while not evento.exit:
@@ -68,10 +70,14 @@ class MenuApostador:
             if sel == len(opcoes):
                 evento.exit = True
                 return None,0
-            res,odd = opcoes[sel].split(':')
-            evento.exit = True
-            return res,float(odd)
+            else:
+                res,odd = opcoes[sel].split(':')
+                evento.exit = True
+                return res,float(odd)
+            
+            
 
+    # Carteira =============================================================
     #INCOMPLETO
     def menuCarteira(self, usrId, saldo):
         carteira = Menu(f"  Saldo :: {saldo} .\n",["Histórico de Apostas","Histórico de transações","Depositar dinheiro","Levantar dinheiro","Sair"])        
@@ -98,14 +104,18 @@ class MenuApostador:
     # FORA DO CONTROLLER
 
     # (id,nome,aposta,odd)
-    def menu_boletim(boletim,email,saldo):
+    def menuBoletim(self,boletim,saldo):
         txt = []
-        odd_total = 1
-        for aposta in boletim:
-            txt += [f"{aposta[0]} {aposta[1]} {aposta[2]} {aposta[3]}"]
-            odd_total *= float(aposta[3])
 
-        boletim = Menu.Menu(f"  Boletim | Odd Total: {'%.2f' % odd_total} | Saldo: {saldo}", txt + ["Apostar","Sair"])
+        odd_total = 1
+        if boletim == []:
+            odd_total = 0
+        else:
+            for aposta in boletim:
+                txt += [f"{aposta[1]} {aposta[2]} {aposta[3]}"]
+                odd_total *= float(aposta[3])
+
+        boletim = Menu(f"  Boletim | Odd Total: {'%.2f' % odd_total} | Saldo: {saldo}", txt + ["Apostar","Sair"])
 
         while not boletim.exit:
             sel = boletim.menu.show()
