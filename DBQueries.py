@@ -4,6 +4,7 @@ from Database import Database
 from passlib.hash import sha256_crypt
 from datetime import datetime
 
+import time
 class DBQueries:
 
     def __init__(self):
@@ -105,6 +106,7 @@ class DBQueries:
         try:
             self.mydb.execute(DBConstants.create_promotion,(gameId, 1+value,))
             self.mydb.execute(DBConstants.boosted_odds,(1+value, gameId,))
+            self.addNotificacao("BOOSTED ODDDDDDD!", f'Não percas esta odd gigantesca, disponível por tempo limitado!',-1)
             self.mydb.commit()
         except Exception:
             #erro
@@ -151,7 +153,8 @@ class DBQueries:
         #Jogo Ainda não começou
         idJogosApostados = [x for x in jogosApostados[0]]
         datas = []
-        for id in jogosApostados:
+        for id in idJogosApostados:
+            print(id[0])
             datas.append(self.mydb.query(DBConstants.get_game_date, (id[0],))[0][0])
 
         if datetime.now() > min(datas):
@@ -167,7 +170,7 @@ class DBQueries:
         self.mydb.execute(DBConstants.update_odd_total,(float(oddsTotal),numAposta))
         self.mydb.commit()
         
-
+    # [(nomeEquipa,odd,jogaEmCasa)]
     def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes):
         self.mydb.execute(DBConstants.create_game, (idJogo, nomeDesporto, dataJogo))
         for (nomeEquipa,odd,jogaEmCasa) in equipasPresentes:
@@ -233,6 +236,8 @@ class DBQueries:
 
         for idAposta in apostasOndeEstavaJogoPerdido:
             self.mydb.execute(DBConstants.set_aposta,("P",idAposta,))
+            idUser = self.mydb.execute(DBConstants.get_userid_by_bet,(idAposta,))
+            self.addNotificacao("Aposta perdida", f'Infelizmente perdeste a tua aposta :( Boa sorte para a próxima!',idUser)
 
         self.mydb.commit()
                 
@@ -243,7 +248,7 @@ class DBQueries:
         (idUser, valor) = self.mydb.query(DBConstants.get_userid_by_bet,(idAposta,))[0]
         
         oddTotal = float(self.mydb.query(DBConstants.get_odd_total,(idAposta,))[0][0])
-        
+        self.addNotificacao("APOSTA GANHA!!", f'Parabéns, ganhaste uma aposta com odd {oddTotal} que te deu {float(float(valor)*oddTotal)}€!',idUser)
         self.registerTransaction(idUser,float(float(valor)*oddTotal),'G') 
 
     def getGanhos(self, idAposta):
@@ -264,17 +269,31 @@ class DBQueries:
         resultado = self.mydb.query(DBConstants.get_aposta_result,(idAposta,))[0][0]
 
         if resultado == 'G':
-            oddTotal = self.mydb.query(DBConstants.get_odd_total,(idAposta,))
+            oddTotal = self.mydb.query(DBConstants.get_odd_total,(idAposta,))[0][0]
             ganho = montante * oddTotal
         
         if resultado == 'P':
             ganho = (-1) * montante
         for idJogo in listaIdJogos:
-            print(idJogo[0])
+            
             jogo = ([(i[1],i[3]) for i in self.mydb.query(DBConstants.get_teams_by_game,(idJogo[0],))])
+            # 'SELECT idJogo, nomeEquipa, Odd, jogaEmCasa from EquipasPorJogo WHERE idJogo=%s;'
             vencedor = self.mydb.query(DBConstants.get_game_result,(idJogo[0],))
-            if len(vencedor) == 0:
-                 listaJogos.append((jogo,'W'))
-            else:
-                 listaJogos.append((jogo,vencedor[0][0]))
-        return montante,ganho,listaJogos
+            listaJogos.append(jogo)
+            #if len(vencedor) == 0:
+            #     listaJogos.append((jogo,'W'))
+            #else:
+            #     listaJogos.append((jogo,vencedor[0][0]))
+        return float(montante),float(ganho),listaJogos
+    # (Decimal('5.00'), Decimal('47.8500'), [(   [('Draw', 0), ('Sporting Lisbon', 1), ('Vitória SC', 0)]   , 'W')])
+        # ==== NOTIFICAÇÃO ==== #
+    
+    def addNotificacao(self, title, text, idUser):
+        self.mydb.execute(DBConstants.add_notificacao,(idUser,title,text))
+
+    # [(titulo, texto)]
+    def getNotificacao(self, idUser):
+        return self.mydb.execute(DBConstants.add_notificacao,(idUser,))
+    
+    def setResultado(self, vencedor, idJogo):
+        self.mydb.execute(DBConstants.close_game,(vencedor, idJogo))    

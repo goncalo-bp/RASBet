@@ -182,15 +182,11 @@ class Controller:
                 apostas = self.dbq.getHistoricoApostas(usrId)
                 list_ap = []
                 for elem in apostas:
-                    print(self.dbq.listaJogosPorAposta(elem[0]))
-                    list_ap += self.dbq.listaJogosPorAposta(elem[0])
-                    
-                print(list_ap)
-                time.sleep(5)  
+                    list_ap += [self.dbq.listaJogosPorAposta(elem[0])] 
 
-                ma.menuHistApostas(apostas)
+                ma.menuHistApostas(list_ap)
         
-
+    #TODO
     # ============================   NOTIFICACAO   =================================
     def execNotif(self, ma, email):
         notifs = ["Not1","Not2","Not3","Not4"] # SACAR DA BD
@@ -221,14 +217,12 @@ class Controller:
             elif sel == 3:
                 menuAdmin.obj.exit = True
 
-    # ==============================================================================
     # ==============================   DESPORTOS   =================================
-    # ==============================================================================
 
     def execDesportosAdmin(self, madmin, usrId):
         sportsList = self.dbq.getSports()
         desporto = madmin.menuDesportos(sportsList)
-        jogos = self.dbq.getBySport(desporto)
+        jogos = self.dbq.getBySport(desporto,True)
         names = []
         info = []
         for idJogo in jogos:
@@ -256,17 +250,15 @@ class Controller:
             info.append(data) # id ; nome ; odd ; joga_em_casa
         game_name, check_info = madmin.menuJogos(names, info)
         if game_name == None and check_info == "A":
-            idJogo, equipas, dataJogo = madmin.menu_criarjogo()
+            idJogo, equipas, dataJogo = madmin.menu_criarjogo(desporto)
             if idJogo != None:
                 self.dbq.criarJogo(idJogo,desporto, dataJogo, equipas)
         elif game_name != None:
             started = self.dbq.getGameState(check_info[0][0])
-            encerra = madmin.menu_evento(game_name, started)
-            if encerra: self.dbq.suspensaoJogo(encerra, check_info[0][0])
+            nomeEquipaVencedora = madmin.menu_evento(game_name, started)
+            print(nomeEquipaVencedora)
+            self.dbq.setResultado(nomeEquipaVencedora, check_info[0][0])
             
-        
-    
-
 
 
     # =============================   PROMOCOES   ================================== FEITO
