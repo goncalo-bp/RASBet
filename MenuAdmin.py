@@ -10,73 +10,57 @@ class MenuAdmin:
     def __init__(self):
         self.obj = Menu("  Bem Vindo à RASBET.\n",["Desportos","Promoções", "Gestão de contas com privilégios", "Sair"])
 
-    def menu_desportos(self):
-        desportos = Menu.Menu("  Desportos.\n",["Futebol","Ténis","Basquetebol","MotoGP"] + ["Sair"])
+    def menuDesportos(self, sportsList):
+        desportos = Menu("  Desportos.\n", sportsList + ["Sair"])
+        sel = desportos.menu.show()
+        if sel == len(sportsList):
+            desportos.exit = True
+        else:
+            return sportsList[sel]
 
-        while not desportos.exit:
-            sel = desportos.menu.show()
-            if sel == 0:
-                self.menu_futebol()
-            elif sel == 1:
-                self.menu_tenis()
-            elif sel == 2:
-                self.menu_tenis()
-            elif sel == 3:
-                self.menu_motogp()
-            elif sel == 4:
-                desportos.exit = True
 
-    def menu_futebol(self):
-    # jogos = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
-        futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
+    def menuJogos(self, names, info):
+        jogos = Menu(" Jogos.\n", names + ["Sair"])
+        while not jogos.exit:
+            sel = jogos.menu.show()
 
-        while not futebol.exit:
-            futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
-            sel = futebol.menu.show()
-            for i in range(len(jogosfutebol)):
+            for i in range(len(names)):
                 if sel == i:
-                    self.menu_abrirfechar(jogosfutebol[sel])
+                    return names[sel], info[sel]
+            if sel == len(names):
+                jogos.exit = True
 
-            if sel == len(jogosfutebol):
-                self.menu_criarjogo()
+    def menu_evento(self, names, ended, game_date, info):
 
-            if sel == len(jogosfutebol)+1:
-                futebol.exit = True
+        #verificar se o jogo já acabou
+        if not ended:
+            opcoes = ["Fechar Jogo"]
+            terminado = "--> Jogo terminado"
+        else:
+            terminado = ""
 
-    def menu_tenis(self):
-        tenis = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
+        jogo = Menu(names + terminado + "\n" , opcoes + ["Sair"])
 
-        while not tenis.exit:
-            sel = tenis.menu.show()
-            if sel == 0:
-                print("Benfica - Chaves")
-                self.menu_abrirfechar()
-            elif sel == 1:
-                tenis.exit = True
-
-    def menu_basquetebol(self):
-        basquetebol = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-
-        while not basquetebol.exit:
-            sel = basquetebol.menu.show()
-            if sel == 0:
-                print("Benfica - Chaves")
-                self.menu_abrirfechar()
-                time.sleep(2)
-            elif sel == 1:
-                basquetebol.exit = True
-
-    def menu_motogp(self):
-        motogp = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-
-        while not motogp.exit:
-            sel = motogp.menu.show()
-            if sel == 0:
-                print("Benfica - Chaves")
-                self.menu_abrirfechar()
-                time.sleep(2)
-            elif sel == 1:
-                motogp.exit = True
+        while not jogo.exit:
+            sel = jogo.menu.show()
+            if sel == len(opcoes)-1:
+                return True
+            elif sel == len(opcoes):
+                jogo.exit = True
+#   \\\\\\
+#  / o  o \
+#(|   /\   |)
+#  \ ____ /
+#   \____/
+#   /    \
+#  /      \
+# /        \
+#(____| || | ______)
+#  | |     | |
+#  | |     | |
+#  / /      \ \
+# /_/        \_\
+#(__________)
 
     def menu_abrirfechar(jogo):
         opcoes = ["Abrir", "Fechar"]
@@ -92,7 +76,7 @@ class MenuAdmin:
             if sel == len(opcoes):
                 abrirfechar.exit = True
 
-    def menu_criarjogo():
+    def menu_criarjogo(self):
         criar = Menu.Menu("Criar novo jogo.\n", ["Inserir Equipas"] + ["Sair"])
 
         while not criar.exit:

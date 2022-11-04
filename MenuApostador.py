@@ -76,24 +76,23 @@ class MenuApostador:
     #INCOMPLETO
     def menuCarteira(self, usrId, saldo):
         carteira = Menu(f"  Saldo :: {saldo} .\n",["Histórico de Apostas","Histórico de transações","Depositar dinheiro","Levantar dinheiro","Sair"])        
-        while not carteira.exit:
-            sel = carteira.menu.show()
-            if sel == 0:
-                self.menu_hist_apostas(usrId)
-                return 0
-            elif sel == 1:
-                self.menu_hist_transac(usrId)
-                return 0
-            elif sel == 2:
-                valor = self.menuDepositar()
-                if float(valor) > 0:
-                    return float(valor),"D"
-            elif sel == 3:
-                valor = self.menuLevantar()
-                if float(valor) > 0:
-                    return float(valor),"L"
-            elif sel == 4:
-                carteira.exit = True
+
+        sel = carteira.menu.show()
+        if sel == 0:
+            return None,"A"
+        elif sel == 1:
+            return None,"T"
+        elif sel == 2:
+            valor = self.menuDepositar()
+            if float(valor) > 0:
+                return float(valor),"D"
+        elif sel == 3:
+            valor = self.menuLevantar()
+            if float(valor) > 0:
+                return float(valor),"L"
+        elif sel == 4:
+            carteira.exit = True
+            return None,None
 
     # PT50000000000000000000000
     # Boletim ==============================================================
@@ -130,8 +129,10 @@ class MenuApostador:
     # (id,nome,aposta,odd)
 
 
-    def menu_hist_transac(email):
-        lista_transac = ["T1","T2","T3","T4"]
+    def menuHistTransac(self,trans):
+        lista_transac = []
+        for elem in trans:
+            lista_transac += [f"Data: {elem[1]} , Saldo antes: {elem[2]} , Transacao: {elem[3]}"]
         transac = Menu(f" Histórico de Transações .\n",lista_transac+["Sair"])
 
         while not transac.exit:
@@ -141,13 +142,19 @@ class MenuApostador:
                 transac.exit = True
 
 
-    def menu_hist_apostas(email):
-        lista_aposta = ["A1","A2","A3","A4"]
+    def menuHistApostas(self,apostas):
+        lista_aposta = []
+        for elem in apostas:
+            lista_aposta += [f"Data: {elem[1]} , Saldo antes: {elem[2]} , Transacao: {elem[3]}"]
+            oi = 1
         hist_aposta = Menu(f" Histórico de Apostas .\n",lista_aposta+["Sair"])
+        print(apostas)
+        time.sleep(5)
+        #[Row(idAposta=1, dataAposta=datetime.datetime(2022, 11, 4, 15, 34, 49), valorApostado=Decimal('10.00'))]
 
         while not hist_aposta.exit:
             sel = hist_aposta.menu.show()
-
+            print(apostas)
             if sel == len(lista_aposta):
                 hist_aposta.exit = True
 
@@ -176,7 +183,6 @@ class MenuApostador:
 
 
     def menuLevantar(self):
-        ### IR BUSCAR À BD ######
         print("Prima Ctr+D para cancelar\n\n")
         print("-- Levantar Dinheiro  \n")
         try:
@@ -210,40 +216,3 @@ class MenuApostador:
             if self.checkIBAN(iban) == False: 
                 print("Aviso -> IBAN inválido!\n")
                 time.sleep(1)
-
-
-    #def menu_tenis():
-    #    tenis = Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-    #
-    #    while not tenis.exit:
-    #        sel = tenis.menu.show()
-    #        if sel == 0:
-    #            print("Benfica - Chaves")
-    #            menu_evento()
-    #        elif sel == 1:
-    #            tenis.exit = True
-    #
-    #def menu_basquetebol():
-    #    basquetebol = Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-    #
-    #    while not basquetebol.exit:
-    #        sel = basquetebol.menu.show()
-    #        if sel == 0:
-    #            print("Benfica - Chaves")
-    #            menu_evento()
-    #            time.sleep(2)
-    #        elif sel == 1:
-    #            basquetebol.exit = True
-    #
-    #def menu_motogp():
-    #    motogp = Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-    #
-    #    while not motogp.exit:
-    #        sel = motogp.menu.show()
-    #        if sel == 0:
-    #            print("Benfica - Chaves")
-    #            menu_evento()
-    #            time.sleep(2)
-    #        elif sel == 1:
-    #            motogp.exit = True
-    #            

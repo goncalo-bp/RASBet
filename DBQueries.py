@@ -55,7 +55,6 @@ class DBQueries:
         data = self.mydb.query(DBConstants.get_log_info, (email,))
         r = 1
         usrId = True
-        print(data[0][1])
         if len(data) == 0:
             r = -1
             usrId = False

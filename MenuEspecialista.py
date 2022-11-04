@@ -18,52 +18,6 @@ class MenuEspecialista:
             desportos.exit = True
         else:
             return sportsList[sel]
-
-
-    def menu_futebol(self, jogos):
-    # jogos = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
-       # futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
-        futebol = Menu("Jogos.\n", jogos + ["Sair"])
-        sel = futebol.menu.show()
-        if sel == len(futebol):
-            futebol.exit = True
-        else:
-            return jogos[sel]
-
-    def menu_tenis(self):
-        tenis = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-
-        while not tenis.exit:
-            sel = tenis.menu.show()
-            if sel == 0:
-                print("Benfica - Chaves")
-                self.menu_evento()
-            elif sel == 1:
-                tenis.exit = True
-
-    def menu_basquetebol(self):
-        basquetebol = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-
-        while not basquetebol.exit:
-            sel = basquetebol.menu.show()
-            if sel == 0:
-                print("Benfica - Chaves")
-                self.menu_evento()
-                time.sleep(2)
-            elif sel == 1:
-                basquetebol.exit = True
-
-    def menu_motogp(self):
-        motogp = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-
-        while not motogp.exit:
-            sel = motogp.menu.show()
-            if sel == 0:
-                print("Benfica - Chaves")
-                self.menu_evento()
-                time.sleep(2)
-            elif sel == 1:
-                motogp.exit = True
                 
 
     def menuJogos(self, names, info):
@@ -81,15 +35,15 @@ class MenuEspecialista:
     def menu_evento(self, names, ended, game_date, info):
         
         #verificar se o jogo ja começou
-        if game_date > datetime.datetime.now():
-            alterar = "Alterar Odd no: "
-        else:
-            alterar = "Suspender aposta e alterar Odd no: "
+        #if game_date > datetime.datetime.now():
+            #alterar = "Alterar Odd no: "
+        #else:
+        alterar = "Suspender aposta e alterar Odd no: "
 
         #verificar se o jogo já acabou
         if not ended:
             alterar = ""
-            terminado = "Jogo terminado"
+            terminado = "--> Jogo terminado"
         else:
             terminado = ""
 
@@ -104,12 +58,17 @@ class MenuEspecialista:
             sel = jogo.menu.show()
             for i in range(len(opcoes)):
                 if sel == i:
-                    print(opcoes)
-                    time.sleep(60)
-                    #new_odd = input()
-                    #return opcoes[sel],new_odd
+                    flag = False
+                    while not flag:
+                        print("Insira nova Odd")
+                        new_odd = input()
+                        if len(new_odd.rsplit('.')[-1]) == 2:
+                            flag = True
+                            return opcoes[sel].split(':'),new_odd
+                        else:
+                            print("Odd inválida! Por favor insira uma Odd com duas casas decimais")
+                            time.sleep(2)
             if sel == len(opcoes):
                 jogo.exit = True
-
 
 

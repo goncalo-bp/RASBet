@@ -173,6 +173,13 @@ class Controller:
             elif tipo == "L":
                 if self.dbq.registerTransaction(usrId,0-float(valor),"L") == -1:
                     self.view.showMessage(" -> Saldo insuficiente", 2)
+        else:
+            if tipo == "T":
+                transac = self.dbq.getHistoricoTransacoes(usrId)
+                ma.menuHistTransac(transac)
+            elif tipo == "A":
+                apostas = self.dbq.getHistoricoApostas(usrId)
+                ma.menuHistApostas(apostas)
         
 
     # ============================   NOTIFICACAO   =================================
@@ -190,20 +197,62 @@ class Controller:
     # ===============================   ADMIN   ====================================
     # ==============================================================================
 
-    def execAdmin(self):
+    def execAdmin(self, usrId):
         
         menuAdmin = MenuAdmin()
 
         while not menuAdmin.obj.exit:
             sel = menuAdmin.obj.menu.show()
             if sel == 0:
-                MenuAdmin.menu_desportos()
+                self.execDesportosAdmin(menuAdmin, usrId)
             elif sel == 1:
                 self.execPromocoes(menuAdmin)
             elif sel == 2:
                 self.execGestaoContas(menuAdmin)
             elif sel == 3:
                 MenuAdmin.obj.exit = True
+
+    # ==============================================================================
+    # ==============================   DESPORTOS   =================================
+    # ==============================================================================
+
+    def execDesportosAdmin(self, madmin, usrId):
+        sportsList = self.dbq.getSports()
+        desporto = madmin.menuDesportos(sportsList)
+        jogos = self.dbq.getBySport(desporto)
+        names = []
+        info = []
+        for idJogo in jogos:
+            data = self.dbq.getTeamsGame(idJogo)
+
+            if desporto == "Futebol":
+                for i in range(3):
+                    if data[i][1] == "Draw":
+                        draw = i
+                    elif data[i][3]:
+                        home = i
+                names.append(f"{data[home][1]} X {data[3-draw-home][1]}")
+            elif desporto == "Basquetebol":
+                for i in range(2):
+                    if data[i][4]:
+                        home = i
+                names.append(f"{data[home][1]} - {data[2-draw-home][1]}")
+                info.append(data) # id ; nome ; odd ; joga_em_casa
+            elif desporto == "Ténis":
+                names.append(f"{data[home][1]} - {data[2][1]}")
+                info.append(data) # id ; nome ; odd ; joga_em_casa
+            elif desporto == "MotoGP":
+                date = self.dbq.getGameDate[0]
+                names.append(f"GP : {date}")
+            info.append(data) # id ; nome ; odd ; joga_em_casa
+        game_name, check_info = madmin.menuJogos(names, info)
+        started = self.dbq.getGameState(check_info[0][0])
+        game_date = self.dbq.getGameDate(check_info[0][0])
+        encerra = madmin.menu_evento(game_name, started, game_date[0][0], check_info)
+
+    
+
+
 
     # =============================   PROMOCOES   ================================== FEITO
     def execPromocoes(self,mAdmin):
@@ -315,8 +364,8 @@ class Controller:
             game_name, check_info = me.menuJogos(names, info)
             started = self.dbq.getGameState(check_info[0][0])
             game_date = self.dbq.getGameDate(check_info[0][0])
-            new_odd = me.menu_evento(game_name, started, game_date[0][0], check_info)
-            self.dbq.updateOdds(check_info[0][0],new_odd)
+            equipa, new_odd = me.menu_evento(game_name, started, game_date[0][0], check_info)
+            self.dbq.updateOdds(check_info[0][0],equipa[0],new_odd)
 
             #add apostas e etc
     # ==============================================================================
