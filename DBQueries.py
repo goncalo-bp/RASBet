@@ -202,7 +202,7 @@ class DBQueries:
             self.mydb.commit()
             return 0
 
-      #Jogos Apostados = [(idJogo, resultadoApostado)]
+    #Jogos Apostados = [(idJogo, resultadoApostado)]
     def criarAposta(self, idUser, valor, jogosApostados):
         '''
             Cria uma aposta simples ou múltipla associada a um utilizador
@@ -211,8 +211,12 @@ class DBQueries:
         if len(wallet) == 0 or self.registerTransaction(idUser,(-1)*valor,'A') == -1:
             return -1 #Não tem carteira, ou não tem dinheiro suficiente
 
+<<<<<<< HEAD
         #Verifica se um jogo ainda não começou
         idJogosApostados = [x for x in jogosApostados[0]]
+=======
+        #Jogo Ainda não começou
+>>>>>>> e80eb21ba280436c62cb0aa0883d7b491183c998
         datas = []
         for id in jogosApostados:
             datas.append(self.mydb.query(DBConstants.get_game_date, (id[0],))[0][0])

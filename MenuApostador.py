@@ -45,18 +45,16 @@ class MenuApostador:
         else:
             return sportsList[sel]
 
-    def menuJogos(self, names, info):
+    def menuJogos(self, names, info, boletim):
         jogos = Menu(" Jogos.\n", names + ["Sair"])
-        boletim = []
         while not jogos.exit:
             sel = jogos.menu.show()
             if sel == len(names):
                 jogos.exit = True
             else:
-                res,odd = self.menuEvento(info[sel], names[sel])
+                id,res,odd = self.menuEvento(info[sel], names[sel])
                 if res!=None and odd:
-                    boletim += [(info[sel][0],names[sel],res,odd)]
-        return boletim
+                    boletim.append((id, names[sel], res, odd))
 
     # (id,nome,odd,jogaEmcasa)
     def menuEvento(self, gameInfo, name):
@@ -66,14 +64,13 @@ class MenuApostador:
         evento = Menu(f" {name}\n" , opcoes + ["Sair"])
         sel = evento.menu.show()
         if sel == len(opcoes):
-            return None,0
+            return -1,None,0
         res,odd = opcoes[sel].split(':')
-        return res,float(odd)
+        return gameInfo[sel][0],res,float(odd)
             
             
 
     # Carteira =============================================================
-    #INCOMPLETO
     def menuCarteira(self, saldo):
         carteira = Menu(f"  Saldo :: {saldo} .\n",["Histórico de Apostas","Histórico de transações","Depositar dinheiro","Levantar dinheiro","Sair"])        
 
@@ -123,7 +120,7 @@ class MenuApostador:
             odd_total = 0
         else:
             for aposta in boletim:
-                txt += [f"{aposta[1]} {aposta[2]} {aposta[3]}"]
+                txt += [f"{aposta[1]} -> {aposta[2]} {aposta[3]}"]
                 odd_total *= float(aposta[3])
 
         bol = Menu(f"  Boletim | Odd Total: {'%.2f' % odd_total} | Saldo: {saldo}", txt + ["Apostar","Sair"])
@@ -132,17 +129,23 @@ class MenuApostador:
             if sel == len(txt):
                 print("Insira montante a apostar: ")
                 valor = input()
-                if float(valor) and 0 < float(valor) < saldo :
-                    Menu.showMessage(" -> Aposta realizada com sucesso.\n", 1)
-                    apostou = True
-                else:
-                    Menu.showMessage("Aviso -> Saldo insuficiente", 1)
+                try:
+                    if 0 < float(valor) < saldo :
+                        Menu.showMessage(" -> Aposta realizada com sucesso.\n", 1)
+                        apostou = True
+                        boletim = []
+                        bol.exit = True
+                    else:
+                        Menu.showMessage("Aviso -> Saldo insuficiente", 1)
+                except ValueError:
+                    Menu.showMessage("Aviso -> Valor Inválido", 1)
             elif sel == len(txt)+1:
                 bol.exit = True
         if apostou:
             return float(valor)
         return False
 
+    # Notificacao ==========================================================
     #INCOMPLETO
     def menuNotif(self, email, notifs): 
         notif = Menu("  Notificações.\n",notifs+["Sair"])
