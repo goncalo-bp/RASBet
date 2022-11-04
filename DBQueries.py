@@ -199,7 +199,6 @@ class DBQueries:
             self.mydb.execute(DBConstants.update_nome_field, (value, usrId))
         self.mydb.commit()
         
-
     def getTeamsGame(self, gameId):
         return self.mydb.query(DBConstants.get_teams_by_game, (gameId, ))
 
