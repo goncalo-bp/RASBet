@@ -162,8 +162,7 @@ class DBQueries:
         self.mydb.commit()
         
 
-
-    def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes):
+    def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes, suspenso):
         self.mydb.execute(DBConstants.create_game, (idJogo, nomeDesporto, dataJogo))
         for (nomeEquipa,odd,jogaEmCasa) in equipasPresentes:
             self.mydb.execute(DBConstants.add_team, (nomeEquipa,idJogo,odd,jogaEmCasa))
@@ -217,10 +216,15 @@ class DBQueries:
         apostasOndeEstavaJogoPerdido = [x[0] for x in self.mydb.query(DBConstants.get_bets_winner,(idJogo,winner))]
         
         for idAposta in apostasOndeEstavaJogoGanho:
-            distinctGanho = [x[0] for x in self.mydb.query(DBConstants.get_distinct_ganho, (idAposta,))]
-            if len(distinctGanho) == 1 and distinctGanho[0] == 1:
+            ganhos = self.mydb.query(DBConstants.ganho_por_aposta,(idAposta,))
+            apostaGanha = 1
+            for ganho in ganhos:
+                if ganho[0] != 1:
+                    apostaGanha = 0
+            
+            if apostaGanha == 1:
                 self.setApostaGanha(idAposta)
-        
+
         for idAposta in apostasOndeEstavaJogoPerdido:
             self.mydb.execute(DBConstants.set_aposta,(0,idAposta,))
 
@@ -231,7 +235,6 @@ class DBQueries:
         self.mydb.execute(DBConstants.set_aposta,(1,idAposta,))
 
         (idUser, valor) = self.mydb.query(DBConstants.get_userid_by_bet,(idAposta,))[0]
-
         
         oddsList = self.mydb.query(DBConstants.get_odd_total,(idAposta,))
         oddsTotal = 1
@@ -241,3 +244,17 @@ class DBQueries:
         print(oddsTotal)
         
         self.registerTransaction(idUser,float(valor*oddsTotal),'G') 
+
+    def getGanhos(self, idAposta):
+        return self.mydb.query(DBConstants.ganho_por_aposta,(idAposta,))
+
+    def suspensaoJogo(self, suspende, idJogo):
+        self.mydb.execute(DBConstants.suspende_game, (suspende, idJogo))
+        self.mydb.commit()
+
+    #RETURN -> [[(Equipa1 do Jogo1, Joga em casa),(Equipa2 do Jogo1, Joga em Casa)],[(Equipa1 do Jogo2, Joga em casa 2),(Equipa2 do Jogo1, Joga em Casa 2)]]
+    def listaJogosPorAposta(self, idAposta):
+        listaIdJogos = self.mydb.query(DBConstants.idJogos_aposta,(idAposta,))
+        listaJogos = []
+        for idJogo in listaIdJogos:
+            listaJogos.append([(x[1],x[3]) for x in self.mydb.query(DBConstants.get_teams_by_game,(idJogo[0],))])    
