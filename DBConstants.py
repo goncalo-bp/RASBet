@@ -19,7 +19,7 @@ class DBConstants:
     get_history_trans  = 'SELECT idTransação, dataTransação, saldoAntes, valorTransação FROM Transação WHERE idUser=%s;'
     get_balance        = 'SELECT saldoCarteira FROM Carteira WHERE idCarteira = (SELECT idCarteira FROM Utilizador WHERE idUser=%s);'
     reg_transaction    = 'INSERT INTO Transação(saldoAntes,valorTransação,idUser,descricao) VALUES(%s,%s,%s,%s)'
-    reg_bet            = 'INSERT INTO Aposta(idUser, valorApostado) VALUES(%s,%s)'
+    reg_aposta         = 'INSERT INTO Aposta(idUser, valorApostado) VALUES(%s,%s)'
     add_game_to_bet    = 'INSERT INTO JogoPorAposta(idAposta,idJogo,odd,resultadoApostado) VALUES(%s,%s,%s,%s)'
     get_odd_by_game    = 'SELECT Odd FROM EquipasPorJogo WHERE idJogo=%s AND nomeEquipa=%s'
     create_game        = 'INSERT INTO Jogo(idJogo, nomeDesporto, dataJogo) VALUES(%s, %s, %s);'
