@@ -165,14 +165,14 @@ class Controller:
 
     # ==============================   CARTEIRA   ================================== 
     def execCarteira(self, ma, usrId):
-        balance = self.dbq.getBalance(usrId)[0][0]
+        balance = self.dbq.getBalance(usrId)
         valor,tipo = ma.menuCarteira(usrId,balance)
-        print(valor,tipo)
         if valor != None:
             if tipo == "D":
                 self.dbq.registerTransaction(usrId,float(valor),"D")
             elif tipo == "L":
-                self.dbq.registerTransaction(usrId,0-float(valor),"L")
+                if self.dbq.registerTransaction(usrId,0-float(valor),"L") == -1:
+                    self.view.showMessage(" -> Saldo insuficiente", 2)
         
 
     # ============================   NOTIFICACAO   =================================
@@ -315,7 +315,8 @@ class Controller:
             game_name, check_info = me.menuJogos(names, info)
             started = self.dbq.getGameState(check_info[0][0])
             game_date = self.dbq.getGameDate(check_info[0][0])
-            me.menu_evento(game_name, started, game_date[0][0], check_info)
+            new_odd = me.menu_evento(game_name, started, game_date[0][0], check_info)
+            self.dbq.updateOdds(check_info[0][0],new_odd)
 
             #add apostas e etc
     # ==============================================================================

@@ -2,6 +2,7 @@ import mysql.connector # pip install mysql-connector-python
 from DBConstants import DBConstants
 from Database import Database
 from passlib.hash import sha256_crypt
+import numpy as np
 
 class DBQueries:
 
@@ -21,7 +22,7 @@ class DBQueries:
 
         if not alreadyExists:
             self.mydb.execute(DBConstants.add_wallet)
-            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password), self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
+            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password,salt="caldasgay"), self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
             self.mydb.commit()
         else:
             r = 0 
@@ -31,7 +32,7 @@ class DBQueries:
         r = 1
         alreadyExists = self.alreadyExists(email)
         if not alreadyExists:
-            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password), None, None, None, isAdmin, isEspecialista))
+            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password,salt="caldasgay"), None, None, None, isAdmin, isEspecialista))
             self.mydb.commit()
         else:
             r = 0
@@ -54,10 +55,11 @@ class DBQueries:
         data = self.mydb.query(DBConstants.get_log_info, (email,))
         r = 1
         usrId = True
+        print(data[0][1])
         if len(data) == 0:
             r = -1
             usrId = False
-        elif sha256_crypt.verify("password",data[0][1]):
+        elif not sha256_crypt.verify(password,data[0][1]):
             r = 0 
             usrId = False
         elif data[0][3]:
@@ -94,7 +96,7 @@ class DBQueries:
         return l
 
     def getBalance(self, usrId):
-        return self.mydb.query(DBConstants.get_balance, (usrId,))
+        return self.mydb.query(DBConstants.get_balance, (usrId,))[0][0]
 
     # TODO Definir o erro
     def addPromotion(self, gameId, value):
@@ -128,42 +130,40 @@ class DBQueries:
         return self.mydb.query(DBConstants.get_history_trans, (idUser,))
 
     def registerTransaction(self, idUser, valor, descricao):
-        bal = self.getBalance(idUser)
-        print(bal)
-        print(valor)
-        print(idUser)
-        print(descricao)
+        bal = float(self.getBalance(idUser))
         if valor < 0 and valor*(-1) > bal:
             return -1
         else:
+            idW = self.mydb.query(DBConstants.get_wallet, (idUser,))[0][0]
             self.mydb.execute(DBConstants.reg_transaction,((bal,valor,idUser,descricao)))
-            self.mydb.execute(DBConstants.update_wallet,(valor,))
+            self.mydb.execute(DBConstants.update_wallet,(bal+valor,idW))
             self.mydb.commit()
+            return 0
 
-    #Jogos Apostados = [(idJogo, resultadoApostado)]
+      #Jogos Apostados = [(idJogo, resultadoApostado)]
     def criarAposta(self, idUser, valor, jogosApostados):
         wallet = self.mydb.query(DBConstants.get_wallet, (idUser,))
-        if len(wallet) == 0:
-            return -1 #SEM CARTEIRA, É ADMIN OU ESPECIALISTA
+        if len(wallet) == 0 or self.registerTransaction(idUser,(-1)*valor,'A') == -1:
+            return -1 #SEM CARTEIRA, É ADMIN OU ESPECIALISTA OU NÃO TEM DINHEIRO
 
         #Jogo Ainda não começou
         idJogosApostados = [x for x in jogosApostados[0]]
         datas = []
-        for id in jogosApostados:
-            datas.append(self.mydb.query(DBConstants.get_game_date, (id,)))
+        #for id in jogosApostados:
+        #    datas.append(self.mydb.query(DBConstants.get_game_date, (id[0],)))
 
-        if datetime.now() > min(datas):
-            return -2 #UM OU MAIS JOGOS JÁ COMEÇARAM
+        #if datetime.now() > min(datas):
+        #    return -2 #UM OU MAIS JOGOS JÁ COMEÇARAM
 
         self.mydb.execute(DBConstants.reg_aposta, (idUser,valor))
         numAposta = self.mydb.lastrowid()
         for (idJogo, resultadoApostado) in jogosApostados:
             odd = self.mydb.query(DBConstants.get_odd_by_game,(idJogo, resultadoApostado))
-            self.mydb.execute(DBConstants.add_game_to_bet, (numAposta,idJogo,odd,resultadoApostado))
+            self.mydb.execute(DBConstants.add_game_to_bet, (numAposta,idJogo,odd[0][0],resultadoApostado))
         self.mydb.commit()
-        self.registerTransaction(idUser,(-1)*valor,'A')
+        
 
-    def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes):
+    def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes, suspenso):
         self.mydb.execute(DBConstants.create_game, (idJogo, nomeDesporto, dataJogo))
         for (nomeEquipa,odd,jogaEmCasa) in equipasPresentes:
             self.mydb.execute(DBConstants.add_team, (nomeEquipa,idJogo,odd,jogaEmCasa))
@@ -213,5 +213,49 @@ class DBQueries:
     def atualizaResultadoApostas(self, idJogo, winner):
         self.mydb.execute(DBConstants.set_bet_winner,(idJogo, winner))
         self.mydb.execute(DBConstants.set_bet_loser,(idJogo, winner))
-         
-    
+        apostasOndeEstavaJogoGanho = [x[0] for x in self.mydb.query(DBConstants.get_bets_winner,(idJogo,winner))]
+        apostasOndeEstavaJogoPerdido = [x[0] for x in self.mydb.query(DBConstants.get_bets_winner,(idJogo,winner))]
+        
+        for idAposta in apostasOndeEstavaJogoGanho:
+            ganhos = self.mydb.query(DBConstants.ganho_por_aposta,(idAposta,))
+            apostaGanha = 1
+            for ganho in ganhos:
+                if ganho[0] != 1:
+                    apostaGanha = 0
+            
+            if apostaGanha == 1:
+                self.setApostaGanha(idAposta)
+
+        for idAposta in apostasOndeEstavaJogoPerdido:
+            self.mydb.execute(DBConstants.set_aposta,(0,idAposta,))
+
+        self.mydb.commit()
+                
+    def setApostaGanha(self, idAposta):
+
+        self.mydb.execute(DBConstants.set_aposta,(1,idAposta,))
+
+        (idUser, valor) = self.mydb.query(DBConstants.get_userid_by_bet,(idAposta,))[0]
+        
+        oddsList = self.mydb.query(DBConstants.get_odd_total,(idAposta,))
+        oddsTotal = 1
+        for odd in oddsList:
+            oddsTotal = oddsTotal * odd[0]
+
+        print(oddsTotal)
+        
+        self.registerTransaction(idUser,float(valor*oddsTotal),'G') 
+
+    def getGanhos(self, idAposta):
+        return self.mydb.query(DBConstants.ganho_por_aposta,(idAposta,))
+
+    def suspensaoJogo(self, suspende, idJogo):
+        self.mydb.execute(DBConstants.suspende_game, (suspende, idJogo))
+        self.mydb.commit()
+
+    #RETURN -> [[(Equipa1 do Jogo1, Joga em casa),(Equipa2 do Jogo1, Joga em Casa)],[(Equipa1 do Jogo2, Joga em casa 2),(Equipa2 do Jogo1, Joga em Casa 2)]]
+    def listaJogosPorAposta(self, idAposta):
+        listaIdJogos = self.mydb.query(DBConstants.idJogos_aposta,(idAposta,))
+        listaJogos = []
+        for idJogo in listaIdJogos:
+            listaJogos.append([(x[1],x[3]) for x in self.mydb.query(DBConstants.get_teams_by_game,(idJogo[0],))])    

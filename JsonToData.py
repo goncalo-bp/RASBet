@@ -21,20 +21,21 @@ def atualiza():
         response = requests.get(api_url, headers=headers)
         data = response.json()
         for i in data:
+            #id,home_team,away_team,completed,scores,data_inicio,odds,most_recent
             jogo = ps.parse_api_element(i)
             equipasPresentes = [(jogo[1],float(jogo[6][jogo[1]]),1),(jogo[2],float(jogo[6][jogo[2]]),0),('Draw',float(jogo[6]['Draw']),0)]
             if dbq.existingGame(jogo[0]):
                 lastUpdate = dbq.getLastUpdate(jogo[0]) 
                 
-                if lastUpdate != datetime.strptime(jogo[7], "%Y-%m-%dT%H:%M:%S.%fZ"):
+                if lastUpdate != jogo[7]:
                     for equipa in equipasPresentes:
                         dbq.updateOdds(jogo[0],equipa[0],equipa[1])
                 
-                if dbq.getGameState(jogo[0]) != jogo[3]:
+                if int(dbq.getGameState(jogo[0])[0]) != int(jogo[3]):
                     
                     dbq.setGameState(1,jogo[0])
 
-                    resultado = jogo[7].split('x')
+                    resultado = jogo[4].split('x')
                     ganhador = ""
                     if resultado[0] > resultado[1]:
                         ganhador = jogo[1]
@@ -45,7 +46,7 @@ def atualiza():
                     dbq.setWinner(ganhador)
                     dbq.atualizaResultadoApostas(jogo[0],ganhador)
             else:
-                dbq.criarJogo(jogo[0],'Futebol',datetime.strptime(jogo[5], "%Y-%m-%dT%H:%M:%S.%fZ"),equipasPresentes)
+                dbq.criarJogo(jogo[0],'Futebol',datetime.strptime(jogo[5], "%Y-%m-%dT%H:%M:%S.%fZ"),equipasPresentes,0)
 
         date,ch,length = parse_header(response.headers)
         time.sleep(600) #Wait 600s (10 min) before re-entering the cycle

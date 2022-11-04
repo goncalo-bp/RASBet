@@ -20,19 +20,15 @@ class MenuEspecialista:
             return sportsList[sel]
 
 
-    def menu_futebol(self):
+    def menu_futebol(self, jogos):
     # jogos = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
-        futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
-
-        while not futebol.exit:
-            futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
-            sel = futebol.menu.show()
-            for i in range(len(jogosfutebol)):
-                if sel == i:
-                    self.menu_evento(jogosfutebol[sel])
-
-            if sel == len(jogosfutebol):
-                futebol.exit = True
+       # futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
+        futebol = Menu("Jogos.\n", jogos + ["Sair"])
+        sel = futebol.menu.show()
+        if sel == len(futebol):
+            futebol.exit = True
+        else:
+            return jogos[sel]
 
     def menu_tenis(self):
         tenis = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
@@ -108,8 +104,10 @@ class MenuEspecialista:
             sel = jogo.menu.show()
             for i in range(len(opcoes)):
                 if sel == i:
-                    #falta alterar as odds na base de dados
-                    return opcoes[sel]
+                    print(opcoes)
+                    time.sleep(60)
+                    #new_odd = input()
+                    #return opcoes[sel],new_odd
             if sel == len(opcoes):
                 jogo.exit = True
 
