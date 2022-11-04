@@ -12,7 +12,9 @@ dbq = DBQueries()
 #dbq.registerSpecialUser("b","b@gm.com","b",1,0)
 #dbq.registerSpecialUser("c","c@gm.com","c",0,1)
 
-dbq.datasDisponiveis()
+dbq.datasDisponiveis('Futebol')
+
+dbq.jogoPorData(datetime.date(2022,11,6),'Futebol')
 
 #dbq.criarAposta("1",20,[('B','Draw')])
 #dbq.atualizaResultadoApostas('6ae5f22198593f180590bf8161bbf910','Vitória SC')

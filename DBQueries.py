@@ -230,36 +230,48 @@ class DBQueries:
         self.mydb.execute(DBConstants.update_odd_total,(float(oddsTotal),numAposta))
         self.mydb.commit()
         
-    '''
-        Cria um jogo
-    '''
+    
     def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes):
+        '''
+        Cria um jogo
+        '''
         self.mydb.execute(DBConstants.create_game, (idJogo, nomeDesporto, dataJogo))
         for (nomeEquipa,odd,jogaEmCasa) in equipasPresentes:
             self.mydb.execute(DBConstants.add_team, (nomeEquipa,idJogo,odd,jogaEmCasa))
         self.mydb.commit()
     
-    '''
+    
+    def datasDisponiveis(self, desporto):
+        '''
         Retorna a lista com as datas em que há jogos
-    '''
-    def datasDisponiveis(self):
-        datas = [x[0] for x in (self.mydb.query(DBConstants.get_games_calendar, ()))]
-        datas = list(set([x.date() for x in datas]))
-        print(datas)
+        '''
+        return list(set([x.date() for x in [x[0] for x in (self.mydb.query(DBConstants.get_games_calendar, (desporto,)))]]))
         
 
-    def jogoPorData(self, data):
-        return self.mydb.execute(DBConstants.get_game_by_day, (data,))
+    def jogoPorData(self,dia,desporto):
+        '''
+            Retorna os jogos numa determinada data
+        '''
+        return [x[1] for x in list(filter(lambda x: x[0].date() == dia, self.mydb.query(DBConstants.get_game_by_day, (desporto, ))))]
     
     def existingGame(self, idJogo):
+        '''
+            Retorna se já existe um jogo na base de dados
+        '''
         listaJogos = self.mydb.query(DBConstants.get_game_by_ID,(idJogo,))
         return len(listaJogos) == 1
 
     def getLastUpdate(self, idJogo):
+        '''
+            Retorna a ultima vez que um jogo foi atualizado
+        '''
         return self.mydb.query(DBConstants.get_last_update,(idJogo,))[0]
 
-    def setGameState(self, started, idJogo):
-        self.mydb.execute(DBConstants.set_game_state,(started, idJogo,))
+    def setGameState(self, finished, idJogo):
+        '''
+            Define o estado do jogo, se já está terminado ou não
+        '''
+        self.mydb.execute(DBConstants.set_game_state,(finished, idJogo,))
         self.mydb.commit()
 
     def getGameState(self, idJogo):
