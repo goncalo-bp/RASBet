@@ -162,7 +162,8 @@ class DBQueries:
             self.mydb.execute(DBConstants.add_game_to_bet, (numAposta,idJogo,odd[0][0],resultadoApostado))
         self.mydb.commit()
         
-    def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes):
+
+    def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes, suspenso):
         self.mydb.execute(DBConstants.create_game, (idJogo, nomeDesporto, dataJogo))
         for (nomeEquipa,odd,jogaEmCasa) in equipasPresentes:
             self.mydb.execute(DBConstants.add_team, (nomeEquipa,idJogo,odd,jogaEmCasa))

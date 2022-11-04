@@ -46,7 +46,7 @@ def atualiza():
                     dbq.setWinner(ganhador)
                     dbq.atualizaResultadoApostas(jogo[0],ganhador)
             else:
-                dbq.criarJogo(jogo[0],'Futebol',datetime.strptime(jogo[5], "%Y-%m-%dT%H:%M:%S.%fZ"),equipasPresentes)
+                dbq.criarJogo(jogo[0],'Futebol',datetime.strptime(jogo[5], "%Y-%m-%dT%H:%M:%S.%fZ"),equipasPresentes,0)
 
         date,ch,length = parse_header(response.headers)
         time.sleep(600) #Wait 600s (10 min) before re-entering the cycle
