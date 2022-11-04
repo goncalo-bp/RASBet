@@ -30,7 +30,7 @@ class DBQueries:
     def loginUser(self, email, password):
         data = self.mydb.query(DBConstants.get_log_info, (email,))
         r = 1
-        usrId = data[0][2]
+        usrId = True
         if len(data) == 0:
             r = -1
             usrId = False
@@ -41,6 +41,8 @@ class DBQueries:
             r = 2
         elif data[0][4]:
             r = 3
+        if usrId:
+            usrId = data[0][2]
         return r, usrId
 
     def addTeam(self, name, gameId, odd, home):
@@ -153,6 +155,7 @@ class DBQueries:
             self.mydb.execute(DBConstants.update_email_field, (value, usrId))
         elif index == 1:
             self.mydb.execute(DBConstants.update_nome_field, (value, usrId))
+        self.mydb.commit()
         
 
     def getTeamsGame(self, gameId):

@@ -1,12 +1,5 @@
 import datetime
 from DBQueries import DBQueries
-
-
-#####   #   #   #####  #####  #####  #   #          #####  #####  #   #           #####  #####  #####  #  #####  #####  #####
-#       #   #   #   #  #      #       # #           #      #   #   # #            #   #  #   #  #      #  #        #    #   #
-#####   #####   #####  #  ##  #  ##    #            #  ##  #####    #             #####  #####  #      #  #####    #    #####
-    #   #   #   #   #  #   #  #   #    #            #   #  #   #    #             #  #   #   #  #      #      #    #    #   #
-#####   #   #   #   #  #####  #####    #            #####  #   #    #             #   #  #   #  #####  #  #####    #    #   #
 from LoginMsgs import LoginMsgs
 from CheckStructure import *
 from Menu import *
@@ -57,11 +50,13 @@ class Controller:
             self.view.exit = True
             error,email,password = self.view.menu_login()
             if error:
-                return -1, None
-            code,usrId = self.dbq.loginUser(email, password)
-            self.view.showMessage(LoginMsgs.getLoginMsg(code), 2)
-            if code == 0:
-                self.view.exit = False
+                code = -1
+                usrId = None
+            else:
+                code,usrId = self.dbq.loginUser(email, password)
+                self.view.showMessage(LoginMsgs.getLoginMsg(code), 2)
+                if code == 0:
+                    self.view.exit = False
         return code,usrId
 
     # ==============================================================================
@@ -102,69 +97,77 @@ class Controller:
     # ==============================================================================
 
     def execApostador(self, usrId):
+        boletim = []
         menuApostador = MenuApostador()
         while not menuApostador.obj.exit:
             sel = menuApostador.obj.menu.show()
             if sel == 0:
-                self.execDesportos(menuApostador, usrId)
+                self.execDesportos(menuApostador, boletim)
             elif sel == 1:
                 self.execCarteira(menuApostador, usrId)
             elif sel == 2:
                 self.execNotif(menuApostador, usrId)
             elif sel == 3:
-                balance = self.dbq.getBalance(usrId)[0][0]
-                #menuApostador.menu_boletim(boletim,email,balance)
+                self.execBoletim(menuApostador, usrId, boletim)
             elif sel == 4:
                 self.execEdit(menuApostador, usrId)
             elif sel == 5:
-                menuApostador.exit = True
+                menuApostador.obj.exit = True
 
     # =============================   DESPORTOS   ==================================
-    def execDesportos(self, ma, usrId):
+    def execDesportos(self, ma, boletim):
         sportsList = self.dbq.getSports()
-        desporto = ma.menuDesportos(sportsList)
-        jogos = self.dbq.getBySport(desporto)
-        names = []
-        info = []
-        for idJogo in jogos:
-            data = self.dbq.getTeamsGame(idJogo)
+        desporto = sportsList[0]
+        while desporto in sportsList:
+            desporto = ma.menuDesportos(sportsList)
+            jogos = self.dbq.getBySport(desporto)
+            names = []
+            info = []
 
-            if desporto == "Futebol":
-                for i in range(3):
-                    if data[i][1] == "Draw":
-                        draw = i
-                    elif data[i][3]:
-                        home = i
-                names.append(f"{data[home][1]} X {data[3-draw-home][1]}")
-            elif desporto == "Basquetebol":
-                for i in range(2):
-                    if data[i][4]:
-                        home = i
-                names.append(f"{data[home][1]} - {data[2-draw-home][1]}")
+            for idJogo in jogos:
+                data = self.dbq.getTeamsGame(idJogo)
+
+                if desporto == "Futebol":
+                    for i in range(3):
+                        if data[i][1] == "Draw":
+                            draw = i
+                        elif data[i][3]:
+                            home = i
+                    names.append(f"{data[home][1]} X {data[3-draw-home][1]}")
+
+                elif desporto == "Basquetebol":
+                    for i in range(2):
+                        if data[i][4]:
+                            home = i
+                    names.append(f"{data[home][1]} - {data[2-draw-home][1]}")
+                    info.append(data) # id ; nome ; odd ; joga_em_casa
+
+                elif desporto == "Ténis":
+                    names.append(f"{data[home][1]} - {data[2][1]}")
+                    info.append(data) # id ; nome ; odd ; joga_em_casa
+
+                elif desporto == "MotoGP":
+                    date = self.dbq.getGameDate[0]
+                    names.append(f"GP : {date}")
+                
                 info.append(data) # id ; nome ; odd ; joga_em_casa
-            elif desporto == "Ténis":
-                names.append(f"{data[home][1]} - {data[2][1]}")
-                info.append(data) # id ; nome ; odd ; joga_em_casa
-            elif desporto == "MotoGP":
-                date = self.dbq.getGameDate[0]
-                names.append(f"GP : {date}")
-            info.append(data) # id ; nome ; odd ; joga_em_casa
-        boletim = ma.menuJogos(names, info)
+            if len(names) > 0:
+                r = ma.menuJogos(names, info)
+                boletim += r
+            sportsList = self.dbq.getSports()
 
-        #add apostas e etc
-
-
-    # ===============================   EDITAR   ===================================
+    # ===============================   EDITAR   =================================== FEITO
     def execEdit(self, ma, userId):
         sels, data = ma.menuEditar() # 0=email ; 1=nome
         for i in range(len(sels)):
             self.dbq.updateUserField(sels[i], data[i], userId)
         self.view.showMessage(" -> Informação atualizada", 2)
 
-    # ==============================   CARTEIRA   ==================================
+    # ==============================   CARTEIRA   ================================== 
     def execCarteira(self, ma, usrId):
         balance = self.dbq.getBalance(usrId)[0][0]
         ma.menuCarteira(usrId,balance)
+        
 
     # ============================   NOTIFICACAO   =================================
     def execNotif(self, ma, email):
@@ -172,6 +175,9 @@ class Controller:
         ma.menuNotif(email, notifs)
 
     # ==============================   BOLETIM   ===================================
+    def execBoletim(self, ma, usrId, boletim):
+        balance = self.dbq.getBalance(usrId)[0][0]
+        ma.menuBoletim(boletim,balance)
 
 
     # ==============================================================================
