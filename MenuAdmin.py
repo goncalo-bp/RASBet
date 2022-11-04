@@ -51,11 +51,11 @@ class MenuAdmin:
         
         jogo = Menu(names + "\n" , ["1", "X", "2", "Sair"])
         print(names)
-        names.split(",")
+        names.split("X")
         while not jogo.exit:
             sel = jogo.menu.show()
             if sel == 0:
-                return names
+                return names[0]
             elif sel == 1:
                 return names[1]
             elif sel == 2:
