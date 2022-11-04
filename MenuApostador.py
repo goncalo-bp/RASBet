@@ -89,12 +89,13 @@ class MenuApostador:
                 if float(valor) > 0:
                     return float(valor),"D"
             elif sel == 3:
-                saldo = self.menuLevantar()
+                valor = self.menuLevantar()
                 if float(valor) > 0:
                     return float(valor),"L"
             elif sel == 4:
                 carteira.exit = True
 
+    # PT50000000000000000000000
     # Boletim ==============================================================
     def menuBoletim(self, boletim, saldo):
         txt = []
@@ -156,7 +157,7 @@ class MenuApostador:
         try:
             print("Quanto pretende transferir?\n")
             valor = input()
-            if(valor.isdecimal):
+            if(valor.isdecimal or valor.isnumeric):
                 metodo = self.menuTransf()
                 if metodo == 1:
                     self.menuIBAN()
@@ -167,7 +168,7 @@ class MenuApostador:
         except EOFError as e:
             return -2
 
-    def checkIBAN(iban):
+    def checkIBAN(self,iban):
         if re.fullmatch(r'PT50\d{21}', iban):
             return True
         else:
@@ -182,10 +183,10 @@ class MenuApostador:
             while True:
                 print("Quanto pretende transferir?\n")
                 valor = input()
-                print("Instira IBAN")
+                print("Instira IBAN (PT50 + 21 digitos)\n")
                 iban = input()
                 if valor.isdecimal:
-                    if self.check_IBAN(iban): 
+                    if self.checkIBAN(iban): 
                         return float(valor)
                     else:
                         print("Aviso -> IBAN inválido!\n")
@@ -202,8 +203,9 @@ class MenuApostador:
     def menuTransf(self):
         metodos = ["MBWay","Transferência Bancária"]
         metodo = Menu(f" Método de Transferência.\n",metodos+["Sair"])
-        if metodo == 1:
-            print("Instira IBAN")
+        sel = metodo.menu.show()
+        if sel == 1:
+            print("Instira IBAN (PT50 + 21 digitos)\n")
             iban = input()
             if self.checkIBAN(iban) == False: 
                 print("Aviso -> IBAN inválido!\n")

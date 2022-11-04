@@ -165,14 +165,14 @@ class Controller:
 
     # ==============================   CARTEIRA   ================================== 
     def execCarteira(self, ma, usrId):
-        balance = self.dbq.getBalance(usrId)[0][0]
+        balance = self.dbq.getBalance(usrId)
         valor,tipo = ma.menuCarteira(usrId,balance)
-        print(valor,tipo)
         if valor != None:
             if tipo == "D":
                 self.dbq.registerTransaction(usrId,float(valor),"D")
             elif tipo == "L":
-                self.dbq.registerTransaction(usrId,0-float(valor),"L")
+                if self.dbq.registerTransaction(usrId,0-float(valor),"L") == -1:
+                    self.view.showMessage(" -> Saldo insuficiente", 2)
         
 
     # ============================   NOTIFICACAO   =================================

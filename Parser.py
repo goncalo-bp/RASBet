@@ -15,6 +15,7 @@ def parse_api_element(data):
     for j in bookmakers:
         #key = j["key"]  # nome da casa de apostas
         last_update.append(datetime.strptime(j["lastUpdate"], "%Y-%m-%dT%H:%M:%S%fZ"))
+        print(j["lastUpdate"])
         markets = j["markets"]
         #print("-" + key)
         #print("-" + last_update)
