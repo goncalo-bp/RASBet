@@ -102,21 +102,20 @@ class Controller:
         while not menuApostador.obj.exit:
             sel = menuApostador.obj.menu.show()
             if sel == 0:
-                self.execDesportos(menuApostador, usrId, boletim)
+                self.execDesportos(menuApostador, boletim)
             elif sel == 1:
                 self.execCarteira(menuApostador, usrId)
             elif sel == 2:
                 self.execNotif(menuApostador, usrId)
             elif sel == 3:
-                balance = self.dbq.getBalance(usrId)[0][0]
-                menuApostador.menuBoletim(boletim,usrId,balance)
+                self.execBoletim(menuApostador, usrId, boletim)
             elif sel == 4:
                 self.execEdit(menuApostador, usrId)
             elif sel == 5:
                 menuApostador.obj.exit = True
 
     # =============================   DESPORTOS   ==================================
-    def execDesportos(self, ma, usrId, boletim):
+    def execDesportos(self, ma, boletim):
         sportsList = self.dbq.getSports()
         desporto = sportsList[0]
         while desporto in sportsList:
@@ -153,12 +152,9 @@ class Controller:
                 
                 info.append(data) # id ; nome ; odd ; joga_em_casa
             if len(names) > 0:
-                boletim += ma.menuJogos(names, info)
+                r = ma.menuJogos(names, info)
+                boletim += r
             sportsList = self.dbq.getSports()
-
-        print(boletim)
-        #add apostas e etc
-
 
     # ===============================   EDITAR   =================================== FEITO
     def execEdit(self, ma, userId):
@@ -179,6 +175,9 @@ class Controller:
         ma.menuNotif(email, notifs)
 
     # ==============================   BOLETIM   ===================================
+    def execBoletim(self, ma, usrId, boletim):
+        balance = self.dbq.getBalance(usrId)[0][0]
+        ma.menuBoletim(boletim,balance)
 
 
     # ==============================================================================
