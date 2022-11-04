@@ -166,7 +166,11 @@ class Controller:
     # ==============================   CARTEIRA   ================================== 
     def execCarteira(self, ma, usrId):
         balance = self.dbq.getBalance(usrId)[0][0]
-        ma.menuCarteira(usrId,balance)
+        valor,tipo = ma.menuCarteira(usrId,balance)
+        print(valor,tipo)
+        if valor != None:
+            if tipo == "D":
+                self.dbq.registerTransaction(usrId,0-float(valor))
         
 
     # ============================   NOTIFICACAO   =================================

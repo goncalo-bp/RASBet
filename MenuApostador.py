@@ -80,12 +80,14 @@ class MenuApostador:
             sel = carteira.menu.show()
             if sel == 0:
                 self.menu_hist_apostas(usrId)
+                return 0
             elif sel == 1:
                 self.menu_hist_transac(usrId)
+                return 0
             elif sel == 2:
-                valor = self.menu_depositar(usrId)
-                if valor != -1:
-                    saldo += float(valor)
+                valor = self.menuDepositar(usrId)
+                if float(valor) > 0:
+                    return float(valor),"D"
             elif sel == 3:
                 saldo = self.menu_levantar(usrId,saldo)
             elif sel == 4:
@@ -146,24 +148,24 @@ class MenuApostador:
             if sel == len(lista_aposta):
                 hist_aposta.exit = True
 
-    def menu_depositar(self, email):
+    def menuDepositar(self, email):
         print("Prima Ctr+D para cancelar\n\n")
         print("-- Depositar Dinheiro\n")
         try:
             print("Quanto pretende transferir?\n")
             valor = input()
             if(valor.isdecimal):
-                metodo = self.menu_transf() 
-                time.sleep(1)
-                print("Transferência realizada com sucesso!")
+                metodo = self.menuTransf()
+                if metodo == 1:
+                    self.menuIBAN()
                 return valor
             else:
                 print("Aviso -> Valor inválido.")
                 return -1
         except EOFError as e:
-            return -1
+            return -2
 
-    def check_IBAN(iban):
+    def checkIBAN(iban):
         if re.fullmatch(r'PT50\d{21}', iban):
             return True
         else:
@@ -197,11 +199,15 @@ class MenuApostador:
             return saldo
 
     # 0 -> MBWay , 1 -> Transferencia
-    def menu_transf():
+    def menuTransf(self):
         metodos = ["MBWay","Transferência Bancária"]
         metodo = Menu(f" Método de Transferência.\n",metodos+["Sair"])
-
-        return metodo.menu.show()
+        if metodo == 1:
+            print("Instira IBAN")
+            iban = input()
+            if self.checkIBAN(iban) == False: 
+                print("Aviso -> IBAN inválido!\n")
+                time.sleep(1)
 
     ### O QUE FAZER COM AS NOTIFICACOES ????
 
