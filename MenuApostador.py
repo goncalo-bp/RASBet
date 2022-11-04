@@ -38,7 +38,6 @@ class MenuApostador:
     # Desportos ============================================================
     def menuDesportos(self, sportsList):
         desportos = Menu("  Desportos.\n", sportsList + ["Sair"])
-        boletim = []
         sel = desportos.menu.show()
         if sel == len(sportsList):
             desportos.exit = True
@@ -51,29 +50,25 @@ class MenuApostador:
         boletim = []
         while not jogos.exit:
             sel = jogos.menu.show()
-
             if sel == len(names):
                 jogos.exit = True
             else:
                 res,odd = self.menuEvento(info[sel], names[sel])
-                boletim += [(info[sel][0],names[sel],res,odd)]
-            
+                if res!=None and odd:
+                    boletim += [(info[sel][0],names[sel],res,odd)]
         return boletim
 
-# (id,nome,odd,jogaEmcasa)
+    # (id,nome,odd,jogaEmcasa)
     def menuEvento(self, gameInfo, name):
-        opcoes = [f"{gameInfo[0][1]} : {gameInfo[0][2]}",f"{gameInfo[1][1]} : {gameInfo[1][2]}", f"{gameInfo[2][1]} : {gameInfo[2][2]}",]
+        opcoes = []
+        for res in gameInfo:
+            opcoes.append(f"{res[1]} : {res[2]}")
         evento = Menu(f" {name}\n" , opcoes + ["Sair"])
-
-        while not evento.exit:
-            sel = evento.menu.show()
-            if sel == len(opcoes):
-                evento.exit = True
-                return None,0
-            else:
-                res,odd = opcoes[sel].split(':')
-                evento.exit = True
-                return res,float(odd)
+        sel = evento.menu.show()
+        if sel == len(opcoes):
+            return None,0
+        res,odd = opcoes[sel].split(':')
+        return res,float(odd)
             
             
 
@@ -96,17 +91,9 @@ class MenuApostador:
             elif sel == 4:
                 carteira.exit = True
 
-    #INCOMPLETO
-    def menuNotif(self, email, notifs): 
-        notif = Menu("  Notificações.\n",notifs+["Sair"])
-        
-
-    # FORA DO CONTROLLER
-
-    # (id,nome,aposta,odd)
-    def menuBoletim(self,boletim,saldo):
+    # Boletim ==============================================================
+    def menuBoletim(self, boletim, saldo):
         txt = []
-
         odd_total = 1
         if boletim == []:
             odd_total = 0
@@ -115,25 +102,27 @@ class MenuApostador:
                 txt += [f"{aposta[1]} {aposta[2]} {aposta[3]}"]
                 odd_total *= float(aposta[3])
 
-        boletim = Menu(f"  Boletim | Odd Total: {'%.2f' % odd_total} | Saldo: {saldo}", txt + ["Apostar","Sair"])
-
-        while not boletim.exit:
-            sel = boletim.menu.show()
+        bol = Menu(f"  Boletim | Odd Total: {'%.2f' % odd_total} | Saldo: {saldo}", txt + ["Apostar","Sair"])
+        while not bol.exit:
+            sel = bol.menu.show()
             if sel == len(txt):
                 print("Insira montante a apostar: ")
                 valor = input()
-                if valor.isdecimal() and valor < saldo:
-                    print("Aposta realizada com sucesso.\n")
-                    time.sleep(1)
+                if valor.isdecimal() and float(valor) < saldo:
+                    Menu.showMessage(" -> Aposta realizada com sucesso.\n", 1)
                 else:
-                    print("Aviso -> Saldo insuficiente")
-                    time.sleep(1)
-                boletim = []
-
+                    Menu.showMessage("Aviso -> Saldo insuficiente", 1)
             elif sel == len(txt)+1:
-                boletim.exit = True
-            #else:
-            #   merdas
+                bol.exit = True
+
+    #INCOMPLETO
+    def menuNotif(self, email, notifs): 
+        notif = Menu("  Notificações.\n",notifs+["Sair"])
+        
+
+    # FORA DO CONTROLLER
+
+    # (id,nome,aposta,odd)
 
 
     def menu_hist_transac(email):

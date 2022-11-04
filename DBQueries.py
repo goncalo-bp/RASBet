@@ -53,7 +53,7 @@ class DBQueries:
     def loginUser(self, email, password):
         data = self.mydb.query(DBConstants.get_log_info, (email,))
         r = 1
-        usrId = data[0][2]
+        usrId = True
         if len(data) == 0:
             r = -1
             usrId = False
@@ -64,6 +64,8 @@ class DBQueries:
             r = 2
         elif data[0][4]:
             r = 3
+        if usrId:
+            usrId = data[0][2]
         return r, usrId
 
     def addTeam(self, name, gameId, odd, home):
@@ -154,10 +156,11 @@ class DBQueries:
         return self.mydb.query(DBConstants.get_last_update,(idJogo,))[0]
 
     def setGameState(self, started, idJogo):
-        return self.mydb.execute(DBConstants.get_game_state,(started, idJogo,))
+        self.mydb.execute(DBConstants.set_game_state,(started, idJogo,))
+        self.mydb.commit()
 
     def getGameState(self, idJogo):
-        return self.mydb.execute(DBConstants.set_game_state,(idJogo,))[0]
+        return self.mydb.query(DBConstants.get_game_state,(idJogo,))[0]
 
     def setWinner(self, idJogo, winner):
         self.mydb.execute(DBConstants.set_winner,(winner,idJogo))
@@ -190,3 +193,4 @@ class DBQueries:
         self.mydb.execute(DBConstants.set_bet_winner,(idJogo, winner))
         self.mydb.execute(DBConstants.set_bet_loser,(idJogo, winner))
          
+    

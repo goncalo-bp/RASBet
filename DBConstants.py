@@ -29,7 +29,7 @@ class DBConstants:
     update_nome_field  = 'UPDATE Utilizador SET nome=%s WHERE idUser=%s;'
     get_teams_by_game  = 'SELECT idJogo, nomeEquipa, Odd, jogaEmCasa from EquipasPorJogo WHERE idJogo=%s;'
     get_game_date      = 'SELECT dataJogo FROM Jogo WHERE idJogo=%s;'
-    get_game_state     = 'SELECT Estado FROM Jogo WHERE idJogo=%s;'
+    get_game_state     = 'SELECT Finalizado FROM Jogo WHERE idJogo=%s;'
     set_game_state     = 'UPDATE Jogo SET started=%s WHERE idJogo=%s;'
     set_winner         = 'UPDATE Jogo SET resultado=%s WHERE idJogo=%s;'
     #get_bets           = 'SELECT idAposta FROM JogoPorAposta WHERE idJogo=%s AND resultadoApostado=%s'
