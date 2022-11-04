@@ -2,6 +2,7 @@ import mysql.connector # pip install mysql-connector-python
 from DBConstants import DBConstants
 from Database import Database
 from passlib.hash import sha256_crypt
+import numpy as np
 
 class DBQueries:
 
@@ -21,7 +22,7 @@ class DBQueries:
 
         if not alreadyExists:
             self.mydb.execute(DBConstants.add_wallet)
-            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password), self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
+            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password,salt="caldasgay"), self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
             self.mydb.commit()
         else:
             r = 0 
@@ -31,7 +32,7 @@ class DBQueries:
         r = 1
         alreadyExists = self.alreadyExists(email)
         if not alreadyExists:
-            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password), None, None, None, isAdmin, isEspecialista))
+            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password,salt="caldasgay"), None, None, None, isAdmin, isEspecialista))
             self.mydb.commit()
         else:
             r = 0
@@ -54,10 +55,11 @@ class DBQueries:
         data = self.mydb.query(DBConstants.get_log_info, (email,))
         r = 1
         usrId = True
+        print(data[0][1])
         if len(data) == 0:
             r = -1
             usrId = False
-        elif sha256_crypt.verify("password",data[0][1]):
+        elif not sha256_crypt.verify(password,data[0][1]):
             r = 0 
             usrId = False
         elif data[0][3]:
@@ -129,10 +131,6 @@ class DBQueries:
 
     def registerTransaction(self, idUser, valor, descricao):
         bal = self.getBalance(idUser)
-        print(bal)
-        print(valor)
-        print(idUser)
-        print(descricao)
         if valor < 0 and valor*(-1) > bal:
             return -1
         else:
@@ -213,5 +211,21 @@ class DBQueries:
     def atualizaResultadoApostas(self, idJogo, winner):
         self.mydb.execute(DBConstants.set_bet_winner,(idJogo, winner))
         self.mydb.execute(DBConstants.set_bet_loser,(idJogo, winner))
-         
-    
+        apostasOndeEstavaJogoGanho = [x[0] for x in self.mydb.query(DBConstants.get_bets_winner,(idJogo,winner))]
+        apostasOndeEstavaJogoPerdido = [x[0] for x in self.mydb.query(DBConstants.get_bets_winner,(idJogo,winner))]
+        
+        for idAposta in apostasOndeEstavaJogoGanho:
+            distinctGanho = [x[0] for x in self.mydb.query(DBConstants.get_distinct_ganho, (idAposta,))]
+            if len(distinctGanho) == 1 and distinctGanho[0] == 1:
+                self.setApostaGanha(idAposta)
+        
+        for idAposta in apostasOndeEstavaJogoPerdido:
+            self.mydb.execute(DBConstants.set_aposta,(0,idAposta,))
+
+        self.mydb.commit()
+                
+    def setApostaGanha(self, idAposta):
+        self.mydb.execute(DBConstants.set_aposta,(1,idAposta,))
+        (idUser, valor) = self.mydb.query(DBConstants.get_userid_by_bet,(idAposta,))[0]
+        oddTotal = np.prod([x[0] for x in self.mydb.query(DBConstants.get_odd_total,(idAposta,))])
+        self.registerTransaction(idUser,valor*oddTotal,'G') 
