@@ -162,8 +162,6 @@ class DBQueries:
             self.mydb.execute(DBConstants.add_game_to_bet, (numAposta,idJogo,odd[0][0],resultadoApostado))
         self.mydb.commit()
         
-
-
     def criarJogo(self, idJogo, nomeDesporto, dataJogo, equipasPresentes):
         self.mydb.execute(DBConstants.create_game, (idJogo, nomeDesporto, dataJogo))
         for (nomeEquipa,odd,jogaEmCasa) in equipasPresentes:
@@ -227,8 +225,6 @@ class DBQueries:
             if apostaGanha == 1:
                 self.setApostaGanha(idAposta)
 
-            
-        
         for idAposta in apostasOndeEstavaJogoPerdido:
             self.mydb.execute(DBConstants.set_aposta,(0,idAposta,))
 
@@ -255,3 +251,10 @@ class DBQueries:
     def suspensaoJogo(self, suspende, idJogo):
         self.mydb.execute(DBConstants.suspende_game, (suspende, idJogo))
         self.mydb.commit()
+
+    #RETURN -> [[(Equipa1 do Jogo1, Joga em casa),(Equipa2 do Jogo1, Joga em Casa)],[(Equipa1 do Jogo2, Joga em casa 2),(Equipa2 do Jogo1, Joga em Casa 2)]]
+    def listaJogosPorAposta(self, idAposta):
+        listaIdJogos = self.mydb.query(DBConstants.idJogos_aposta,(idAposta,))
+        listaJogos = []
+        for idJogo in listaIdJogos:
+            listaJogos.append([(x[1],x[3]) for x in self.mydb.query(DBConstants.get_teams_by_game,(idJogo[0],))])    
