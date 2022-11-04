@@ -1,5 +1,7 @@
 from Menu import Menu
 import time
+import datetime
+
 
 jogosfutebol = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
 
@@ -7,23 +9,15 @@ jogosfutebol = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo
 class MenuEspecialista:
 
     def __init__(self):
-        self.menuEspecialista = Menu("  Bem Vindo à RASBET.\n",["Desportos","Sair"])
+        self.obj = Menu("  Bem Vindo à RASBET.\n",["Desportos","Sair"])
 
-    def menu_desportos(self):
-        desportos = Menu("  Desportos.\n",["Futebol","Ténis","Basquetebol","MotoGP"] + ["Sair"])
-
-        while not desportos.exit:
-            sel = desportos.menu.show()
-            if sel == 0:
-                self.menu_futebol()
-            elif sel == 1:
-                self.menu_tenis()
-            elif sel == 2:
-                self.menu_basquetebol()
-            elif sel == 3:
-                self.menu_motogp()
-            elif sel == 4:
-                desportos.exit = True
+    def menuDesportos(self, sportsList):
+        desportos = Menu("  Desportos.\n", sportsList + ["Sair"])
+        sel = desportos.menu.show()
+        if sel == len(sportsList):
+            desportos.exit = True
+        else:
+            return sportsList[sel]
 
 
     def menu_futebol(self):
@@ -76,24 +70,43 @@ class MenuEspecialista:
                 motogp.exit = True
                 
 
+    def menuJogos(self, names, info):
+        jogos = Menu(" Jogos.\n", names + ["Sair"])
+        while not jogos.exit:
+            sel = jogos.menu.show()
 
-    def menu_evento(desp):
+            for i in range(len(names)):
+                if sel == i:
+                    return names[sel], info[sel]
+            if sel == len(names):
+                jogos.exit = True
 
-        #verificar se o jogo já começou
-        jogo_comecou = False
-        if jogo_comecou:
-            opcao = ["Suspender jogo e alterar Odd"]
+
+    def menu_evento(self, names, ended, game_date, info):
+        
+        #verificar se o jogo ja começou
+        if game_date > datetime.datetime.now():
+            alterar = "Alterar Odd no: "
         else:
-            opcao = ["Alterar Odd"]
+            alterar = "Suspender aposta e alterar Odd no: "
 
-        jogo = Menu.Menu("  Jogo.\n", opcao + ["Sair"])
+        #verificar se o jogo já acabou
+        if not ended:
+            alterar = ""
+            terminado = "Jogo terminado"
+        else:
+            terminado = ""
+        opcoes = f"{info[1]} : {info[2]}"
+
+        print(opcoes)
+        jogo = Menu(alterar + names + terminado + "\n" , opcoes + ["Sair"])
 
         while not jogo.exit:
             sel = jogo.menu.show()
-            if sel == 0:
-                print("Odd")
-                time.sleep(2)
-            elif sel == 2:
+            for i in range(len(opcoes)):
+                if sel == i:
+                    return opcoes[sel]
+            if sel == len(opcoes):
                 jogo.exit = True
 
 

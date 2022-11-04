@@ -34,7 +34,7 @@ class Controller:
                 elif tipo == 2:
                     self.execAdmin()
                 elif tipo == 3:
-                    self.execEspecialista()
+                    self.execEspecialista(usrId)
 
                 self.view.exit = False
 
@@ -197,16 +197,55 @@ class Controller:
     # ============================   ESPECIALISTA   ================================
     # ==============================================================================
 
-    def execEspecialista():
+    def execEspecialista(self, usrId):
         menuEspecialista = MenuEspecialista()
         
-        while not menuEspecialista.exit:
-            sel = menuEspecialista.menu.show()
+        while not menuEspecialista.obj.exit:
+            sel = menuEspecialista.obj.menu.show()
             if sel == 0:
-                MenuEspecialista.menu_desportos()
+                self.execDesportosEspecialista(menuEspecialista, usrId)
             elif sel == 1:
                 menuEspecialista.exit = True
 
+
+    # ==============================================================================
+    # ==============================   DESPORTOS   ====================================
+    # ==============================================================================
+    def execDesportosEspecialista(self, me, usrId):
+            sportsList = self.dbq.getSports()
+            desporto = me.menuDesportos(sportsList)
+            jogos = self.dbq.getBySport(desporto)
+            names = []
+            info = []
+            for idJogo in jogos:
+                data = self.dbq.getTeamsGame(idJogo)
+
+                if desporto == "Futebol":
+                    for i in range(3):
+                        if data[i][1] == "Draw":
+                            draw = i
+                        elif data[i][3]:
+                            home = i
+                    names.append(f"{data[home][1]} X {data[3-draw-home][1]}")
+                elif desporto == "Basquetebol":
+                    for i in range(2):
+                        if data[i][4]:
+                            home = i
+                    names.append(f"{data[home][1]} - {data[2-draw-home][1]}")
+                    info.append(data) # id ; nome ; odd ; joga_em_casa
+                elif desporto == "Ténis":
+                    names.append(f"{data[home][1]} - {data[2][1]}")
+                    info.append(data) # id ; nome ; odd ; joga_em_casa
+                elif desporto == "MotoGP":
+                    date = self.dbq.getGameDate[0]
+                    names.append(f"GP : {date}")
+                info.append(data) # id ; nome ; odd ; joga_em_casa
+            game_name, check_info = me.menuJogos(names, info)
+            started = self.dbq.getGameState(check_info[0][0])
+            game_date = self.dbq.getGameDate(check_info[0][0])
+            me.menu_evento(game_name, started, game_date[0][0], check_info)
+
+            #add apostas e etc
     # ==============================================================================
     # ==============================   EXTRAS   ====================================
     # ==============================================================================

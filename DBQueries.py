@@ -130,10 +130,11 @@ class DBQueries:
         return self.mydb.query(DBConstants.get_last_update,(idJogo,))[0]
 
     def setGameState(self, started, idJogo):
-        return self.mydb.execute(DBConstants.get_game_state,(started, idJogo,))
+        self.mydb.execute(DBConstants.set_game_state,(started, idJogo,))
+        self.mydb.commit()
 
     def getGameState(self, idJogo):
-        return self.mydb.execute(DBConstants.set_game_state,(idJogo,))[0]
+        return self.mydb.query(DBConstants.get_game_state,(idJogo,))[0]
 
     def setWinner(self, idJogo, winner):
         self.mydb.execute(DBConstants.set_winner,(winner,idJogo))
@@ -165,3 +166,4 @@ class DBQueries:
         self.mydb.execute(DBConstants.set_bet_winner,(idJogo, winner))
         self.mydb.execute(DBConstants.set_bet_loser,(idJogo, winner))
          
+    
