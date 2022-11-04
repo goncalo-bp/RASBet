@@ -194,12 +194,17 @@ class Controller:
     # ============================   NOTIFICACAO   =================================
     def execNotif(self, ma, email):
         notifs = ["Not1","Not2","Not3","Not4"] # SACAR DA BD
-        ma.menuNotif(email, notifs)
+        valor = ma.menuNotif(email, notifs)
 
     # ==============================   BOLETIM   ===================================
     def execBoletim(self, ma, usrId, boletim):
-        balance = self.dbq.getBalance(usrId)
-        ma.menuBoletim(boletim,balance)
+        balance = self.dbq.getBalance(usrId)[0][0]
+        valor = ma.menuBoletim(boletim,balance)
+        jogos = []
+        for entry in boletim:
+            jogos.append((entry[0], entry[2]))
+        if valor:
+            self.dbq.criarAposta(usrId, valor, jogos)
 
 
     # ==============================================================================

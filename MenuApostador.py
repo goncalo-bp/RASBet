@@ -94,11 +94,31 @@ class MenuApostador:
             carteira.exit = True
             return None,None
 
+    def menuHistApostas(listaApostas):
+        hist_aposta = Menu(f" Histórico de Apostas .\n",listaApostas+["Sair"])
+
+        while not hist_aposta.exit:
+            sel = hist_aposta.menu.show()
+
+            if sel == len(listaApostas):
+                hist_aposta.exit = True
+
+    def menuHistTransac(listaTransacoes):
+        transac = Menu(f" Histórico de Transações .\n",listaTransacoes+["Sair"])
+
+        while not transac.exit:
+            sel = transac.menu.show()
+
+            if sel == len(listaTransacoes):
+                transac.exit = True
+
+
     # PT50000000000000000000000
     # Boletim ==============================================================
     def menuBoletim(self, boletim, saldo):
         txt = []
         odd_total = 1
+        apostou = False
         if boletim == []:
             odd_total = 0
         else:
@@ -112,12 +132,16 @@ class MenuApostador:
             if sel == len(txt):
                 print("Insira montante a apostar: ")
                 valor = input()
-                if valor.isdecimal() and float(valor) < saldo:
+                if valor.isdecimal() and 0 < float(valor) < saldo :
                     Menu.showMessage(" -> Aposta realizada com sucesso.\n", 1)
+                    apostou = True
                 else:
                     Menu.showMessage("Aviso -> Saldo insuficiente", 1)
             elif sel == len(txt)+1:
                 bol.exit = True
+        if apostou:
+            return float(valor)
+        return False
 
     #INCOMPLETO
     def menuNotif(self, email, notifs): 
@@ -129,6 +153,7 @@ class MenuApostador:
     # (id,nome,aposta,odd)
 
 
+<<<<<<< Updated upstream
     def menuHistTransac(self,trans):
         lista_transac = []
         for elem in trans:
@@ -159,6 +184,8 @@ class MenuApostador:
             if sel == len(lista_aposta):
                 hist_aposta.exit = True
 
+=======
+>>>>>>> Stashed changes
     def menuDepositar(self):
         print("Prima Ctr+D para cancelar\n\n")
         print("-- Depositar Dinheiro\n")
@@ -216,4 +243,9 @@ class MenuApostador:
             iban = input()
             if self.checkIBAN(iban) == False: 
                 print("Aviso -> IBAN inválido!\n")
+<<<<<<< Updated upstream
                 time.sleep(1)
+=======
+                time.sleep(1)
+
+>>>>>>> Stashed changes
