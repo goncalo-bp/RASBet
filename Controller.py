@@ -64,9 +64,9 @@ class Controller:
     # ==============================================================================
     
     def check_registo(self, email, date, nif):
-        if CheckStructure.check(email):
+        if CheckStruct.check(email):
             if len(nif) == 9 and nif.isdigit():
-                data = CheckStructure.check_data(date)
+                data = CheckStruct.check_data(date)
                 if data == True:
                     self.view.showMessage("\n-> Data de nascimento inválida", 2)
                     return False
@@ -102,7 +102,7 @@ class Controller:
         while not menuApostador.obj.exit:
             sel = menuApostador.obj.menu.show()
             if sel == 0:
-                self.execDesportos(menuApostador, usrId,boletim)
+                self.execDesportos(menuApostador, usrId, boletim)
             elif sel == 1:
                 self.execCarteira(menuApostador, usrId)
             elif sel == 2:
@@ -116,38 +116,47 @@ class Controller:
                 menuApostador.obj.exit = True
 
     # =============================   DESPORTOS   ==================================
-    def execDesportos(self, ma, usrId,boletim):
+    def execDesportos(self, ma, usrId, boletim):
         sportsList = self.dbq.getSports()
-        md = ma.menuDesportos(sportsList)
-        #while not md
-        desporto = None
-        jogos = self.dbq.getBySport(desporto)
-        names = []
-        info = []
-        for idJogo in jogos:
-            data = self.dbq.getTeamsGame(idJogo)
-            if desporto == "Futebol":
-                for i in range(3):
-                    if data[i][1] == "Draw":
-                        draw = i
-                    elif data[i][3]:
-                        home = i
-                names.append(f"{data[home][1]} X {data[3-draw-home][1]}")
-            elif desporto == "Basquetebol":
-                for i in range(2):
-                    if data[i][4]:
-                        home = i
-                names.append(f"{data[home][1]} - {data[2-draw-home][1]}")
-                info.append(data) # id ; nome ; odd ; joga_em_casa
-            elif desporto == "Ténis":
-                names.append(f"{data[home][1]} - {data[2][1]}")
-                info.append(data) # id ; nome ; odd ; joga_em_casa
-            elif desporto == "MotoGP":
-                date = self.dbq.getGameDate[0]
-                names.append(f"GP : {date}")
-            info.append(data) # id ; nome ; odd ; joga_em_casa
-        boletim += ma.menuJogos(names, info)
+        desporto = sportsList[0]
+        while desporto in sportsList:
+            desporto = ma.menuDesportos(sportsList)
+            jogos = self.dbq.getBySport(desporto)
+            names = []
+            info = []
 
+            for idJogo in jogos:
+                data = self.dbq.getTeamsGame(idJogo)
+
+                if desporto == "Futebol":
+                    for i in range(3):
+                        if data[i][1] == "Draw":
+                            draw = i
+                        elif data[i][3]:
+                            home = i
+                    names.append(f"{data[home][1]} X {data[3-draw-home][1]}")
+
+                elif desporto == "Basquetebol":
+                    for i in range(2):
+                        if data[i][4]:
+                            home = i
+                    names.append(f"{data[home][1]} - {data[2-draw-home][1]}")
+                    info.append(data) # id ; nome ; odd ; joga_em_casa
+
+                elif desporto == "Ténis":
+                    names.append(f"{data[home][1]} - {data[2][1]}")
+                    info.append(data) # id ; nome ; odd ; joga_em_casa
+
+                elif desporto == "MotoGP":
+                    date = self.dbq.getGameDate[0]
+                    names.append(f"GP : {date}")
+                
+                info.append(data) # id ; nome ; odd ; joga_em_casa
+            if len(names) > 0:
+                boletim += ma.menuJogos(names, info)
+            sportsList = self.dbq.getSports()
+
+        print(boletim)
         #add apostas e etc
 
 

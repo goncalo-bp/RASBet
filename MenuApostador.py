@@ -38,7 +38,6 @@ class MenuApostador:
     # Desportos ============================================================
     def menuDesportos(self, sportsList):
         desportos = Menu("  Desportos.\n", sportsList + ["Sair"])
-        boletim = []
         sel = desportos.menu.show()
         if sel == len(sportsList):
             desportos.exit = True
@@ -51,29 +50,22 @@ class MenuApostador:
         boletim = []
         while not jogos.exit:
             sel = jogos.menu.show()
-
             if sel == len(names):
                 jogos.exit = True
             else:
                 res,odd = self.menuEvento(info[sel], names[sel])
                 boletim += [(info[sel][0],names[sel],res,odd)]
-            
         return boletim
 
 # (id,nome,odd,jogaEmcasa)
     def menuEvento(self, gameInfo, name):
         opcoes = [f"{gameInfo[0][1]} : {gameInfo[0][2]}",f"{gameInfo[1][1]} : {gameInfo[1][2]}", f"{gameInfo[2][1]} : {gameInfo[2][2]}",]
         evento = Menu(f" {name}\n" , opcoes + ["Sair"])
-
-        while not evento.exit:
-            sel = evento.menu.show()
-            if sel == len(opcoes):
-                evento.exit = True
-                return None,0
-            else:
-                res,odd = opcoes[sel].split(':')
-                evento.exit = True
-                return res,float(odd)
+        sel = evento.menu.show()
+        if sel == len(opcoes):
+            return None,0
+        res,odd = opcoes[sel].split(':')
+        return res,float(odd)
             
             
 
