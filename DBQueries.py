@@ -152,8 +152,7 @@ class DBQueries:
 
         #Jogo Ainda não começou
         datas = []
-        for id in idJogosApostados:
-            print(id[0])
+        for id in jogosApostados:
             datas.append(self.mydb.query(DBConstants.get_game_date, (id[0],))[0][0])
 
         if datetime.now() > min(datas):

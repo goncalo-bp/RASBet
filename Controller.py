@@ -192,11 +192,9 @@ class Controller:
     def execBoletim(self, ma, usrId, boletim):
         balance = self.dbq.getBalance(usrId)
         valor = ma.menuBoletim(boletim,balance)
-        print(boletim)
         jogos = []
         for entry in boletim:
             jogos.append((entry[0], entry[2]))
-        print(jogos)
         if valor:
             self.dbq.criarAposta(usrId, valor, jogos)
 
