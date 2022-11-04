@@ -1,7 +1,7 @@
 import time
 import re
-from View.Menu import Menu
-from Utilities.CheckStructure import CheckStruct
+from Menu import Menu
+from CheckStructure import CheckStruct
 
 jogosfutebol = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
 

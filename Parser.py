@@ -34,4 +34,4 @@ def parse_api_element(data):
     for odd in odds.keys():
             odds[odd] = round(odds[odd]/num_odds,2)
 
-    return id,home_team,away_team,completed,scores,data_inicio,odds
+    return id,home_team,away_team,completed,scores,data_inicio,odds,most_recent,scores

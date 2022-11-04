@@ -1,11 +1,19 @@
 import datetime
-from Backend.DBQueries import DBQueries
-from Utilities.LoginMsgs import LoginMsgs
-from Utilities.CheckStructure import *
-from View.Menu import *
-from View.MenuAdmin import MenuAdmin
-from View.MenuEspecialista import MenuEspecialista
-from View.MenuApostador import MenuApostador
+from DBQueries import DBQueries
+
+
+#####   #   #   #####  #####  #####  #   #          #####  #####  #   #           #####  #####  #####  #  #####  #####  #####
+#       #   #   #   #  #      #       # #           #      #   #   # #            #   #  #   #  #      #  #        #    #   #
+#####   #####   #####  #  ##  #  ##    #            #  ##  #####    #             #####  #####  #      #  #####    #    #####
+    #   #   #   #   #  #   #  #   #    #            #   #  #   #    #             #  #   #   #  #      #      #    #    #   #
+#####   #   #   #   #  #####  #####    #            #####  #   #    #             #   #  #   #  #####  #  #####    #    #   #
+from LoginMsgs import LoginMsgs
+from CheckStructure import *
+from Menu import *
+from MenuAdmin import MenuAdmin
+from MenuEspecialista import MenuEspecialista
+from MenuApostador import MenuApostador
+
 
 class Controller:
     def __init__(self):
@@ -146,10 +154,10 @@ class Controller:
 
 
     # ===============================   EDITAR   ===================================
-    def execEdit(self, ma, email):
+    def execEdit(self, ma, userId):
         sels, data = ma.menuEditar() # 0=email ; 1=nome
         for i in range(len(sels)):
-            self.dbq.updateUserField(sels[i], data[i], email)
+            self.dbq.updateUserField(sels[i], data[i], userId)
         self.view.showMessage(" -> Informação atualizada", 2)
 
     # ==============================   CARTEIRA   ==================================

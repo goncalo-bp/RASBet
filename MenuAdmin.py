@@ -1,4 +1,4 @@
-from View.Menu import Menu
+from Menu import Menu
 import time
 
 

@@ -128,9 +128,19 @@ class DBQueries:
     def getLastUpdate(self, idJogo):
         return self.mydb.query(DBConstants.get_last_update,(idJogo,))[0]
 
+    def setGameState(self, started, idJogo):
+        return self.mydb.execute(DBConstants.get_game_state,(started, idJogo,))
+
+    def getGameState(self, idJogo):
+        return self.mydb.execute(DBConstants.set_game_state,(idJogo,))[0]
+
+    def setWinner(self, idJogo, winner):
+        self.mydb.execute(DBConstants.set_winner,(winner,idJogo))
+
     def updateOdds(self, idJogo, nomeEquipa, odd):
         self.mydb.execute(DBConstants.update_odds,(odd,idJogo,nomeEquipa))
         self.mydb.commit()
+
     def registerTransaction(self, usrId, valorApostado):
         bal = self.getBalance(usrId)
         self.mydb.execute(DBConstants.reg_transaction,((bal,valorApostado,usrId)))
@@ -138,14 +148,19 @@ class DBQueries:
 
     def updateUserField(self, index, value, usrId): #atualizar
         if index == 0:
-            name = "email"
+            self.mydb.execute(DBConstants.update_email_field, (value, usrId))
         elif index == 1:
-            name = "nome"
-        self.mydb.execute(DBConstants.update_user_field, (name, value, usrId))
+            self.mydb.execute(DBConstants.update_nome_field, (value, usrId))
+        
 
     def getTeamsGame(self, gameId):
         return self.mydb.query(DBConstants.get_teams_by_game, (gameId, ))
 
+    #Isto não te retorna o que queres acho, Blanc (retorna lista, faz [0] para retornar o valor)
     def getGameDate(self, gameId):
         return self.mydb.query(DBConstants.get_game_date, (gameId, ))
 
+    def atualizaResultadoApostas(self, idJogo, winner):
+        self.mydb.execute(DBConstants.set_bet_winner,(idJogo, winner))
+        self.mydb.execute(DBConstants.set_bet_loser,(idJogo, winner))
+         

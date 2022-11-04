@@ -2,7 +2,7 @@
 import time
 from traceback import print_tb
 
-from Utilities.CheckStructure import *
+from CheckStructure import *
 
 from simple_term_menu import TerminalMenu
 

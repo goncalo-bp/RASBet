@@ -1,4 +1,4 @@
-from Controller.Controller import Controller
+from Controller import Controller
 import datetime
 
 controller = Controller()
