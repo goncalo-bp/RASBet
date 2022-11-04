@@ -93,7 +93,7 @@ class MenuEspecialista:
         #verificar se o jogo já acabou
         if not ended:
             alterar = ""
-            terminado = "Jogo terminado"
+            terminado = "Jogo terminaddo"
         else:
             terminado = ""
 
