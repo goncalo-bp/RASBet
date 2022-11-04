@@ -96,7 +96,10 @@ class MenuEspecialista:
             terminado = "Jogo terminado"
         else:
             terminado = ""
-        opcoes = f"{info[1]} : {info[2]}"
+
+        opcoes = []
+        for res in info:
+            opcoes.append(f"{res[1]} : {res[2]}")
 
         print(opcoes)
         jogo = Menu(alterar + names + terminado + "\n" , opcoes + ["Sair"])
@@ -105,6 +108,7 @@ class MenuEspecialista:
             sel = jogo.menu.show()
             for i in range(len(opcoes)):
                 if sel == i:
+                    #falta alterar as odds na base de dados
                     return opcoes[sel]
             if sel == len(opcoes):
                 jogo.exit = True

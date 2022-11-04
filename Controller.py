@@ -211,7 +211,7 @@ class Controller:
             if sel == 0:
                 self.execDesportosEspecialista(menuEspecialista, usrId)
             elif sel == 1:
-                menuEspecialista.exit = True
+                menuEspecialista.obj.exit = True
 
 
     # ==============================================================================
