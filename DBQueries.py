@@ -140,11 +140,11 @@ class DBQueries:
             self.mydb.commit()
             return 0
 
-    #Jogos Apostados = [(idJogo, resultadoApostado)]
+      #Jogos Apostados = [(idJogo, resultadoApostado)]
     def criarAposta(self, idUser, valor, jogosApostados):
         wallet = self.mydb.query(DBConstants.get_wallet, (idUser,))
-        if len(wallet) == 0:
-            return -1 #SEM CARTEIRA, É ADMIN OU ESPECIALISTA
+        if len(wallet) == 0 or self.registerTransaction(idUser,(-1)*valor,'A') == -1:
+            return -1 #SEM CARTEIRA, É ADMIN OU ESPECIALISTA OU NÃO TEM DINHEIRO
 
         #Jogo Ainda não começou
         idJogosApostados = [x for x in jogosApostados[0]]
@@ -160,7 +160,6 @@ class DBQueries:
         for (idJogo, resultadoApostado) in jogosApostados:
             odd = self.mydb.query(DBConstants.get_odd_by_game,(idJogo, resultadoApostado))
             self.mydb.execute(DBConstants.add_game_to_bet, (numAposta,idJogo,odd[0][0],resultadoApostado))
-        self.registerTransaction(idUser,(-1)*valor,'A')
         self.mydb.commit()
         
 

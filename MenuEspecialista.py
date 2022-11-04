@@ -105,6 +105,7 @@ class MenuEspecialista:
             for i in range(len(opcoes)):
                 if sel == i:
                     print(opcoes)
+                    time.sleep(60)
                     #new_odd = input()
                     #return opcoes[sel],new_odd
             if sel == len(opcoes):
