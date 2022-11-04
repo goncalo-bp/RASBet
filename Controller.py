@@ -315,7 +315,8 @@ class Controller:
             game_name, check_info = me.menuJogos(names, info)
             started = self.dbq.getGameState(check_info[0][0])
             game_date = self.dbq.getGameDate(check_info[0][0])
-            me.menu_evento(game_name, started, game_date[0][0], check_info)
+            new_odd = me.menu_evento(game_name, started, game_date[0][0], check_info)
+            self.dbq.updateOdds(check_info[0][0],new_odd)
 
             #add apostas e etc
     # ==============================================================================

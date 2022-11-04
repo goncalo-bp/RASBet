@@ -104,8 +104,9 @@ class MenuEspecialista:
             sel = jogo.menu.show()
             for i in range(len(opcoes)):
                 if sel == i:
-                    #falta alterar as odds na base de dados
-                    return opcoes[sel]
+                    print(opcoes)
+                    #new_odd = input()
+                    #return opcoes[sel],new_odd
             if sel == len(opcoes):
                 jogo.exit = True
 
