@@ -25,7 +25,7 @@ class Controller:
                 if tipo == 1:
                     self.execApostador(usrId)
                 elif tipo == 2:
-                    self.execAdmin()
+                    self.execAdmin(usrId)
                 elif tipo == 3:
                     self.execEspecialista(usrId)
 
@@ -120,7 +120,7 @@ class Controller:
         desporto = sportsList[0]
         while desporto in sportsList:
             desporto = ma.menuDesportos(sportsList)
-            jogos = self.dbq.getBySport(desporto)
+            jogos = self.dbq.getBySport(desporto,0)
             names = []
             info = []
 
@@ -166,44 +166,105 @@ class Controller:
     # ==============================   CARTEIRA   ================================== 
     def execCarteira(self, ma, usrId):
         balance = self.dbq.getBalance(usrId)
-        valor,tipo = ma.menuCarteira(usrId,balance)
+        valor,tipo = ma.menuCarteira(balance)
         if valor != None:
             if tipo == "D":
                 self.dbq.registerTransaction(usrId,float(valor),"D")
             elif tipo == "L":
                 if self.dbq.registerTransaction(usrId,0-float(valor),"L") == -1:
                     self.view.showMessage(" -> Saldo insuficiente", 2)
-        
+        else:
+            if tipo == "T":
+                transac = self.dbq.getHistoricoTransacoes(usrId)
+                ma.menuHistTransac(transac)
+            elif tipo == "A":
+                #[Row(idAposta=1, dataAposta=datetime.datetime(2022, 11, 4, 15, 34, 49), valorApostado=Decimal('10.00'))]
+                apostas = self.dbq.getHistoricoApostas(usrId)
+                list_ap = []
+                for elem in apostas:
+                    list_ap += [self.dbq.listaJogosPorAposta(elem[0])] 
 
+                ma.menuHistApostas(list_ap)
+        
+    #TODO
     # ============================   NOTIFICACAO   =================================
     def execNotif(self, ma, email):
         notifs = ["Not1","Not2","Not3","Not4"] # SACAR DA BD
-        ma.menuNotif(email, notifs)
+        valor = ma.menuNotif(email, notifs)
 
     # ==============================   BOLETIM   ===================================
     def execBoletim(self, ma, usrId, boletim):
         balance = self.dbq.getBalance(usrId)[0][0]
-        ma.menuBoletim(boletim,balance)
+        valor = ma.menuBoletim(boletim,balance)
+        jogos = []
+        for entry in boletim:
+            jogos.append((entry[0], entry[2]))
+        if valor:
+            self.dbq.criarAposta(usrId, valor, jogos)
 
 
     # ==============================================================================
     # ===============================   ADMIN   ====================================
     # ==============================================================================
 
-    def execAdmin(self):
+    def execAdmin(self, usrId):
         
         menuAdmin = MenuAdmin()
 
         while not menuAdmin.obj.exit:
             sel = menuAdmin.obj.menu.show()
             if sel == 0:
-                MenuAdmin.menu_desportos()
+                self.execDesportosAdmin(menuAdmin, usrId)
             elif sel == 1:
                 self.execPromocoes(menuAdmin)
             elif sel == 2:
                 self.execGestaoContas(menuAdmin)
             elif sel == 3:
-                MenuAdmin.obj.exit = True
+                menuAdmin.obj.exit = True
+
+    # ==============================   DESPORTOS   =================================
+
+    def execDesportosAdmin(self, madmin, usrId):
+        sportsList = self.dbq.getSports()
+        desporto = madmin.menuDesportos(sportsList)
+        jogos = self.dbq.getBySport(desporto,True)
+        names = []
+        info = []
+        for idJogo in jogos:
+            data = self.dbq.getTeamsGame(idJogo)
+
+            if desporto == "Futebol":
+                for i in range(3):
+                    if data[i][1] == "Draw":
+                        draw = i
+                    elif data[i][3]:
+                        home = i
+                names.append(f"{data[home][1]} X {data[3-draw-home][1]}")
+            elif desporto == "Basquetebol":
+                for i in range(2):
+                    if data[i][4]:
+                        home = i
+                names.append(f"{data[home][1]} - {data[2-draw-home][1]}")
+                info.append(data) # id ; nome ; odd ; joga_em_casa
+            elif desporto == "Ténis":
+                names.append(f"{data[home][1]} - {data[2][1]}")
+                info.append(data) # id ; nome ; odd ; joga_em_casa
+            elif desporto == "MotoGP":
+                date = self.dbq.getGameDate[0]
+                names.append(f"GP : {date}")
+            info.append(data) # id ; nome ; odd ; joga_em_casa
+        game_name, check_info = madmin.menuJogos(names, info)
+        if game_name == None and check_info == "A":
+            idJogo, equipas, dataJogo = madmin.menu_criarjogo(desporto)
+            if idJogo != None:
+                self.dbq.criarJogo(idJogo,desporto, dataJogo, equipas)
+        elif game_name != None:
+            started = self.dbq.getGameState(check_info[0][0])
+            nomeEquipaVencedora = madmin.menu_evento(game_name, started)
+            print(nomeEquipaVencedora)
+            self.dbq.setResultado(nomeEquipaVencedora, check_info[0][0])
+            
+
 
     # =============================   PROMOCOES   ================================== FEITO
     def execPromocoes(self,mAdmin):
@@ -315,8 +376,8 @@ class Controller:
             game_name, check_info = me.menuJogos(names, info)
             started = self.dbq.getGameState(check_info[0][0])
             game_date = self.dbq.getGameDate(check_info[0][0])
-            new_odd = me.menu_evento(game_name, started, game_date[0][0], check_info)
-            self.dbq.updateOdds(check_info[0][0],new_odd)
+            equipa, new_odd = me.menu_evento(game_name, started, game_date[0][0], check_info)
+            self.dbq.updateOdds(check_info[0][0],equipa[0],new_odd)
 
             #add apostas e etc
     # ==============================================================================

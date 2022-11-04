@@ -1,6 +1,21 @@
 from Menu import Menu
 import time
+import re
+import random, string
 
+#######  #     #  #######  #######  #######  #     #           #######  #######  #     #
+#        #     #  #     #  #        #         #   #            #        #     #   #   #
+#######  #######  #######  #   ###  #   ###     #              #   ###  #######     #
+      #  #     #  #     #  #     #  #     #     #              #     #  #     #     #
+#######  #     #  #     #  #######  #######     #              #######  #     #     #
+ 
+
+#######          #######  #######  ##    #  #######  #       #######  #######  #######  #######
+#                #     #  #     #  # #   #  #        #       #           #     #     #  #     #
+####             #######  #######  #  #  #  ####     #       ####        #     #######  #     #
+#                #        #     #  #   # #  #        #       #           #     #   #    #     #
+#######          #        #     #  #    ##  #######  ####### #######  #######  #     #  #######
+    
 
 jogosfutebol = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
 
@@ -10,105 +25,115 @@ class MenuAdmin:
     def __init__(self):
         self.obj = Menu("  Bem Vindo à RASBET.\n",["Desportos","Promoções", "Gestão de contas com privilégios", "Sair"])
 
-    def menu_desportos(self):
-        desportos = Menu.Menu("  Desportos.\n",["Futebol","Ténis","Basquetebol","MotoGP"] + ["Sair"])
+    def menuDesportos(self, sportsList):
+        desportos = Menu("  Desportos.\n", sportsList + ["Sair"])
+        sel = desportos.menu.show()
+        if sel == len(sportsList):
+            desportos.exit = True
+        else:
+            return sportsList[sel]
 
-        while not desportos.exit:
-            sel = desportos.menu.show()
+
+    def menuJogos(self, names, info):
+        jogos = Menu(" Jogos.\n", names + ["Abrir jogo"] + ["Sair"])
+        sel = jogos.menu.show()
+        for i in range(len(names)):
+            if sel == i:
+                return names[sel], info[sel]
+        if sel == len(names):
+            return None,"A"
+        elif sel == len(names)+1:
+            return None,None
+                
+
+    def menu_evento(self, names, ended):
+
+        
+        jogo = Menu(names + "\n" , ["1", "X", "2", "Sair"])
+        print(names)
+        names.split(",")
+        while not jogo.exit:
+            sel = jogo.menu.show()
             if sel == 0:
-                self.menu_futebol()
+                return names
             elif sel == 1:
-                self.menu_tenis()
+                return names[1]
             elif sel == 2:
-                self.menu_tenis()
+                return names[2] 
             elif sel == 3:
-                self.menu_motogp()
-            elif sel == 4:
-                desportos.exit = True
+                jogo.exit = True
 
-    def menu_futebol(self):
-    # jogos = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
-        futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
 
-        while not futebol.exit:
-            futebol = Menu.Menu(" Jogos.\n", jogosfutebol + ["Criar Jogo"] + ["Sair"])
-            sel = futebol.menu.show()
-            for i in range(len(jogosfutebol)):
-                if sel == i:
-                    self.menu_abrirfechar(jogosfutebol[sel])
-
-            if sel == len(jogosfutebol):
-                self.menu_criarjogo()
-
-            if sel == len(jogosfutebol)+1:
-                futebol.exit = True
-
-    def menu_tenis(self):
-        tenis = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-
-        while not tenis.exit:
-            sel = tenis.menu.show()
-            if sel == 0:
-                print("Benfica - Chaves")
-                self.menu_abrirfechar()
-            elif sel == 1:
-                tenis.exit = True
-
-    def menu_basquetebol(self):
-        basquetebol = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-
-        while not basquetebol.exit:
-            sel = basquetebol.menu.show()
-            if sel == 0:
-                print("Benfica - Chaves")
-                self.menu_abrirfechar()
-                time.sleep(2)
-            elif sel == 1:
-                basquetebol.exit = True
-
-    def menu_motogp(self):
-        motogp = Menu.Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])
-
-        while not motogp.exit:
-            sel = motogp.menu.show()
-            if sel == 0:
-                print("Benfica - Chaves")
-                self.menu_abrirfechar()
-                time.sleep(2)
-            elif sel == 1:
-                motogp.exit = True
-
-    def menu_abrirfechar(jogo):
-        opcoes = ["Abrir", "Fechar"]
-        abrirfechar = Menu.Menu(f" {jogo}\n" , opcoes + ["Sair"])
-
-        while not abrirfechar.exit:
-            sel = abrirfechar.menu.show()
-            for i in range(len(opcoes)):
-                if sel == i:
-                    print(f"<3{sel}\n")
-                    time.sleep(1)
-            
-            if sel == len(opcoes):
-                abrirfechar.exit = True
-
-    def menu_criarjogo():
-        criar = Menu.Menu("Criar novo jogo.\n", ["Inserir Equipas"] + ["Sair"])
-
+    def menu_criarjogo(self, desporto):
+        criar = Menu("Criar novo jogo.\n", ["Inserir Equipas"] + ["Sair"])
+        equipas = []
         while not criar.exit:
             sel = criar.menu.show()
             if sel == 0:
-                print("Inserir Equipa da Casa:")
-                equipaCasa = input()
-                print("Inserir Equipa Visitante:")
-                equipaFora = input()
-                novoJogo = (equipaCasa + " - " + equipaFora)
-                print(novoJogo)
-                jogosfutebol.append(novoJogo)
-                criar.exit = True
+                if desporto == 'Futebol' or desporto == 'Basquetebol' or desporto == 'Ténis':
+                    print("Inserir Equipa da Casa:")
+                    equipaCasa = input()
+                    flag = False
+                    while not flag:
+                        print("Insira Odd Equipa da Casa:")
+                        oddCasa = input()
+                        if len(oddCasa.rsplit('.')[-1]) == 2:
+                            flag = True
+                        else:print("Odd Inválida")
+                    equipaCasa = (equipaCasa,oddCasa,1)
+                    equipas.append(equipaCasa)
+                    print("Inserir Equipa Visitante:")
+                    equipaFora = input()
+                    flag = False
+                    while not flag:
+                        print("Insira Odd Equipa Visitante:")
+                        oddFora = input()
+                        if len(oddFora.rsplit('.')[-1]) == 2:
+                            flag = True
+                        else:print("Odd Inválida")
+                    equipaFora = (equipaFora,oddFora,0)
+                    equipas.append(equipaFora)
+                    flag = False
+                    while not flag:
+                        print("Insira a Odd do empate:")
+                        oddEmpate = input()
+                        if len(oddEmpate.rsplit('.')[-1]) == 2:
+                            flag = True
+                        else:print("Odd Inválida")
+                    equipaEmpate = ("Draw",oddEmpate,0)
+                    equipas.append(equipaEmpate)
+                elif desporto == 'MotoGP':
+                    print("Iserir nome do Grande Pŕemio")
+                    nome = input()
+                    i=0
+                    while i<20:
+                        print("Inserir Piloto:")
+                        piloto = input()
+                        flag = False
+                        while not flag:
+                            print("Inserir Odd Piloto:")
+                            oddPiloto = input()
+                            if len(oddPiloto.rsplit('.')[-1]) == 2:
+                                flag = True
+                            else:print("Odd Inválida")
+                        piloto = (piloto,oddPiloto)
+                        equipas.append(piloto)
+                        i+=1
+                flag = False
+                while not flag:
+                    print("Inserir data do Jogo: AAAA-MM-DD HH:MM:SS")
+                    dataJogo = input()
+                    test = re.search('[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]', dataJogo)
+                    if test:
+                        flag = True
+                    else:
+                        print("Formato Inválido")
+                        time.sleep(2)
+                idJogo = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(32))
+                return idJogo, equipas, dataJogo
             elif sel == 1:
-                criar.exit = True
-            
+                return None, None, None, None
+
 
 
     def menuPromocoes(self,proms):
