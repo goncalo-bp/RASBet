@@ -21,7 +21,7 @@ class DBQueries:
 
         if not alreadyExists:
             self.mydb.execute(DBConstants.add_wallet)
-            self.mydb.execute(DBConstants.register_user,(nome, email, password, self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
+            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password), self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
             self.mydb.commit()
         else:
             r = 0 
@@ -31,7 +31,7 @@ class DBQueries:
         r = 1
         alreadyExists = self.alreadyExists(email)
         if not alreadyExists:
-            self.mydb.execute(DBConstants.register_user,(nome, email, password, None, None, None, isAdmin, isEspecialista))
+            self.mydb.execute(DBConstants.register_user,(nome, email, sha256_crypt.hash(password), None, None, None, isAdmin, isEspecialista))
             self.mydb.commit()
         else:
             r = 0
@@ -57,7 +57,7 @@ class DBQueries:
         if len(data) == 0:
             r = -1
             usrId = False
-        elif password != data[0][1]:
+        elif sha256_crypt.verify("password",data[0][1]):
             r = 0 
             usrId = False
         elif data[0][3]:
