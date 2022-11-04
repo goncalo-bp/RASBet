@@ -1,6 +1,21 @@
 from Menu import Menu
 import time
+import re
+import random, string
 
+#######  #     #  #######  #######  #######  #     #           #######  #######  #     #
+#        #     #  #     #  #        #         #   #            #        #     #   #   #
+#######  #######  #######  #   ###  #   ###     #              #   ###  #######     #
+      #  #     #  #     #  #     #  #     #     #              #     #  #     #     #
+#######  #     #  #     #  #######  #######     #              #######  #     #     #
+ 
+
+#######          #######  #######  ##    #  #######  #       #######  #######  #######  #######
+#                #     #  #     #  # #   #  #        #       #           #     #     #  #     #
+####             #######  #######  #  #  #  ####     #       ####        #     #######  #     #
+#                #        #     #  #   # #  #        #       #           #     #   #    #     #
+#######          #        #     #  #    ##  #######  ####### #######  #######  #     #  #######
+    
 
 jogosfutebol = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
 
@@ -20,79 +35,77 @@ class MenuAdmin:
 
 
     def menuJogos(self, names, info):
-        jogos = Menu(" Jogos.\n", names + ["Sair"])
-        while not jogos.exit:
-            sel = jogos.menu.show()
+        jogos = Menu(" Jogos.\n", names + ["Abrir jogo"] + ["Sair"])
+        sel = jogos.menu.show()
+        for i in range(len(names)):
+            if sel == i:
+                return names[sel], info[sel]
+        if sel == len(names):
+            return None,"A"
+        elif sel == len(names)+1:
+            return None,None
+                
 
-            for i in range(len(names)):
-                if sel == i:
-                    return names[sel], info[sel]
-            if sel == len(names):
-                jogos.exit = True
-
-    def menu_evento(self, names, ended, game_date, info):
+    def menu_evento(self, names, ended):
 
         #verificar se o jogo já acabou
         if not ended:
+            length = 1
             opcoes = ["Fechar Jogo"]
             terminado = "--> Jogo terminado"
+            jogo = Menu(names + terminado + "\n" , opcoes + ["Sair"])
         else:
+            length = 0
             terminado = ""
-
-        jogo = Menu(names + terminado + "\n" , opcoes + ["Sair"])
+            jogo = Menu(names + terminado + "\n" , ["Sair"])
 
         while not jogo.exit:
             sel = jogo.menu.show()
-            if sel == len(opcoes)-1:
+            if sel == length-1:
                 return True
-            elif sel == len(opcoes):
+            elif sel == length:
                 jogo.exit = True
-#   \\\\\\
-#  / o  o \
-#(|   /\   |)
-#  \ ____ /
-#   \____/
-#   /    \
-#  /      \
-# /        \
-#(____| || | ______)
-#  | |     | |
-#  | |     | |
-#  / /      \ \
-# /_/        \_\
-#(__________)
 
-    def menu_abrirfechar(jogo):
-        opcoes = ["Abrir", "Fechar"]
-        abrirfechar = Menu.Menu(f" {jogo}\n" , opcoes + ["Sair"])
 
-        while not abrirfechar.exit:
-            sel = abrirfechar.menu.show()
-            for i in range(len(opcoes)):
-                if sel == i:
-                    print(f"<3{sel}\n")
-                    time.sleep(1)
-            
-            if sel == len(opcoes):
-                abrirfechar.exit = True
-
-    def menu_criarjogo(self):
+    def menu_criarjogo(self, sportsList):
         criar = Menu.Menu("Criar novo jogo.\n", ["Inserir Equipas"] + ["Sair"])
-
+        desporto = [sportsList]
+        equipas = []
         while not criar.exit:
             sel = criar.menu.show()
             if sel == 0:
-                print("Inserir Equipa da Casa:")
-                equipaCasa = input()
-                print("Inserir Equipa Visitante:")
-                equipaFora = input()
-                novoJogo = (equipaCasa + " - " + equipaFora)
-                print(novoJogo)
-                jogosfutebol.append(novoJogo)
-                criar.exit = True
+                if desporto == 'Futebol' or desporto == 'Basquetebol' or desporto == 'Ténis':
+                    print("Inserir Equipa da Casa:")
+                    equipaCasa = input()
+                    equipas.append(equipaCasa)
+                    print("Inserir Equipa Visitante:")
+                    equipaFora = input()
+                    equipas.append(equipaFora)
+                elif desporto == 'MotoGP':
+                    print("Iserir nome do Grande Pŕemio")
+                    nome = input()
+                    i=0
+                    while i<20:
+                        print("Inserir Piloto:")
+                        piloto = input()
+                        equipas.append(piloto)
+                        i+=1
+                flag = False
+                while not flag:
+                    print("Inserir data do Jogo: AAAA-MM-DD HH:MM:SS")
+                    dataJogo = input()
+                    test = re.search('(\d{4})(0\d|1[0-2])([0-2]\d|3[0-1])([0-1]\d|2[0-3])([0-5]\d)([0-5]\d))', dataJogo)
+                    if test:
+                        flag = True
+                        return idJogo, equipas, dataJogo
+                    else:
+                        print("Formato Inválido")
+                        time.sleep(2)
+                idJogo = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(32))
+                return idJogo, equipas, dataJogo
             elif sel == 1:
-                criar.exit = True
-            
+                return None, None, None, None
+
 
 
     def menuPromocoes(self,proms):

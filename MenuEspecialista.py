@@ -32,7 +32,7 @@ class MenuEspecialista:
                 jogos.exit = True
 
 
-    def menu_evento(self, names, ended, game_date, info):
+    def menu_evento(self, names, ended, info):
         
         #verificar se o jogo ja começou
         #if game_date > datetime.datetime.now():

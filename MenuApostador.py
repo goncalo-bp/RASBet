@@ -74,7 +74,7 @@ class MenuApostador:
 
     # Carteira =============================================================
     #INCOMPLETO
-    def menuCarteira(self, usrId, saldo):
+    def menuCarteira(self, saldo):
         carteira = Menu(f"  Saldo :: {saldo} .\n",["Histórico de Apostas","Histórico de transações","Depositar dinheiro","Levantar dinheiro","Sair"])        
 
         sel = carteira.menu.show()
@@ -144,6 +144,7 @@ class MenuApostador:
 
     def menuHistApostas(self,apostas):
         lista_aposta = []
+        # (<MontanteApostado>,<total ganho>,[([(Estoril,jogaEmCasa)],<Quem ganhou>)]), ... ,])
         for elem in apostas:
             lista_aposta += [f"Data: {elem[1]} , Saldo antes: {elem[2]} , Transacao: {elem[3]}"]
             oi = 1

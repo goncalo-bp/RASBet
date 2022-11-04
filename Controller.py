@@ -25,7 +25,7 @@ class Controller:
                 if tipo == 1:
                     self.execApostador(usrId)
                 elif tipo == 2:
-                    self.execAdmin()
+                    self.execAdmin(usrId)
                 elif tipo == 3:
                     self.execEspecialista(usrId)
 
@@ -120,7 +120,7 @@ class Controller:
         desporto = sportsList[0]
         while desporto in sportsList:
             desporto = ma.menuDesportos(sportsList)
-            jogos = self.dbq.getBySport(desporto)
+            jogos = self.dbq.getBySport(desporto,0)
             names = []
             info = []
 
@@ -166,7 +166,7 @@ class Controller:
     # ==============================   CARTEIRA   ================================== 
     def execCarteira(self, ma, usrId):
         balance = self.dbq.getBalance(usrId)
-        valor,tipo = ma.menuCarteira(usrId,balance)
+        valor,tipo = ma.menuCarteira(balance)
         if valor != None:
             if tipo == "D":
                 self.dbq.registerTransaction(usrId,float(valor),"D")
@@ -178,7 +178,16 @@ class Controller:
                 transac = self.dbq.getHistoricoTransacoes(usrId)
                 ma.menuHistTransac(transac)
             elif tipo == "A":
+                #[Row(idAposta=1, dataAposta=datetime.datetime(2022, 11, 4, 15, 34, 49), valorApostado=Decimal('10.00'))]
                 apostas = self.dbq.getHistoricoApostas(usrId)
+                list_ap = []
+                for elem in apostas:
+                    print(self.dbq.listaJogosPorAposta(elem[0]))
+                    list_ap += self.dbq.listaJogosPorAposta(elem[0])
+                    
+                print(list_ap)
+                time.sleep(5)  
+
                 ma.menuHistApostas(apostas)
         
 
@@ -189,7 +198,7 @@ class Controller:
 
     # ==============================   BOLETIM   ===================================
     def execBoletim(self, ma, usrId, boletim):
-        balance = self.dbq.getBalance(usrId)[0][0]
+        balance = self.dbq.getBalance(usrId)
         ma.menuBoletim(boletim,balance)
 
 
@@ -210,7 +219,7 @@ class Controller:
             elif sel == 2:
                 self.execGestaoContas(menuAdmin)
             elif sel == 3:
-                MenuAdmin.obj.exit = True
+                menuAdmin.obj.exit = True
 
     # ==============================================================================
     # ==============================   DESPORTOS   =================================
@@ -246,10 +255,16 @@ class Controller:
                 names.append(f"GP : {date}")
             info.append(data) # id ; nome ; odd ; joga_em_casa
         game_name, check_info = madmin.menuJogos(names, info)
-        started = self.dbq.getGameState(check_info[0][0])
-        game_date = self.dbq.getGameDate(check_info[0][0])
-        encerra = madmin.menu_evento(game_name, started, game_date[0][0], check_info)
-
+        if game_name == None and check_info == "A":
+            idJogo, equipas, dataJogo = madmin.menu_criarjogo()
+            if idJogo != None:
+                self.dbq.criarJogo(idJogo,desporto, dataJogo, equipas)
+        elif game_name != None:
+            started = self.dbq.getGameState(check_info[0][0])
+            encerra = madmin.menu_evento(game_name, started)
+            if encerra: self.dbq.suspensaoJogo(encerra, check_info[0][0])
+            
+        
     
 
 
