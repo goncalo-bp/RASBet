@@ -132,7 +132,7 @@ class MenuApostador:
             if sel == len(txt):
                 print("Insira montante a apostar: ")
                 valor = input()
-                if valor.isdecimal() and 0 < float(valor) < saldo :
+                if float(valor) and 0 < float(valor) < saldo :
                     Menu.showMessage(" -> Aposta realizada com sucesso.\n", 1)
                     apostou = True
                 else:
@@ -189,7 +189,6 @@ class MenuApostador:
 
         while not hist_aposta.exit:
             sel = hist_aposta.menu.show()
-            print(apostas)
             if sel == len(lista_aposta):
                 hist_aposta.exit = True
 

@@ -32,7 +32,7 @@ class MenuEspecialista:
                 jogos.exit = True
 
 
-    def menu_evento(self, names, ended, info):
+    def menu_evento(self, names, ended, info,dbq):
         
         #verificar se o jogo ja começou
         #if game_date > datetime.datetime.now():
@@ -60,15 +60,19 @@ class MenuEspecialista:
                 if sel == i:
                     flag = False
                     while not flag:
+                        dbq.suspensaoJogo(1,info[i][0])
                         print("Insira nova Odd")
                         new_odd = input()
                         if len(new_odd.rsplit('.')[-1]) == 2:
                             flag = True
+                            dbq.suspensaoJogo(0,info[i][0])
                             return opcoes[sel].split(':'),new_odd
                         else:
                             print("Odd inválida! Por favor insira uma Odd com duas casas decimais")
                             time.sleep(2)
+                    dbq.suspensaoJogo(0,info[i][0])
             if sel == len(opcoes):
                 jogo.exit = True
+                return None,None
 
 

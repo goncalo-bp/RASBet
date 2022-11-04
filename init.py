@@ -12,6 +12,8 @@ dbq = DBQueries()
 #dbq.registerSpecialUser("b","b@gm.com","b",1,0)
 #dbq.registerSpecialUser("c","c@gm.com","c",0,1)
 
+dbq.datasDisponiveis()
+
 #dbq.criarAposta("1",20,[('B','Draw')])
 #dbq.atualizaResultadoApostas('6ae5f22198593f180590bf8161bbf910','Vitória SC')
 #dbq.atualizaResultadoApostas('72cdea24cebb5465e577b8fe3f3cdfeb','Boavista Porto')

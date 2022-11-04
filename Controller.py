@@ -84,7 +84,7 @@ class Controller:
     
     def execRegisterUser(self):
         email,password,date,nif = self.view.menu_registar()
-        if self.check_registo(email, date, nif):
+        if email != None and self.check_registo(email, date, nif):
             code = self.dbq.registerUser("",email, password, nif, date, 0, 0)
             if code == 0:
                 self.view.showMessage("\n-> Conta já existente", 2)
@@ -120,7 +120,7 @@ class Controller:
         desporto = sportsList[0]
         while desporto in sportsList:
             desporto = ma.menuDesportos(sportsList)
-            jogos = self.dbq.getBySport(desporto,0)
+            jogos = self.dbq.getBySport(desporto,False)
             names = []
             info = []
 
@@ -194,7 +194,7 @@ class Controller:
 
     # ==============================   BOLETIM   ===================================
     def execBoletim(self, ma, usrId, boletim):
-        balance = self.dbq.getBalance(usrId)[0][0]
+        balance = self.dbq.getBalance(usrId)
         valor = ma.menuBoletim(boletim,balance)
         jogos = []
         for entry in boletim:
@@ -261,7 +261,6 @@ class Controller:
         elif game_name != None:
             started = self.dbq.getGameState(check_info[0][0])
             nomeEquipaVencedora = madmin.menu_evento(game_name, started)
-            print(nomeEquipaVencedora)
             self.dbq.setResultado(nomeEquipaVencedora, check_info[0][0])
             
 
@@ -276,9 +275,6 @@ class Controller:
             return
         else:
             for elem in promos:
-                print(elem)
-                print(sel)
-                time.sleep(3)
                 if elem[0] == sel:
                     self.execRemovePromo(mAdmin, elem)
                     break
@@ -312,7 +308,7 @@ class Controller:
     def execAddUser(self, mAdmin):
         email,passw,tipo = mAdmin.menuAdicionarConta()
         if email != 0:
-            if tipo == 1:
+            if int(tipo) == 1:
                 r = self.dbq.registerSpecialUser("", email, passw,0,1)
                 if r == 1:
                     self.view.showMessage(" -> Conta adicionada", 2)
@@ -347,7 +343,7 @@ class Controller:
     def execDesportosEspecialista(self, me, usrId):
             sportsList = self.dbq.getSports()
             desporto = me.menuDesportos(sportsList)
-            jogos = self.dbq.getBySport(desporto)
+            jogos = self.dbq.getBySport(desporto,True)
             names = []
             info = []
             for idJogo in jogos:
@@ -376,8 +372,9 @@ class Controller:
             game_name, check_info = me.menuJogos(names, info)
             started = self.dbq.getGameState(check_info[0][0])
             game_date = self.dbq.getGameDate(check_info[0][0])
-            equipa, new_odd = me.menu_evento(game_name, started, game_date[0][0], check_info)
-            self.dbq.updateOdds(check_info[0][0],equipa[0],new_odd)
+            equipa, new_odd = me.menu_evento(game_name, started, check_info,self.dbq)
+            if equipa != None:
+                self.dbq.updateOdds(check_info[0][0],equipa[0],new_odd)
 
             #add apostas e etc
     # ==============================================================================
