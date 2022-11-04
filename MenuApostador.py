@@ -153,7 +153,6 @@ class MenuApostador:
     # (id,nome,aposta,odd)
 
 
-<<<<<<< Updated upstream
     def menuHistTransac(self,trans):
         lista_transac = []
         for elem in trans:
@@ -184,8 +183,6 @@ class MenuApostador:
             if sel == len(lista_aposta):
                 hist_aposta.exit = True
 
-=======
->>>>>>> Stashed changes
     def menuDepositar(self):
         print("Prima Ctr+D para cancelar\n\n")
         print("-- Depositar Dinheiro\n")
@@ -243,9 +240,4 @@ class MenuApostador:
             iban = input()
             if self.checkIBAN(iban) == False: 
                 print("Aviso -> IBAN inválido!\n")
-<<<<<<< Updated upstream
                 time.sleep(1)
-=======
-                time.sleep(1)
-
->>>>>>> Stashed changes
