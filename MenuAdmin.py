@@ -48,28 +48,24 @@ class MenuAdmin:
 
     def menu_evento(self, names, ended):
 
-        #verificar se o jogo já acabou
-        if not ended:
-            length = 1
-            opcoes = ["Fechar Jogo"]
-            terminado = "--> Jogo terminado"
-            jogo = Menu(names + terminado + "\n" , opcoes + ["Sair"])
-        else:
-            length = 0
-            terminado = ""
-            jogo = Menu(names + terminado + "\n" , ["Sair"])
-
+        
+        jogo = Menu(names + "\n" , ["1", "X", "2", "Sair"])
+        print(names)
+        names.split("X")
         while not jogo.exit:
             sel = jogo.menu.show()
-            if sel == length-1:
-                return True
-            elif sel == length:
+            if sel == 0:
+                return names[0]
+            elif sel == 1:
+                return names[1]
+            elif sel == 2:
+                return names[2] 
+            elif sel == 3:
                 jogo.exit = True
 
 
-    def menu_criarjogo(self, sportsList):
-        criar = Menu.Menu("Criar novo jogo.\n", ["Inserir Equipas"] + ["Sair"])
-        desporto = [sportsList]
+    def menu_criarjogo(self, desporto):
+        criar = Menu("Criar novo jogo.\n", ["Inserir Equipas"] + ["Sair"])
         equipas = []
         while not criar.exit:
             sel = criar.menu.show()
@@ -77,10 +73,35 @@ class MenuAdmin:
                 if desporto == 'Futebol' or desporto == 'Basquetebol' or desporto == 'Ténis':
                     print("Inserir Equipa da Casa:")
                     equipaCasa = input()
+                    flag = False
+                    while not flag:
+                        print("Insira Odd Equipa da Casa:")
+                        oddCasa = input()
+                        if len(oddCasa.rsplit('.')[-1]) == 2:
+                            flag = True
+                        else:print("Odd Inválida")
+                    equipaCasa = (equipaCasa,oddCasa,1)
                     equipas.append(equipaCasa)
                     print("Inserir Equipa Visitante:")
                     equipaFora = input()
+                    flag = False
+                    while not flag:
+                        print("Insira Odd Equipa Visitante:")
+                        oddFora = input()
+                        if len(oddFora.rsplit('.')[-1]) == 2:
+                            flag = True
+                        else:print("Odd Inválida")
+                    equipaFora = (equipaFora,oddFora,0)
                     equipas.append(equipaFora)
+                    flag = False
+                    while not flag:
+                        print("Insira a Odd do empate:")
+                        oddEmpate = input()
+                        if len(oddEmpate.rsplit('.')[-1]) == 2:
+                            flag = True
+                        else:print("Odd Inválida")
+                    equipaEmpate = ("Draw",oddEmpate,0)
+                    equipas.append(equipaEmpate)
                 elif desporto == 'MotoGP':
                     print("Iserir nome do Grande Pŕemio")
                     nome = input()
@@ -88,16 +109,23 @@ class MenuAdmin:
                     while i<20:
                         print("Inserir Piloto:")
                         piloto = input()
+                        flag = False
+                        while not flag:
+                            print("Inserir Odd Piloto:")
+                            oddPiloto = input()
+                            if len(oddPiloto.rsplit('.')[-1]) == 2:
+                                flag = True
+                            else:print("Odd Inválida")
+                        piloto = (piloto,oddPiloto)
                         equipas.append(piloto)
                         i+=1
                 flag = False
                 while not flag:
                     print("Inserir data do Jogo: AAAA-MM-DD HH:MM:SS")
                     dataJogo = input()
-                    test = re.search('(\d{4})(0\d|1[0-2])([0-2]\d|3[0-1])([0-1]\d|2[0-3])([0-5]\d)([0-5]\d))', dataJogo)
+                    test = re.search('[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]', dataJogo)
                     if test:
                         flag = True
-                        return idJogo, equipas, dataJogo
                     else:
                         print("Formato Inválido")
                         time.sleep(2)

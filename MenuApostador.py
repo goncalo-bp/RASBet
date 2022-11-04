@@ -171,13 +171,23 @@ class MenuApostador:
 
     def menuHistApostas(self,apostas):
         lista_aposta = []
+        jogo = []
+        txt = ""
         # (<MontanteApostado>,<total ganho>,[([(Estoril,jogaEmCasa)],<Quem ganhou>)]), ... ,])
         for elem in apostas:
-            lista_aposta += [f"Data: {elem[1]} , Saldo antes: {elem[2]} , Transacao: {elem[3]}"]
-            oi = 1
+            for game in elem[2]:
+                for team in game:
+                    if team[1] == 1 and team[0] != "Draw":
+                        jogo = [f"{team[0]}"] + jogo
+                    elif team[1] == 0 and team[0] != "Draw":
+                        jogo += [f"{team[0]}"]
+            for eq in jogo:
+                if txt == "":
+                    txt = eq
+                else:
+                    txt += f" X {eq}" 
+            lista_aposta += [f"Montante apostado: {elem[0]} , Total ganho: {elem[1]} , Equipas incluidas: {txt}"]
         hist_aposta = Menu(f" Histórico de Apostas .\n",lista_aposta+["Sair"])
-        print(apostas)
-        time.sleep(5)
         #[Row(idAposta=1, dataAposta=datetime.datetime(2022, 11, 4, 15, 34, 49), valorApostado=Decimal('10.00'))]
 
         while not hist_aposta.exit:
