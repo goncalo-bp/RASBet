@@ -129,6 +129,10 @@ class DBQueries:
 
     def registerTransaction(self, idUser, valor, descricao):
         bal = self.getBalance(idUser)
+        print(bal)
+        print(valor)
+        print(idUser)
+        print(descricao)
         if valor < 0 and valor*(-1) > bal:
             return -1
         else:
@@ -172,7 +176,7 @@ class DBQueries:
         return self.mydb.execute(DBConstants.get_game_by_day, (data,))
     
     def existingGame(self, idJogo):
-        listaJogos = self.mydb.query(DBConstants.get_game,(idJogo,))
+        listaJogos = self.mydb.query(DBConstants.get_game_by_ID,(idJogo,))
         return len(listaJogos) == 1
 
     def getLastUpdate(self, idJogo):

@@ -85,11 +85,13 @@ class MenuApostador:
                 self.menu_hist_transac(usrId)
                 return 0
             elif sel == 2:
-                valor = self.menuDepositar(usrId)
+                valor = self.menuDepositar()
                 if float(valor) > 0:
                     return float(valor),"D"
             elif sel == 3:
-                saldo = self.menu_levantar(usrId,saldo)
+                saldo = self.menuLevantar()
+                if float(valor) > 0:
+                    return float(valor),"L"
             elif sel == 4:
                 carteira.exit = True
 
@@ -148,7 +150,7 @@ class MenuApostador:
             if sel == len(lista_aposta):
                 hist_aposta.exit = True
 
-    def menuDepositar(self, email):
+    def menuDepositar(self):
         print("Prima Ctr+D para cancelar\n\n")
         print("-- Depositar Dinheiro\n")
         try:
@@ -172,7 +174,7 @@ class MenuApostador:
             return False
 
 
-    def menu_levantar(self, email,saldo):
+    def menuLevantar(self):
         ### IR BUSCAR À BD ######
         print("Prima Ctr+D para cancelar\n\n")
         print("-- Levantar Dinheiro  \n")
@@ -182,23 +184,21 @@ class MenuApostador:
                 valor = input()
                 print("Instira IBAN")
                 iban = input()
-                if valor.isdecimal or valor < saldo:
+                if valor.isdecimal:
                     if self.check_IBAN(iban): 
-                        print("Transferência realizada com sucesso!\n")
-                        time.sleep(1)
-                        return saldo - float(valor)
+                        return float(valor)
                     else:
                         print("Aviso -> IBAN inválido!\n")
                         time.sleep(1)
-                        return saldo
+                        return 0
                 else:
                     print("Aviso -> Valor inválido.\n")
                     time.sleep(1)
-                    return saldo
+                    return 0
         except EOFError as e:
-            return saldo
+            return 0
 
-    # 0 -> MBWay , 1 -> Transferencia
+
     def menuTransf(self):
         metodos = ["MBWay","Transferência Bancária"]
         metodo = Menu(f" Método de Transferência.\n",metodos+["Sair"])
@@ -209,14 +209,6 @@ class MenuApostador:
                 print("Aviso -> IBAN inválido!\n")
                 time.sleep(1)
 
-    ### O QUE FAZER COM AS NOTIFICACOES ????
-
-
-        while not notif.exit:
-            sel = notif.menu.show()
-
-            if sel == len(self.lista_notif):
-                notif.exit = True
 
     #def menu_tenis():
     #    tenis = Menu(" Jogos.\n", ["Benfica - Chaves"] + ["Sair"])

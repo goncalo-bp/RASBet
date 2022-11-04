@@ -170,7 +170,9 @@ class Controller:
         print(valor,tipo)
         if valor != None:
             if tipo == "D":
-                self.dbq.registerTransaction(usrId,0-float(valor))
+                self.dbq.registerTransaction(usrId,float(valor),"D")
+            elif tipo == "L":
+                self.dbq.registerTransaction(usrId,0-float(valor),"L")
         
 
     # ============================   NOTIFICACAO   =================================
@@ -279,7 +281,7 @@ class Controller:
 
 
     # ==============================================================================
-    # ==============================   DESPORTOS   ====================================
+    # ==============================   DESPORTOS   =================================
     # ==============================================================================
     def execDesportosEspecialista(self, me, usrId):
             sportsList = self.dbq.getSports()
