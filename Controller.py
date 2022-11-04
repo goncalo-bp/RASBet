@@ -97,8 +97,9 @@ class Controller:
     # ==============================================================================
 
     def execApostador(self, usrId):
-        boletim = []
+        boletim = [] # Id, NomeJogo, ResApostado, Odd
         menuApostador = MenuApostador()
+        boletim = []
         while not menuApostador.obj.exit:
             sel = menuApostador.obj.menu.show()
             if sel == 0:
@@ -123,10 +124,8 @@ class Controller:
             jogos = self.dbq.getBySport(desporto,0)
             names = []
             info = []
-
             for idJogo in jogos:
-                data = self.dbq.getTeamsGame(idJogo)
-
+                data = self.dbq.getTeamsGame(idJogo) #id, nome, odd, home
                 if desporto == "Futebol":
                     for i in range(3):
                         if data[i][1] == "Draw":
@@ -140,20 +139,17 @@ class Controller:
                         if data[i][4]:
                             home = i
                     names.append(f"{data[home][1]} - {data[2-draw-home][1]}")
-                    info.append(data) # id ; nome ; odd ; joga_em_casa
 
                 elif desporto == "Ténis":
                     names.append(f"{data[home][1]} - {data[2][1]}")
-                    info.append(data) # id ; nome ; odd ; joga_em_casa
 
                 elif desporto == "MotoGP":
                     date = self.dbq.getGameDate[0]
                     names.append(f"GP : {date}")
-                
-                info.append(data) # id ; nome ; odd ; joga_em_casa
+
+                info.append(data)
             if len(names) > 0:
-                r = ma.menuJogos(names, info)
-                boletim += r
+                ma.menuJogos(names, info, boletim)
             sportsList = self.dbq.getSports()
 
     # ===============================   EDITAR   =================================== FEITO
@@ -198,11 +194,13 @@ class Controller:
 
     # ==============================   BOLETIM   ===================================
     def execBoletim(self, ma, usrId, boletim):
-        balance = self.dbq.getBalance(usrId)[0][0]
+        balance = self.dbq.getBalance(usrId)
         valor = ma.menuBoletim(boletim,balance)
+        print(boletim)
         jogos = []
         for entry in boletim:
             jogos.append((entry[0], entry[2]))
+        print(jogos)
         if valor:
             self.dbq.criarAposta(usrId, valor, jogos)
 
