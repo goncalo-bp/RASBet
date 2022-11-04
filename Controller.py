@@ -176,20 +176,80 @@ class Controller:
     # ===============================   ADMIN   ====================================
     # ==============================================================================
 
-    def execAdmin():
+    def execAdmin(self):
         
         menuAdmin = MenuAdmin()
 
-        while not menuAdmin.exit:
-            sel = menuAdmin.menu.show()
+        while not menuAdmin.obj.exit:
+            sel = menuAdmin.obj.menu.show()
             if sel == 0:
                 MenuAdmin.menu_desportos()
             elif sel == 1:
-                MenuAdmin.menu_promocoes()
+                self.execPromocoes(menuAdmin)
             elif sel == 2:
-                MenuAdmin.menu_gestao_contas()
+                self.execGestaoContas(menuAdmin)
             elif sel == 3:
-                MenuAdmin.menuAdmi.exit = True
+                MenuAdmin.obj.exit = True
+
+    # =============================   PROMOCOES   ================================== FEITO
+    def execPromocoes(self,mAdmin):
+        promos = self.dbq.getPromotions()
+        sel = mAdmin.menuPromocoes(promos)
+        if sel == "A":
+            self.execAddPromo(mAdmin)
+        elif sel == 0:
+            return
+        else:
+            for elem in promos:
+                print(elem)
+                print(sel)
+                time.sleep(3)
+                if elem[0] == sel:
+                    self.execRemovePromo(mAdmin, elem)
+                    break
+
+    def execAddPromo(self,mAdmin):
+        id,valor = mAdmin.menuAdicionarPromocao()
+        if id != None:
+            self.dbq.addPromotion(id,float(valor))
+            self.view.showMessage(" -> Promoção adicionada", 2)
+
+    def execRemovePromo(self,mAdmin, promo):
+        if mAdmin.menuRemoverPromocao(promo) != -1:
+            self.dbq.removePromotion(promo[0])
+            self.view.showMessage(" -> Promoção removida", 2)
+
+    # =============================   GESTAO DE CONTAS   ================================== FEITO
+
+    def execGestaoContas(self, mAdmin):
+        users = self.dbq.getSpecialUser()
+        sel = mAdmin.menuGestaoContas(users)
+        if sel == "A":
+            self.execAddUser(mAdmin)
+        elif sel == 0:
+            return
+        else:
+            for elem in users:
+                if elem[0] == sel:
+                    self.execRemoveUser(mAdmin, elem)
+                    break
+
+    def execAddUser(self, mAdmin):
+        email,passw,tipo = mAdmin.menuAdicionarConta()
+        if email != 0:
+            if tipo == 1:
+                r = self.dbq.registerSpecialUser("", email, passw,0,1)
+                if r == 1:
+                    self.view.showMessage(" -> Conta adicionada", 2)
+            else:
+                r = self.dbq.registerSpecialUser("", email, passw,1,0)
+                if r == 1:
+                    self.view.showMessage(" -> Conta adicionada", 2)
+            
+    def execRemoveUser(self, mAdmin, user):
+        if mAdmin.menuConta(user) != -1:
+            self.dbq.removeSpecialUser(user[0])
+            self.view.showMessage(" -> Conta removida", 2)
 
     # ==============================================================================
     # ============================   ESPECIALISTA   ================================

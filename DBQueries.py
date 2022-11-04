@@ -27,6 +27,29 @@ class DBQueries:
             r = 0 
         return r
     
+    def registerSpecialUser(self, nome, email, password, isAdmin, isEspecialista):
+        r = 1
+        alreadyExists = self.alreadyExists(email)
+        if not alreadyExists:
+            self.mydb.execute(DBConstants.register_user,(nome, email, password, None, None, None, isAdmin, isEspecialista))
+            self.mydb.commit()
+        else:
+            r = 0
+        return r
+    
+    def removeSpecialUser(self, id):
+        prom = self.mydb.query(DBConstants.get_user, (id,))
+        if len(prom) == 0:
+            #Não existe
+            pass
+        else:
+            self.mydb.execute(DBConstants.remove_special_user,(id,))
+            self.mydb.commit()
+
+    def getSpecialUser(self):
+        return self.mydb.query(DBConstants.get_special_users)
+
+
     def loginUser(self, email, password):
         data = self.mydb.query(DBConstants.get_log_info, (email,))
         r = 1
@@ -84,8 +107,6 @@ class DBQueries:
     # TODO Definir o erro
     def removePromotion(self, idProm):
         prom = self.mydb.query(DBConstants.get_promotion, (idProm,))
-        print(prom)
-        
         if len(prom) == 0:
             #Não existe
             pass
@@ -93,6 +114,9 @@ class DBQueries:
             self.mydb.execute(DBConstants.boosted_odds,(1/float(prom[0][1]), prom[0][2],))
             self.mydb.execute(DBConstants.remove_promotion,(idProm,))
             self.mydb.commit()
+
+    def getPromotions(self):
+        return self.mydb.query(DBConstants.get_promotions)
 
     # Históricos
     def getHistoricoApostas(self, usrId):

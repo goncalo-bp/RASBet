@@ -8,7 +8,7 @@ jogosfutebol = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo
 class MenuAdmin:
 
     def __init__(self):
-        self.menuAdmin = Menu("  Bem Vindo à RASBET.\n",["Desportos","Promoções", "Gestão de contas com privilégios", "Sair"])
+        self.obj = Menu("  Bem Vindo à RASBET.\n",["Desportos","Promoções", "Gestão de contas com privilégios", "Sair"])
 
     def menu_desportos(self):
         desportos = Menu.Menu("  Desportos.\n",["Futebol","Ténis","Basquetebol","MotoGP"] + ["Sair"])
@@ -111,98 +111,77 @@ class MenuAdmin:
             
 
 
-    def menu_promocoes(self):
+    def menuPromocoes(self,proms):
         #receber promoções
-        promotions = ["Promoção 1","Promoção 2","Promoção 3","Promoção 4"]
-        promocoes = Menu.Menu("  Promoções\n", promotions + ["Adiciona Promoção","Sair"])
+        promotions = []
+        for elem in proms:
+            promotions += [f"Promoção {elem[0]} : IdJogo -> {elem[1]} : Valor -> {elem[2]}"]
+        #promotions = ["Promoção 1","Promoção 2","Promoção 3","Promoção 4"]
+        promocoes = Menu("  Promoções\n", promotions + ["Adiciona Promoção","Sair"])
 
         while not promocoes.exit:
-            promocoes = Menu.Menu("  Promoções.\n", promotions + ["Adiciona Promoção","Sair"])
+            promocoes = Menu("  Promoções.\n", promotions + ["Adiciona Promoção","Sair"])
             sel = promocoes.menu.show()
-            if sel == len(promotions):
-                promotions += self.menu_adicionar_promocao()
-
-            elif sel == len(promotions) + 1:
-                promocoes.exit = True
-
+            if sel < len(promotions):
+                return proms[sel][0]
+            elif sel == len(promotions):
+                return "A"
             else:
-                id = self.menu_remover_promocao(promotions[sel])
-                if id != -1:
-                    promotions.remove(id)
+                return 0
 
-    def menu_remover_promocao(id):
-        remover = Menu.Menu(f"Promoção {id}.\n" , ["Remover"] + ["Sair"])
 
-        while not remover.exit:
-            sel = remover.menu.show()
-            if sel == 0:
-                ###### atualizar BD ######
-                print("Promoção removida com sucesso!")
-                time.sleep(1)
-                return id
+    def menuRemoverPromocao(self,id):
+        remover = Menu(f"Promoção {id}.\n" , ["Remover"] + ["Sair"])
+        sel = remover.menu.show()
+        if sel == 0:
+            return id
+        else:
+            return -1
 
-            if sel == 1:
-                remover.exit = True
-                return -1
-
-    def menu_adicionar_promocao():
+    def menuAdicionarPromocao(self):
         print("Prima Ctr+D para cancelar\n\n")
         try:
-            print("Inserir valor da promoção\n")
-            valor = input()
             print("Inserir id do jogo\n")
             id = input()
+            print("Inserir valor da promoção (valor entre 0 e 1)\n")
+            valor = input()
 
-            #adicionar promoção
-            if True:
-                #### ATUALIZAR BD ####
-                #### ENVIAR NOTIFICACAO (ATUALIZARA BD?) ####
-                print("-- Promoção adicionada com sucesso!")
-                time.sleep(1)
-                return [id]
-            else:
-                print("-- Erro ao adicionar promoção")
-                time.sleep(1)
+            return id,valor
 
         except EOFError as e:
-            return
+            return None,None
 
 
-    def menu_gestao_contas(self):
+    def menuGestaoContas(self,cont):
         #receber contas com privilégios
-        contas = ["Conta 1","Conta 2","Conta 3"]
+        contas = []
+        for elem in cont:
+            contas += [f"{elem[1]}"] 
 
-        gestao_contas = Menu.Menu("  Gestão de Contas.\n", contas + ["Adicionar Conta","Sair"])
+        gestao_contas = Menu("  Gestão de Contas.\n", contas + ["Adicionar Conta","Sair"])
+        sel = gestao_contas.menu.show()
 
-        while not gestao_contas.exit:
-            gestao_contas = Menu.Menu("  Gestão de Contas.\n", contas + ["Adicionar Conta","Sair"])
-            sel = gestao_contas.menu.show()
-            if sel == len(contas)+1:
-                gestao_contas.exit = True
+        if sel == len(contas)+1:
+            return 0
+        
+        elif sel == len(contas):
+            return "A"
+        else:
+            return cont[sel][0]
             
-            elif sel == len(contas):
-                contas += self.menu_adicionar_conta()
-            else:
-                id = self.menu_conta(contas[sel])
-                if id != -1:
-                    contas.remove(id)
-            
-    def menu_conta(id):
-        conta = Menu.Menu(f"  {id}.\n",["Remover", "Sair"])
+    def menuConta(self,id):
+        conta = Menu(f"  {id}.\n",["Remover", "Sair"])
 
         while not conta.exit:
             sel = conta.menu.show()
             if sel == 0:
-                ###### ATUALIZAR BD ######
-                print("-- Conta removida com sucesso!")
-                time.sleep(2)
                 return id
                 #remover conta
             elif sel == 1:
                 conta.exit = True
                 return -1
 
-    def menu_adicionar_conta():
+    def menuAdicionarConta(self):
         print("Prima Ctr+D para cancelar\n\n")
         try:
             print("Inserir email da conta\n")
@@ -212,19 +191,10 @@ class MenuAdmin:
             print("Inserir tipo da conta (1 -> Especialista | 2 -> Administrador)\n")
             tipo = input()
 
-            ## check conta
-            #adicionar promoção
-            if True:
-                #### ATUALIZAR BD ####
-                print("-- Conta adicionada com sucesso!")
-                time.sleep(1)
-                return [email]
-            else:
-                print("-- Erro ao adicionar conta")
-                time.sleep(1)
+            return email,passw,tipo
 
         except EOFError as e:
-            return
+            return 0,0,0
 
 
 
