@@ -1,5 +1,5 @@
 class DBConstants:
-    register_user      = 'INSERT INTO Utilizador (email,password,nome,idCarteira,dataNascimento,nif,isAdmin,isEspecialista) VALUES ((%s),(%s),(%s),(%s),(%s),(%s),(%s),(%s));'
+    register_user      = 'INSERT INTO Utilizador (nome, email,password,idCarteira,dataNascimento,nif,isAdmin,isEspecialista) VALUES ((%s),(%s),(%s),(%s),(%s),(%s),(%s),(%s));'
     add_wallet         = 'INSERT INTO Carteira (saldoCarteira) VALUES(0.00);'
     get_log_info       = 'SELECT email, password, idUser, isAdmin, isEspecialista FROM Utilizador WHERE email=(%s);'
     add_team           = 'INSERT INTO EquipasPorJogo(nomeEquipa, idJogo, Odd, jogaEmCasa) VALUES((%s),(%s),(%s),(%s));'    

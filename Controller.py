@@ -86,10 +86,11 @@ class Controller:
             return False
         return True
 
+    
     def execRegisterUser(self):
         email,password,date,nif = self.view.menu_registar()
         if self.check_registo(email, date, nif):
-            code = self.dbq.registerUser(email, password, nif, date, 0, 0)
+            code = self.dbq.registerUser("",email, password, nif, date, 0, 0)
             if code == 0:
                 self.view.showMessage("\n-> Conta já existente", 2)
             else:

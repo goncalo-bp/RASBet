@@ -1,6 +1,7 @@
 import mysql.connector # pip install mysql-connector-python
 from DBConstants import DBConstants
 from Database import Database
+from passlib.hash import sha256_crypt
 
 class DBQueries:
 
@@ -14,13 +15,13 @@ class DBQueries:
         lines = self.mydb.query(DBConstants.get_log_info,(email,))
         return len(lines) > 0
 
-    def registerUser(self, email, password, nome, nif, date, isAdmin, isEspecialista):
+    def registerUser(self, nome, email, password, nif, date, isAdmin, isEspecialista):
         r = 1
         alreadyExists = self.alreadyExists(email)
 
         if not alreadyExists:
             self.mydb.execute(DBConstants.add_wallet)
-            self.mydb.execute(DBConstants.register_user,(email, password, nome, self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
+            self.mydb.execute(DBConstants.register_user,(nome, email, password, self.mydb.lastrowid(), date, nif, isAdmin, isEspecialista))     
             self.mydb.commit()
         else:
             r = 0 
