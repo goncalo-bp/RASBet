@@ -211,12 +211,7 @@ class DBQueries:
         if len(wallet) == 0 or self.registerTransaction(idUser,(-1)*valor,'A') == -1:
             return -1 #Não tem carteira, ou não tem dinheiro suficiente
 
-<<<<<<< HEAD
         #Verifica se um jogo ainda não começou
-        idJogosApostados = [x for x in jogosApostados[0]]
-=======
-        #Jogo Ainda não começou
->>>>>>> e80eb21ba280436c62cb0aa0883d7b491183c998
         datas = []
         for id in jogosApostados:
             datas.append(self.mydb.query(DBConstants.get_game_date, (id[0],))[0][0])
@@ -224,7 +219,8 @@ class DBQueries:
         if datetime.now() > min(datas):
             return -2
 
-        self.mydb.execute(DBConstants.reg_aposta, (idUser,valor))
+        print("teste1")
+        self.mydb.execute(DBConstants.reg_aposta, (idUser,valor, len(jogosApostados)))
         numAposta = self.mydb.lastrowid()
         oddsTotal = 1
         for (idJogo, resultadoApostado) in jogosApostados:
@@ -232,6 +228,7 @@ class DBQueries:
             oddsTotal = oddsTotal * odd[0][0]
             self.mydb.execute(DBConstants.add_game_to_bet, (numAposta,idJogo,float(odd[0][0]),resultadoApostado))
         self.mydb.execute(DBConstants.update_odd_total,(float(oddsTotal),numAposta))
+        print("teste2")
         self.mydb.commit()
         
     
@@ -279,16 +276,28 @@ class DBQueries:
         self.mydb.commit()
 
     def getGameState(self, idJogo):
+        '''
+            Retorna o estado do jogo
+        '''
         return self.mydb.query(DBConstants.get_game_state,(idJogo,))[0]
 
     def setWinner(self, idJogo, winner):
+        '''
+            Define o vencedor de um jogo
+        '''
         self.mydb.execute(DBConstants.set_winner,(winner,idJogo))
 
     def updateOdds(self, idJogo, nomeEquipa, odd):
+        '''
+            Atualiza as odds de uma equipa num jogo
+        '''
         self.mydb.execute(DBConstants.update_odds,(odd,idJogo,nomeEquipa))
         self.mydb.commit()
 
-    def updateUserField(self, index, value, usrId): #atualizar
+    def updateUserField(self, index, value, usrId):
+        '''
+            Permite editar o perfil
+        '''
         if index == 0:
             self.mydb.execute(DBConstants.update_email_field, (value, usrId))
         elif index == 1:
@@ -296,28 +305,32 @@ class DBQueries:
         self.mydb.commit()
         
     def getTeamsGame(self, gameId):
+        '''
+            Devolve as equipas de um jogo
+        '''
         return self.mydb.query(DBConstants.get_teams_by_game, (gameId, ))
 
-    #Isto não te retorna o que queres acho, Blanc (retorna lista, faz [0] para retornar o valor)
     def getGameDate(self, gameId):
+        '''
+            Devolve o dia do jogo de uma equipa
+        '''
         return self.mydb.query(DBConstants.get_game_date, (gameId, ))
 
     def atualizaResultadoApostas(self, idJogo, winner):
+        '''
+            Atualiza o resultado das apostas que tem o jogo que terminou
+        '''
         self.mydb.execute(DBConstants.set_bet_winner,(idJogo, winner))
         self.mydb.execute(DBConstants.set_bet_loser,(idJogo, winner))
         apostasOndeEstavaJogoGanho = [x[0] for x in self.mydb.query(DBConstants.get_bets_winner,(idJogo,winner))]
         apostasOndeEstavaJogoPerdido = [x[0] for x in self.mydb.query(DBConstants.get_bets_loser,(idJogo,winner))]
-        
-        print(apostasOndeEstavaJogoGanho)
 
         for idAposta in apostasOndeEstavaJogoGanho:
-            ganhos = self.mydb.query(DBConstants.ganho_por_aposta,(idAposta,))
-            apostaGanha = 1
-            for ganho in ganhos:
-                if ganho[0] != 1:
-                    apostaGanha = 0
             
-            if apostaGanha == 1:
+            self.mydb.execute(DBConstants.update_nmr_jogos,(idAposta,))
+            nmrApostas = self.mydb.query(DBConstants.get_nmr_jogos,(idAposta,))[0][0]
+
+            if nmrApostas == 0:
                 self.setApostaGanha(idAposta)
 
         for idAposta in apostasOndeEstavaJogoPerdido:
@@ -328,7 +341,9 @@ class DBQueries:
         self.mydb.commit()
                 
     def setApostaGanha(self, idAposta):
-
+        '''
+            Define a aposta dada como ganha
+        '''
         self.mydb.execute(DBConstants.set_aposta,("G",idAposta,))
 
         (idUser, valor) = self.mydb.query(DBConstants.get_userid_by_bet,(idAposta,))[0]
@@ -341,11 +356,18 @@ class DBQueries:
         return self.mydb.query(DBConstants.ganho_por_aposta,(idAposta,))
 
     def suspensaoJogo(self, suspende, idJogo):
+        '''
+            Serve para ativar ou desativar a suspensão de um jogo
+        '''
         self.mydb.execute(DBConstants.suspende_game, (suspende, idJogo))
         self.mydb.commit()
 
     #RETURN -> (<MontanteApostado>,<total ganho>,[([(Estoril,jogaEmCasa)],<Quem ganhou>)])
     def listaJogosPorAposta(self, idAposta):
+        '''
+            Devolve um tuplo com o montante apostado, o lucro ou prejuízo final e os jogos da aposta
+        '''
+
         listaIdJogos = self.mydb.query(DBConstants.idJogos_aposta,(idAposta,))
         listaJogos = []
 
@@ -371,13 +393,22 @@ class DBQueries:
         # ==== NOTIFICAÇÃO ==== #
     
     def addNotificacao(self, title, text, idUser):
+        '''
+            Adiciona uma notificação à base de dados
+        '''
         self.mydb.execute(DBConstants.add_notificacao,(idUser,title,text))
 
     # [(titulo, texto)]
     def getNotificacao(self, idUser):
+        '''
+            Devolve as notificações privadas de um utilizador, juntamente com as públicas
+        '''
         return self.mydb.execute(DBConstants.add_notificacao,(idUser,))
     
     def setResultado(self, vencedor, idJogo):
+        '''
+            Define o resultado de um jogo
+        '''
         self.mydb.execute(DBConstants.close_game,(vencedor, idJogo))
         self.mydb.execute(DBConstants.close_game_t,(idJogo,))
         self.atualizaResultadoApostas(idJogo, vencedor)
