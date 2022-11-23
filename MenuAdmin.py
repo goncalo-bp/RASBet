@@ -3,19 +3,6 @@ import time
 import re
 import random, string
 
-#######  #     #  #######  #######  #######  #     #           #######  #######  #     #
-#        #     #  #     #  #        #         #   #            #        #     #   #   #
-#######  #######  #######  #   ###  #   ###     #              #   ###  #######     #
-      #  #     #  #     #  #     #  #     #     #              #     #  #     #     #
-#######  #     #  #     #  #######  #######     #              #######  #     #     #
- 
-
-#######          #######  #######  ##    #  #######  #       #######  #######  #######  #######
-#                #     #  #     #  # #   #  #        #       #           #     #     #  #     #
-####             #######  #######  #  #  #  ####     #       ####        #     #######  #     #
-#                #        #     #  #   # #  #        #       #           #     #   #    #     #
-#######          #        #     #  #    ##  #######  ####### #######  #######  #     #  #######
-    
 
 jogosfutebol = ["Benfica - Chaves", "Sporting - Varzim", "Palmeiras - São Paulo"]
 
@@ -50,16 +37,15 @@ class MenuAdmin:
 
         
         jogo = Menu(names + "\n" , ["1", "X", "2", "Sair"])
-        print(names)
-        names.split("X")
+        s = names.split(" X ")
         while not jogo.exit:
             sel = jogo.menu.show()
             if sel == 0:
-                return names[0]
+                return str(s[0])
             elif sel == 1:
-                return names[1]
+                return "Draw"
             elif sel == 2:
-                return names[2] 
+                return str(s[1])
             elif sel == 3:
                 jogo.exit = True
 

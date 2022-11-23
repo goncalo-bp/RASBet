@@ -52,3 +52,4 @@ class Menu:
             return email,palavra_passe,data_nascimento,nif
         except EOFError as e:
             self.showMessage("-> Saindo...", 1)
+            return None,None,None,None
