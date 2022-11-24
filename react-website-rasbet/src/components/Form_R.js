@@ -110,7 +110,6 @@ return (
 		{errorMessage()}
 		{successMessage()}
 	</div>
-
 	<form className='list-item'>
 		<div className='title'>
 			<h1>REGISTO</h1>
