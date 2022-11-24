@@ -1,15 +1,14 @@
 import React from 'react';
 import '../../App.css';
-import Init from '../Init';
+import '../Init.css';
+import Form_L from '../Form_L';
 
 function Login() {
   return (
     <>
       <div className='init-container'>
         <div className='init-content'>
-            <div className='init-item'>
-                <h1>Login</h1>
-            </div>
+            <Form_L/>
             <div className='init-image'/>
         </div>
     </div>
@@ -17,4 +16,4 @@ function Login() {
   );
 }
 
-export default Registo;
+export default Login;

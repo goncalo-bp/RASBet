@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import './Form_R.css';
 
-export default function Form_R() {
+export default function Form_L() {
 
 // States for registration
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
-const [nif, setNIF] = useState('');
-const [date, setDate] = useState('');
-
 
 // States for checking the errors
 const [submitted, setSubmitted] = useState(false);
@@ -27,36 +24,17 @@ const handlePassword = (e) => {
 	setSubmitted(false);
 };
 
-// Handling the date change
-const handleDate = (e) => {
-	e.target.type="date";
-	setDate(e.target.value);
-	setSubmitted(false);
-};
-
-// Handling the nif change
-const handleNIF = (e) => {
-	if (e.target.value.length <= 9) {
-		setNIF(e.target.value);
-		setSubmitted(false);
-	}
-};
-
 
 // Handling the form submission
 const handleSubmit = (e) => {
 	e.preventDefault();
-	if (nif === '' || email === '' || password === '' || date === '') {
+	if (email === '' || password === '') {
 	setError(true);
 	} else {
 	setSubmitted(true);
 	setError(false);
 	}
 };
-
-const setToDate = (e) => {
-	e.target.type="date";
-}
 
 // Showing success message
 const successMessage = () => {
@@ -105,15 +83,10 @@ return (
 <div className="form">
 	
 
-	{/* Calling to the methods */}
-	<div className="messages">
-		{errorMessage()}
-		{successMessage()}
-	</div>
+	
 	<form className='list-item'>
-		<div className='rasbet-image'/>
 		<div className='title'>
-			<h1>REGISTO</h1>
+			<h1>BEM VINDO</h1>
 		</div>
 		<br/>
 		{/* Labels and inputs for form data */}
@@ -123,16 +96,15 @@ return (
 		<input onChange={handlePassword} className="input"
 		value={password} type="password" placeholder='Palavra-passe' />
 		<br/>
-		<input onChange={handleDate} className="input" id="date"
-		value={date} type="text" placeholder='Data de Nascimento' onClick={setToDate}/>
-		<br/>
-		<input onChange={handleNIF} className="input"
-		value={nif} type="number" placeholder='NIF' />
-
-
+        {/* Calling to the methods */}
+	    <div className="messages">
+	    	{errorMessage()}
+	    	{successMessage()}
+	    </div>
 		<button onClick={handleSubmit} className="btn" type="submit">
-		Concluir
+		Aceder
 		</button>
+        Não tem conta? <a href="/sign-up">Registe-se já!</a>
 	</form>
 
 	</div>

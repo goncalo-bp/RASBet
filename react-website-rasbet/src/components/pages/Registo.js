@@ -8,6 +8,7 @@ function Registo() {
     <>
       <div className='init-container'>
         <div className='init-content'>
+            
             <Form_R/>
             <div className='init-image'/>
         </div>
