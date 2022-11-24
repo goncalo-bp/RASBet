@@ -1,0 +1,38 @@
+.init-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background-color: #013220;
+    position: absolute;
+}
+
+.init-content {
+
+    height: 80%;
+    width: 80%;
+    border-radius: 5%;
+    background-color: #ffffff;
+    display: grid;
+    grid-template-columns: 50% 100%;
+}
+
+.init-image {
+    background: url('/imagens/aposta-esportiva.jpg') center center/cover no-repeat;
+    max-height: inherit;
+    height: 96%;
+    width: 48%;
+    align-self: center;
+    z-index: 1;
+    border-radius: 5%;
+}
+
+.init-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}

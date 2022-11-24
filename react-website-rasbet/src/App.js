@@ -1,14 +1,13 @@
 import './App.css';
-import Navbar from './components/Navbar';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import Registo from './components/pages/Registo';
 
 function App() {
   return (
     <>
       <Router>
-      <Navbar />
       <Routes>
-        <Route path="/" exact  />
+        <Route exact path="/"  element={<Registo/>} />
       </Routes> 
       </Router>
     </>
