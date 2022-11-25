@@ -6,6 +6,7 @@ from flask_cors import CORS,cross_origin
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['JSON_AS_ASCII'] = False
 dbQueries = DBQueries()
 
 @app.route('/login', methods = ['POST'])
@@ -52,5 +53,45 @@ def register():
     except:
         return {"msg": "Email or NIF already existent"}, 401
 
+@app.route('/games', methods = ['POST'])
+@cross_origin()
+def get_games():
+    sport = request.json.get("sport", None)
+    suspenso = request.json.get("suspenso", None)
+    toJson = {}
+    jogo = 0
+    idList = dbQueries.getBySport(sport,suspenso)
+    for id in idList:
+        perGame = {}
+        game = dbQueries.getGameInfo(id)
+        i=0
+        for team in game:
+            equipa = {}
+            equipa['name'] = team[0]
+            equipa['odd'] = team[1]
+            if len(game) == 3:
+                if team[0] == 'Draw':
+                    perGame[f'equipa1'] = equipa
+                elif team[2] == 1:
+                    perGame[f'equipa0'] = equipa
+                else:
+                    perGame[f'equipa2'] = equipa
+            
+            else:
+                perGame[f'equipa{i}'] = equipa
+                i = i+1
+        
+        datetimeX = dbQueries.getGameDate(id)[0]
+        print(datetimeX)
+
+        perGame['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
+        perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
+        
+        
+        toJson[f'jogo{jogo}'] = perGame
+        jogo += 1
+
+    return toJson,200
+    
 if __name__ == '__main__':
    app.run()

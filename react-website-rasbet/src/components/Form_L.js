@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './Form_R.css';
-
+import Popup from './Popup';
 export default function Form_L() {
 
 // States for registration
@@ -8,83 +8,79 @@ const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
 
 // States for checking the errors
-const [submitted, setSubmitted] = useState(false);
-const [error, setError] = useState(false);
+const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/pass incorretos
+const [btnPopup, setBtnPopup] = useState(false);
 
 
 // Handling the email change
 const handleEmail = (e) => {
 	setEmail(e.target.value);
-	setSubmitted(false);
 };
 
 // Handling the password change
 const handlePassword = (e) => {
 	setPassword(e.target.value);
-	setSubmitted(false);
 };
 
 
-// Handling the form submission
+function toJson(email,password) {
+	return {
+		"email": email,
+		"password": password
+	}
+}
+
 const handleSubmit = (e) => {
 	e.preventDefault();
 	if (email === '' || password === '') {
-	setError(true);
-	} else {
-	setSubmitted(true);
+	setError(0);
+	setBtnPopup(true);
+	}
+	else {
+
 	setError(false);
+	fetch('http://localhost:5000/login', {  // Enter your IP address here
+
+	method: 'POST', 
+	mode: 'cors', 
+	body: JSON.stringify(toJson(email,password)), // body data type must match "Content-Type" header
+	headers: {"Content-Type": "application/json"}
+	})
+	.then( (response) => {
+		if(!response.ok) {
+			throw Error(response.status);
+		}
+		else return response.json();
+	}).then( (data) => {
+		window.location.replace('http://localhost:3000/home');
+	})
+	.catch( (error,status) => {
+		console.log("error: ",status);
+		setError(1);
+		setBtnPopup(true);
+	});
 	}
 };
 
-// Showing success message
-const successMessage = () => {
-	return (
-	<div
-		className="success"
-		style={{
-		display: submitted ? '' : 'none',
-		}}>
-		<h1>User {email} successfully registered!!</h1>
-	</div>
-	);
-};
 
-// Showing error message if error is true
+
+
 const errorMessage = () => {
 	return (
-	<div
-		className="error"
-		style={{
-		display: error ? '' : 'none',
-		}}>
-		<h1>Please enter all the fields</h1>
+	<div>
+		{error === 0 ? <h1>Complete todos os campos</h1> :
+		<h1>Email / Password incorretos</h1>}
 	</div>
 	);
 };
-
-document.addEventListener("click", (evt) => {
-	const date = document.getElementById("date");
-	let targetEl = evt.target; // clicked element      
-	do {
-	  if(targetEl === date) {
-		// This is a click inside, does nothing, just return.
-		document.getElementById("date").type = "date";
-		return;
-	  }
-	  // Go up the DOM
-	  targetEl = targetEl.parentNode;
-	} while (targetEl);
-	// This is a click outside.      
-	if(date.value==='') 
-		document.getElementById("date").type = "text";
-  });
 
 return (
 <div className="form">
 	
-
-	
 	<form className='list-item'>
+		<Popup trigger={btnPopup} setTrigger={setBtnPopup}>
+			{errorMessage()}
+		</Popup>
 		<div className='title'>
 			<h1>BEM VINDO</h1>
 		</div>
@@ -96,11 +92,6 @@ return (
 		<input onChange={handlePassword} className="input"
 		value={password} type="password" placeholder='Palavra-passe' />
 		<br/>
-        {/* Calling to the methods */}
-	    <div className="messages">
-	    	{errorMessage()}
-	    	{successMessage()}
-	    </div>
 		<button onClick={handleSubmit} className="btn" type="submit">
 		Aceder
 		</button>

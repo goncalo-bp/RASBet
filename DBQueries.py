@@ -128,8 +128,8 @@ class DBQueries:
         '''
         data = self.mydb.query(DBConstants.get_game_info, (gameId,))
         l = []
-        for elem in data[0]:
-            l.append(elem[0])        
+        for elem in data:
+            l.append(elem)        
         return l
 
     def getBalance(self, usrId):
@@ -311,7 +311,7 @@ class DBQueries:
         '''
             Devolve o dia do jogo de uma equipa
         '''
-        return self.mydb.query(DBConstants.get_game_date, (gameId, ))
+        return self.mydb.query(DBConstants.get_game_date, (gameId, ))[0]
 
     def atualizaResultadoApostas(self, idJogo, winner):
         '''

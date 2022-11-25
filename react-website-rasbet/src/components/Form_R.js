@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './Form_R.css';
-
+import Popup from './Popup';
 export default function Form_R() {
 
 // States for registration
@@ -9,36 +9,45 @@ const [password, setPassword] = useState('');
 const [nif, setNIF] = useState('');
 const [date, setDate] = useState('');
 
-
 // States for checking the errors
-const [submitted, setSubmitted] = useState(false);
-const [error, setError] = useState(false);
-
+const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/nif | 2 - menor
+const [btnPopup, setBtnPopup] = useState(false);
 
 // Handling the email change
 const handleEmail = (e) => {
 	setEmail(e.target.value);
-	setSubmitted(false);
 };
 
 // Handling the password change
 const handlePassword = (e) => {
 	setPassword(e.target.value);
-	setSubmitted(false);
 };
 
 // Handling the date change
 const handleDate = (e) => {
 	e.target.type="date";
 	setDate(e.target.value);
-	setSubmitted(false);
 };
+
+function getAge(data) {
+	var ano = data.substring(0,4);
+	var mes = data.substring(5,7);
+	var dia = data.substring(8,10);
+    var today = new Date();
+    var birthDate = new Date(ano,mes-1,dia);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }    
+    return age;
+}
+
 
 // Handling the nif change
 const handleNIF = (e) => {
 	if (e.target.value.length <= 9) {
 		setNIF(e.target.value);
-		setSubmitted(false);
 	}
 };
 
@@ -54,16 +63,18 @@ function toJson(email,password,nif,date) {
 
 // Handling the form submission
 const handleSubmit = (e) => {
-	var resp;
-	var respo;
 	e.preventDefault();
 	if (nif === '' || email === '' || password === '' || date === '') {
-	setError(true);
-	} else {
-	setSubmitted(true);
+	setError(0);
+	setBtnPopup(true);
+	} else if (getAge(date) < 18) {
+			setError(2);
+			setBtnPopup(true);	
+	}
+	else {
+
 	setError(false);
-	
-	respo = fetch('http://localhost:5000/register', {  // Enter your IP address here
+	fetch('http://localhost:5000/register', {  // Enter your IP address here
 
 	method: 'POST', 
 	mode: 'cors', 
@@ -80,7 +91,8 @@ const handleSubmit = (e) => {
 		window.location.replace('http://localhost:3000/');
 	}).catch( (error) => {
 		console.log("error: ",error);
-		
+		setError(1);
+		setBtnPopup(true);
 	});
 	}
 };
@@ -89,28 +101,13 @@ const setToDate = (e) => {
 	e.target.type="date";
 }
 
-// Showing success message
-const successMessage = () => {
-	return (
-	<div
-		className="success"
-		style={{
-		display: submitted ? '' : 'none',
-		}}>
-		<h1>User {email} successfully registered!!</h1>
-	</div>
-	);
-};
-
 // Showing error message if error is true
 const errorMessage = () => {
 	return (
-	<div
-		className="error"
-		style={{
-		display: error ? '' : 'none',
-		}}>
-		<h1>Please enter all the fields</h1>
+	<div>
+		{error === 0 ? <h1>Complete todos os campos</h1>  : ""}
+		{error === 1 ? <h1>Email / NIF já registados</h1> : ""}
+		{error === 2 ? <h1>Tem de ser maior de idade</h1> : ""}
 	</div>
 	);
 };
@@ -133,13 +130,12 @@ document.addEventListener("click", (evt) => {
   });
 
 return (
+	
 <div className="form">
 	
-
-	{/* Calling to the methods */}
-	<div className="messages">
+	<Popup trigger={btnPopup} setTrigger={setBtnPopup}>
 		{errorMessage()}
-	</div>
+	</Popup>
 	<form className='list-item'>
 		<div className='rasbet-image'/>
 		<div className='title'>
