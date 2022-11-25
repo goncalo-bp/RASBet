@@ -42,15 +42,46 @@ const handleNIF = (e) => {
 	}
 };
 
+function toJson(email,password,nif,date) {
+	return {
+		"email": email,
+		"password": password,
+		"nif": nif,
+		"date": date
+	}
+}
+
 
 // Handling the form submission
 const handleSubmit = (e) => {
+	var resp;
+	var respo;
 	e.preventDefault();
 	if (nif === '' || email === '' || password === '' || date === '') {
 	setError(true);
 	} else {
 	setSubmitted(true);
 	setError(false);
+	
+	respo = fetch('http://localhost:5000/register', {  // Enter your IP address here
+
+	method: 'POST', 
+	mode: 'cors', 
+	body: JSON.stringify(toJson(email,password,nif,date)), // body data type must match "Content-Type" header
+	headers: {"Content-Type": "application/json"}
+	})
+	.then( (response) => {
+		if(!response.ok) {
+			throw Error(response.status);
+		}
+		else return response.json();
+	}).then( (data) => {
+		console.log(data);
+		window.location.replace('http://localhost:3000/');
+	}).catch( (error) => {
+		console.log("error: ",error);
+		
+	});
 	}
 };
 
@@ -108,7 +139,6 @@ return (
 	{/* Calling to the methods */}
 	<div className="messages">
 		{errorMessage()}
-		{successMessage()}
 	</div>
 	<form className='list-item'>
 		<div className='rasbet-image'/>

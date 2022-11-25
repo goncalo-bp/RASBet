@@ -6,9 +6,6 @@ from datetime import datetime
 
 import time
 
-'''
-
-'''
 class DBQueries:
 
     def __init__(self):
