@@ -4,6 +4,7 @@ import Popup from './Popup';
 export default function Form_R() {
 
 // States for registration
+const [name, setName] = useState('');
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
 const [nif, setNIF] = useState('');
@@ -12,6 +13,11 @@ const [date, setDate] = useState('');
 // States for checking the errors
 const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/nif | 2 - menor
 const [btnPopup, setBtnPopup] = useState(false);
+
+// Handling the name change
+const handleName = (e) => {
+	setName(e.target.value);
+};
 
 // Handling the email change
 const handleEmail = (e) => {
@@ -53,6 +59,7 @@ const handleNIF = (e) => {
 
 function toJson(email,password,nif,date) {
 	return {
+		"name" : name,
 		"email": email,
 		"password": password,
 		"nif": nif,
@@ -64,7 +71,7 @@ function toJson(email,password,nif,date) {
 // Handling the form submission
 const handleSubmit = (e) => {
 	e.preventDefault();
-	if (nif === '' || email === '' || password === '' || date === '') {
+	if (name === '' || nif === '' || email === '' || password === '' || date === '') {
 	setError(0);
 	setBtnPopup(true);
 	} else if (getAge(date) < 18) {
@@ -143,6 +150,9 @@ return (
 		</div>
 		<br/>
 		{/* Labels and inputs for form data */}
+		<input onChange={handleName} className="input"
+		value={name} type="name" placeholder='Name'/>
+		<br/>
 		<input onChange={handleEmail} className="input"
 		value={email} type="email" placeholder='E-mail'/>
 		<br/>
@@ -160,7 +170,6 @@ return (
 		Concluir
 		</button>
 	</form>
-
 	</div>
 );
 }

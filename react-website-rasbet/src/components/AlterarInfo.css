@@ -30,8 +30,13 @@
 }
 
 .edit-trans {
+    height: 10%;
+    width: 100%;
     display: flex;
-    flex-direction: row;
-    column-gap: 10%;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
+
+
+

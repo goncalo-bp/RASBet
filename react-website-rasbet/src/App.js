@@ -4,6 +4,7 @@ import Registo from './components/pages/Registo';
 import Login from './components/pages/Login';
 import Home from './components/pages/Home';
 import Edit from './components/pages/Edit';
+
 function App() {
   return (
     <>

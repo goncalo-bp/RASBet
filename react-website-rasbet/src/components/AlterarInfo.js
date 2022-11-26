@@ -95,15 +95,14 @@ return (
 			/>
 		</div>
 		<br/>
-		<div className='edit-trans' >
-			<Button buttonStyle='btn--white'
-            buttonSize='btn--large' dest="/home">Levantar
+		<div className='edit-form'>
+			<Button buttonStyle='btn--levantar' dest="/home">Levantar
 			</Button>
-			<Button buttonStyle='btn--orange'
-            buttonSize='btn--large' dest="/home">Depositar</Button>
+			<Button buttonStyle='btn--levantar' dest="/home">Depositar
+			</Button>
+			<Button buttonStyle='btn--green' buttonSize='btn--large' dest="/nigga">Historico de Apostas
+			</Button>
 		</div>
-
-		Consultar Histórico de Apostas
 		{/* Labels and inputs for form data */}
 		<input onChange={handleEmail} className="input"
 		value={email} type="email" placeholder='E-mail'/>

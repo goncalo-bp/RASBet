@@ -51,6 +51,11 @@ function Navbar() {
                             Desportos
                         </Link>
                     </li>
+                    <li className='nav-item'>
+                        <Link to='/home/edit' className='nav-links' onClick={closeMobileMenu}>
+                            Conta
+                        </Link>
+                    </li>
                     <li className='nav-item' padd>
                         <Link to='/sign-up' className='nav-links-mobile' onClick={closeMobileMenu}>
                             Registar
