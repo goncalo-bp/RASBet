@@ -86,12 +86,44 @@ def get_games():
 
         perGame['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
         perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
+        perGame['id'] = id
         
         
         toJson[f'jogo{jogo}'] = perGame
         jogo += 1
 
     return toJson,200
+
+@app.route('/transactions', methods = ['POST'])
+@cross_origin()
+def get_historico_transacoes():
+    id = request.json.get("id", None)
+    transactionList = dbQueries.getHistoricoTransacoes(id)
+    toJson = {}
+
+    i = 0
+
+    for transaction in transactionList:
+        perTransaction = {}
+        datetimeX = transaction[1]
+        perTransaction['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
+        perTransaction['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
+        perTransaction['value'] = transaction[3]
+        k = ""
+        if transaction[2] == 'A':
+            k = "Aposta colocada"
+        elif transaction[2] == 'D':
+            k = "Depósito"
+        elif transaction[2] == 'L':
+            k = "Levantamento"
+        elif transaction[2] == 'G':
+            k = "Aposta ganha"
+        perTransaction['description'] = k
+
+        toJson[f'transaction{i}'] = perTransaction
+        i += 1
+
+    return toJson, 200
     
 if __name__ == '__main__':
    app.run()
