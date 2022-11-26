@@ -29,7 +29,7 @@ function Navbar() {
     <>
         <nav className="navbar">
             <div className="navbar-container">
-                <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+                <Link to="/home" className="navbar-logo" onClick={closeMobileMenu}>
                     RASBET
                 </Link>
                 <div className='menu-icon' onClick={handleClick}>
@@ -37,7 +37,7 @@ function Navbar() {
                 </div>
                 <ul className={click ? 'nav-menu active' : 'nav-menu'}>
                     <li className='nav-item'>
-                        <Link to='/' className='nav-links' onClick={closeMobileMenu}>
+                        <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             Home
                         </Link>
                     </li>
@@ -62,7 +62,7 @@ function Navbar() {
                         </Link>
                     </li>
                 </ul>
-                {button && <Button buttonStyle='btn--outline'>Sign UP</Button>}
+                {button && <Button buttonStyle='btn--outline'>Registar</Button>}
             </div>
         </nav>
     </>
