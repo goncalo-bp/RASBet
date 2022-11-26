@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './Form_R.css';
 import Popup from './Popup';
 import './AlterarInfo.css';
+import { Button } from './Button';
 
 export default function Form_L() {
 
@@ -84,10 +85,25 @@ return (
 		</Popup>
 		<div className='edit-header'>
 			<h1>Carlos Pereira</h1>
-      <h2>Saldo : 1000€</h2>
-      <hr/>
+			<br/>
+      		<h2>Saldo : 1000€</h2>
+      		<hr style={{
+    		color: '#E0E0E0',
+    		height: '3px',
+			width: '80%'
+  			}}
+			/>
 		</div>
 		<br/>
+		<div className='edit-trans' >
+			<Button buttonStyle='btn--white'
+            buttonSize='btn--large' dest="/home">Levantar
+			</Button>
+			<Button buttonStyle='btn--orange'
+            buttonSize='btn--large' dest="/home">Depositar</Button>
+		</div>
+
+		Consultar Histórico de Apostas
 		{/* Labels and inputs for form data */}
 		<input onChange={handleEmail} className="input"
 		value={email} type="email" placeholder='E-mail'/>

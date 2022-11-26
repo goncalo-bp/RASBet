@@ -8,6 +8,7 @@
     outline: none;
     border: none;
     cursor: pointer;
+    justify-content: center;
 
 }
 .btn--primary {
@@ -25,6 +26,20 @@
     transition: all 0.3s ease-out;
 }
 
+.btn--white {
+
+    background-color: #fff;
+    color: #FF7300;
+    border: 1px solid #FF7300;
+    transition: all 0.3s ease-out;
+}
+
+.btn--orange {
+    background-color: #FF7300;
+    color: #fff;
+    transition: all 0.3s ease-out;
+}
+
 .btn--medium {
     padding: 8px 20px;
     font-size: 20px;
@@ -38,5 +53,11 @@
 .btn--medium:hover, .btn--large:hover {
     background: #fff;
     color: #242424;
+    transition: all 0.3s ease-out;
+}
+
+.btn--white:hover {
+    background: #FF7300;
+    color: #fff;
     transition: all 0.3s ease-out;
 }

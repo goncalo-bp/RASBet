@@ -88,7 +88,7 @@ const handleSubmit = (e) => {
 		else return response.json();
 	}).then( (data) => {
 		console.log(data);
-		window.location.replace('http://localhost:3000/');
+		return <redirect push to="/login" />
 	}).catch( (error) => {
 		console.log("error: ",error);
 		setError(1);
