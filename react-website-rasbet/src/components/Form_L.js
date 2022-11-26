@@ -2,7 +2,6 @@ import { useState } from 'react';
 import './Form_R.css';
 import Popup from './Popup';
 
-
 export default function Form_L() {
 	// States for registration
 	const [email, setEmail] = useState('');
@@ -36,7 +35,7 @@ export default function Form_L() {
 		}
 		else {
 			setError(false);
-			fetch('http://localhost:5000/login', {  // Enter your IP address here
+			fetch('http://localhost:5002/login', {  // Enter your IP address here
 				method: 'POST', 
 				mode: 'cors', 
 				body: JSON.stringify(toJson(email,password)), // body data type must match "Content-Type" header

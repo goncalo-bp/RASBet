@@ -41,7 +41,7 @@ const handleSubmit = (e) => {
 	else {
 
 	setError(false);
-	fetch('http://localhost:5000/login', {  // Enter your IP address here
+	fetch('http://localhost:5002/login', {  // Enter your IP address here
 
 	method: 'POST', 
 	mode: 'cors', 
