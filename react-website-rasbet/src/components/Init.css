@@ -1,0 +1,46 @@
+.init-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background-color: #013220;
+    position: absolute;
+}
+
+.init-content {
+
+    height: 80%;
+    width: 80%;
+    border-radius: 5%;
+    background-color: #ffffff;
+    display: grid;
+    grid-template-columns: 50% 100%;
+    align-items: center;
+}
+
+.init-image {
+    background: url('/imagens/aposta-esportiva.jpg') center center/cover no-repeat;
+    height: 90%;
+    width: 48%;
+    align-self: center;
+    z-index: 1;
+    border-radius: 5%;
+}
+
+.rasbet-image {
+    background: url('/imagens/rasbet.png') center center/cover no-repeat;
+    height: 10%;
+    width: 10%;
+    align-self: top;
+    z-index: 1;
+}
+
+.init-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}

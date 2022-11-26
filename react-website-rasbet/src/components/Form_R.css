@@ -1,0 +1,60 @@
+.input{
+  font-size: larger;
+  width: auto;
+  border-radius: 10%;
+  padding: 20px 10px;
+  margin: 3%;
+  border: 5px solid #013220;
+  text-align: center;
+  width: 80%;
+}
+
+.title {
+    color: #013220;
+    font-family: cursive;
+}
+
+.list-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
+    width: 100%;
+}
+.btn{
+  color: white;
+  background-color: rgb(255, 115, 0);
+  border-radius: 5px;
+  font-size: larger;
+  display: block;
+  padding: 5px;
+  margin: 5% auto;
+  width: 80%;
+  height: 8%;
+  border-radius: 10%;
+  border: 0cm solid;
+}
+ 
+.messages{
+  display: flex;
+  justify-content: center;
+}
+ 
+.error{
+  display: block;
+  background-color: red;
+  color: white;
+  width: fit-content;
+  height: 50px;
+  padding: 5px;
+}
+ 
+.success{
+  display: block;
+  background-color: lightblue;
+  color: black;
+  width: fit-content;
+  height: 50px;
+  padding: 5px;
+}

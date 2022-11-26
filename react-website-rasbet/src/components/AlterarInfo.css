@@ -1,0 +1,31 @@
+.edit-fundo {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90.9%;
+    width: 100%;
+    background-color: #E0E0E0;
+    position: absolute;
+}
+
+.edit-content {
+    height: 80%;
+    width: 80%;
+    border-radius: 5%;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-header {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+}
