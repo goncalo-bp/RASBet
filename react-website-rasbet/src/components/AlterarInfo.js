@@ -92,6 +92,7 @@ return (
 			<h1>Carlos Pereira</h1>
 			<br/>
       		<h2>Saldo : 1000€</h2>
+			<br/>
       		<hr style={{
     		color: '#E0E0E0',
     		height: '3px',
@@ -107,16 +108,16 @@ return (
 		</div>
 		<br/>
 		<Button dest="/home/historico" className="btn--primary--green--large">Histórico de Transações <i className='far fa-play-circle'/></Button>
-		<input onChange={handleEmail} className="input"
+		<input onChange={handleEmail} className="input--conta"
 		value={email} type="email" placeholder='E-mail'/>
-		<input onChange={handlePassword} className="input"
+		<input onChange={handlePassword} className="input--conta"
 		value={password} type="password" placeholder='Palavra-passe' />
-		<input onChange={handleNewPassword} className="input"
+		<input onChange={handleNewPassword} className="input--conta"
 		value={newPassword} type="newPassword" placeholder='Nova Palavra-passe' />
-		<button onClick={handleSubmit} className="btn" type="submit">
+		<button onClick={handleSubmit} className="btn--primary--orange--large" type="submit">
 		Mudar Palavra-passe
 		</button>
 	</form>
-	</div>
+</div>
 );
 }

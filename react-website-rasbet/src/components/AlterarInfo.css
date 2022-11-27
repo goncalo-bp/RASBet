@@ -3,17 +3,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 90.9%;
+    height: inherit;
     width: 100%;
     background-color: #E0E0E0;
     position: absolute;
 }
 
 .edit-content {
-    height: 90%;
-    width: 80%;
+    height: inherit;
+    width: 70%;
     border-radius: 5%;
-    padding: 3%;
+    padding: 2%;
+    margin: 40px;
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
