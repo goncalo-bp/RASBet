@@ -102,16 +102,11 @@ return (
 		<br/>
 		<br/>
 		<div className='edit-form'>
-			<a href='http://localhost:3000/home/levantar' className='btn--levantar-depositar'>
-				Levantar
-			</a>
-			<a href='http://localhost:3000/home/depositar' className='btn--levantar-depositar'>
-				Depositar
-			</a>
+			<Button dest="/home/levantar" className="btn--primary--orange--large">Levantar</Button>
+			<Button dest="/home/depositar" className="btn--primary--orange--large">Depositar</Button>
 		</div>
-		<a href='http://localhost:3000/home/historico' className='btn--transacoes'>
-				Histórico de Transações <i className='far fa-play-circle'/>
-		</a>
+		<br/>
+		<Button dest="/home/historico" className="btn--primary--green--large">Histórico de Transações <i className='far fa-play-circle'/></Button>
 		<input onChange={handleEmail} className="input"
 		value={email} type="email" placeholder='E-mail'/>
 		<input onChange={handlePassword} className="input"

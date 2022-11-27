@@ -71,6 +71,20 @@
     padding: 12px 26px;
     font-size: 20px;
 }
+.btn--primary--medium:hover{
+    padding: 12px 14px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #242424;
+    transition: all 0.3s ease-out;
+}
+.btn--primary--large:hover {
+    padding: 12px 18px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #242424;
+    transition: all 0.3s ease-out;
+}
 
 /* ============================================= */
 /*                OUTLINE ORANGE                 */
@@ -147,6 +161,20 @@
     padding: 12px 26px;
     font-size: 20px;
 }
+.btn--primary--orange--medium:hover{
+    padding: 12px 14px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #FF7300;
+    transition: all 0.3s ease-out;
+}
+.btn--primary--orange--large:hover {
+    padding: 12px 18px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #FF7300;
+    transition: all 0.3s ease-out;
+}
 /* ============================================= */
 /*                OUTLINE GREEN                  */
 /* ============================================= */
@@ -220,6 +248,20 @@
 
     padding: 12px 26px;
     font-size: 20px;
+}
+.btn--primary--green--medium:hover{
+    padding: 12px 14px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #116530;
+    transition: all 0.3s ease-out;
+}
+.btn--primary--green--large:hover {
+    padding: 12px 18px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #116530;
+    transition: all 0.3s ease-out;
 }
 
 /* ============================================= */
