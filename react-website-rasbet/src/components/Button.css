@@ -9,13 +9,12 @@
     border: none;
     cursor: pointer;
     justify-content: center;
-
+    text-align: center;
 }
 .btn--primary {
     background-color: var(--primary);
     color: #242424;
     border: 1px solid var(--primary);
-
 }
 
 .btn--outline {
@@ -27,7 +26,6 @@
 }
 
 .btn--white {
-
     background-color: #fff;
     color: #FF7300;
     border: 1px solid #FF7300;
@@ -46,8 +44,9 @@
 }
 
 .btn--large {
-    padding: 12px 26px;
-    font-size: 20px;
+    display: flex;
+    padding: 30px 30px;
+    font-size: 40px;
 }
 
 .btn--medium:hover, .btn--large:hover {
@@ -62,20 +61,48 @@
     transition: all 0.3s ease-out;
 }
 
-.btn--levantar {
-    display: flex;
-    outline: 0;
-    text-align: center;
+.btn--levantar-depositar{
+    border-radius: 15px;
+    text-decoration: none;
+    outline: none;
+    border: none;
     cursor: pointer;
-    padding: 30px 5px;
-    border: 0;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    padding: 5px 30px;
+    font-size: 40px;
+    background-color: #FF7300;
     color: #fff;
-    font-size: 30px;
-    background: #00d301;
-    background: -webkit-linear-gradient(-196deg,#00d301,#36c275 50%,#00a562);
-    background: -webkit-linear-gradient(164deg,#00d301,#36c275 50%,#00a562);
-    background: linear-gradient(286deg,#00d301,#36c275 50%,#00a562);
-    line-height: 0px;
-    font-weight: 800;
-    transition: background,color .1s ease-in-out;
+    transition: all 0.3s ease-out;
+}
+.btn--levantar-depositar:hover{
+    border-radius: 15px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    padding: 5px 10px;
+    font-size: 40px;
+    background-color: white;
+    color: #FF7300;
+    transition: all 0.3s ease-out;
+}
+
+.btn--transacoes{
+    background:none; 
+    text-decoration: none;
+    color: #242424;
+    border:none; 
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    padding: 5px 10px;
+    font-size: 25px;
+}
+.btn--transacoes:hover{
+    background-color: green;
+    transition: all 0.3s ease-out;
 }

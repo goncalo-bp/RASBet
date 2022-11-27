@@ -4,6 +4,9 @@ import Registo from './components/pages/Registo';
 import Login from './components/pages/Login';
 import Home from './components/pages/Home';
 import Edit from './components/pages/Edit';
+import Levantar from './components/pages/Levantar';
+import Depositar from './components/pages/Depositar';
+import Historico from './components/pages/Historico';
 
 function App() {
   return (
@@ -14,6 +17,9 @@ function App() {
         <Route exact path="/sign-up"  element={<Registo/>} />
         <Route exact path="/home"  element={<Home/>} />
         <Route exact path="/home/edit"  element={<Edit/>} />
+        <Route exact path="/home/levantar"  element={<Levantar/>} />
+        <Route exact path="/home/depositar"  element={<Depositar/>} />
+        <Route exact path="/home/historico"  element={<Historico/>} />
       </Routes> 
       </Router>
     </>

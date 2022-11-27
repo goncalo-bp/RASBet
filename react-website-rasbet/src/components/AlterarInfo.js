@@ -9,11 +9,11 @@ export default function Form_L() {
 // States for registration
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
+const [newPassword, setNewPassword] = useState('');
 
 // States for checking the errors
 const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/pass incorretos
 const [btnPopup, setBtnPopup] = useState(false);
-
 
 // Handling the email change
 const handleEmail = (e) => {
@@ -25,17 +25,26 @@ const handlePassword = (e) => {
 	setPassword(e.target.value);
 };
 
+// Handling the password change
+const handleNewPassword = (e) => {
+	setNewPassword(e.target.value);
+};
 
-function toJson(email,password) {
+const toLevantar = () => {
+	window.location.replace('http://localhost:3000/home');
+}
+
+function toJson(email,password,newPassword) {
 	return {
 		"email": email,
-		"password": password
+		"password": password,
+		"newPassword": newPassword
 	}
 }
 
 const handleSubmit = (e) => {
 	e.preventDefault();
-	if (email === '' || password === '') {
+	if (newPassword === '' || email === '' || password === '') {
 	setError(0);
 	setBtnPopup(true);
 	}
@@ -46,7 +55,7 @@ const handleSubmit = (e) => {
 
 	method: 'POST', 
 	mode: 'cors', 
-	body: JSON.stringify(toJson(email,password)), // body data type must match "Content-Type" header
+	body: JSON.stringify(toJson(email,password, newPassword)), // body data type must match "Content-Type" header
 	headers: {"Content-Type": "application/json"}
 	})
 	.then( (response) => {
@@ -64,10 +73,6 @@ const handleSubmit = (e) => {
 	});
 	}
 };
-
-
-
-
 const errorMessage = () => {
 	return (
 	<div>
@@ -95,27 +100,28 @@ return (
 			/>
 		</div>
 		<br/>
+		<br/>
 		<div className='edit-form'>
-			<Button buttonStyle='btn--levantar' dest="/home">Levantar
-			</Button>
-			<Button buttonStyle='btn--levantar' dest="/home">Depositar
-			</Button>
-			<Button buttonStyle='btn--green' buttonSize='btn--large' dest="/nigga">Historico de Apostas
-			</Button>
+			<a href='http://localhost:3000/home/levantar' className='btn--levantar-depositar'>
+				Levantar
+			</a>
+			<a href='http://localhost:3000/home/depositar' className='btn--levantar-depositar'>
+				Depositar
+			</a>
 		</div>
-		{/* Labels and inputs for form data */}
+		<a href='http://localhost:3000/home/historico' className='btn--transacoes'>
+				Histórico de Transações <i className='far fa-play-circle'/>
+		</a>
 		<input onChange={handleEmail} className="input"
 		value={email} type="email" placeholder='E-mail'/>
-		<br/>
 		<input onChange={handlePassword} className="input"
 		value={password} type="password" placeholder='Palavra-passe' />
-		<br/>
+		<input onChange={handleNewPassword} className="input"
+		value={newPassword} type="newPassword" placeholder='Nova Palavra-passe' />
 		<button onClick={handleSubmit} className="btn" type="submit">
-		Aceder
+		Mudar Palavra-passe
 		</button>
-        Não tem conta? <a href="/sign-up">Registe-se já!</a>
 	</form>
-
 	</div>
 );
 }
