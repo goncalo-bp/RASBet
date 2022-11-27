@@ -1,65 +1,230 @@
-:root{
-    --primary: #fff;
-}
-
-.btn {
-    padding: 8px 20px;
-    border-radius: 2px;
+/* ============================================= */
+/*                    OUTLINE                    */
+/* ============================================= */
+.btn--outline--medium {
+    border-radius: 5px;
     outline: none;
-    border: none;
     cursor: pointer;
     justify-content: center;
-    text-align: center;
-}
-.btn--primary {
-    background-color: var(--primary);
-    color: #242424;
-    border: 1px solid var(--primary);
-}
+    text-decoration: none;
 
-.btn--outline {
     background-color: transparent;
     color: #fff;
-    padding: 8px 20px;
-    border: 1px solid var(--primary);
+    border: 1px solid #fff;
     transition: all 0.3s ease-out;
-}
 
-.btn--white {
-    background-color: #fff;
-    color: #FF7300;
-    border: 1px solid #FF7300;
-    transition: all 0.3s ease-out;
-}
-
-.btn--orange {
-    background-color: #FF7300;
-    color: #fff;
-    transition: all 0.3s ease-out;
-}
-
-.btn--medium {
     padding: 8px 20px;
     font-size: 18px;
 }
+.btn--outline--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
 
-.btn--large {
-    display: flex;
-    padding: 30px 30px;
-    font-size: 40px;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    transition: all 0.3s ease-out;
+
+    padding: 12px 26px;
+    font-size: 20px;
 }
-
-.btn--medium:hover, .btn--large:hover {
+.btn--outline--medium:hover,
+.btn--outline--large:hover {
     background: #fff;
     color: #242424;
     transition: all 0.3s ease-out;
 }
 
-.btn--white:hover {
-    background: #FF7300;
+/* ============================================= */
+/*                    PRIMARY                    */
+/* ============================================= */
+.btn--primary--medium {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: #fff;
+    color: #242424;
+    border: 1px solid var(--primary);
+    transition: all 0.3s ease-out;
+
+    padding: 8px 20px;
+    font-size: 18px;
+}
+.btn--primary--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: #fff;
+    color: #242424;
+    border: 1px solid var(--primary);
+    transition: all 0.3s ease-out;
+
+    padding: 12px 26px;
+    font-size: 20px;
+}
+
+/* ============================================= */
+/*                OUTLINE ORANGE                 */
+/* ============================================= */
+.btn--outline--orange--medium {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: transparent;
     color: #fff;
+    border: 1px solid #fff;
+    transition: all 0.3s ease-out;
+
+    padding: 8px 20px;
+    font-size: 18px;
+}
+.btn--outline--orange--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    transition: all 0.3s ease-out;
+
+    padding: 12px 26px;
+    font-size: 20px;
+}
+
+.btn--outline--orange--medium:hover,
+.btn--outline--orange--large:hover {
+    background: #fff;
+    border: 1px solid #fff;
+    color: #FF7300;
     transition: all 0.3s ease-out;
 }
+
+/* ============================================= */
+/*                PRIMARY ORANGE                 */
+/* ============================================= */
+.btn--primary--orange--medium {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: #FF7300;
+    color: #fff;
+    border: 1px solid #FF7300;
+    transition: all 0.3s ease-out;
+
+    padding: 8px 20px;
+    font-size: 18px;
+}
+.btn--primary--orange--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: #FF7300;
+    color: #fff;
+    border: 1px solid #FF7300;
+    transition: all 0.3s ease-out;
+
+    padding: 12px 26px;
+    font-size: 20px;
+}
+/* ============================================= */
+/*                OUTLINE GREEN                  */
+/* ============================================= */
+.btn--outline--green--medium {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    transition: all 0.3s ease-out;
+
+    padding: 8px 20px;
+    font-size: 18px;
+}
+.btn--outline--green--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    transition: all 0.3s ease-out;
+
+    padding: 12px 26px;
+    font-size: 20px;
+}
+.btn--outline--green--medium:hover,
+.btn--outline--green--large:hover {
+    background: #fff;
+    border: 1px solid #fff;
+    color: #116530;
+    transition: all 0.3s ease-out;
+}
+
+/* ============================================= */
+/*                PRIMARY GREEN                  */
+/* ============================================= */
+.btn--primary--green--medium {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: #116530;
+    color: #fff;
+    border: 1px solid #116530;
+    transition: all 0.3s ease-out;
+
+    padding: 8px 20px;
+    font-size: 18px;
+}
+.btn--primary--green--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: #116530;
+    color: #fff;
+    border: 1px solid #116530;
+    transition: all 0.3s ease-out;
+
+    padding: 12px 26px;
+    font-size: 20px;
+}
+
+/* ============================================= */
+/*                BOTOES PRIVATE                  */
+/* ============================================= */
 
 .btn--levantar-depositar{
     border-radius: 15px;

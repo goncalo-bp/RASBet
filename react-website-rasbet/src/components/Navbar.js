@@ -42,11 +42,6 @@ function Navbar() {
                         </Link>
                     </li>
                     <li className='nav-item'>
-                        <Link to='/jogos' className='nav-links' onClick={closeMobileMenu}>
-                            Jogos
-                        </Link>
-                    </li>
-                    <li className='nav-item'>
                         <Link to='/desportos' className='nav-links' onClick={closeMobileMenu}>
                             Desportos
                         </Link>
@@ -56,13 +51,15 @@ function Navbar() {
                             Conta
                         </Link>
                     </li>
-                    <li className='nav-item' padd>
-                        <Link to='/sign-up' className='nav-links-mobile' onClick={closeMobileMenu}>
-                            Registar
+                    {!button &&
+                    <li className='nav-item'> {/*TODO - dar logout direito*/}
+                        <Link to='/' className='nav-links-mobile' onClick={closeMobileMenu}> 
+                            Sair
                         </Link>
                     </li>
+                    }
                 </ul>
-                {button && <Button buttonStyle='btn--outline'>Registar</Button>}
+                {button && <Button className='btn--outline--green--large' href='/'>Sair</Button>} {/*TODO - dar logout direito*/}
             </div>
         </nav>
     </>
