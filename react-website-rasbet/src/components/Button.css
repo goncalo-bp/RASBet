@@ -345,3 +345,25 @@
     font-size: 18px;
     transition: all 0.4s ease-out;
 }
+
+/* ============================================= */
+/*                 SIMPLE X BUTTON               */
+/* ============================================= */
+
+.btn--x--gray--medium {
+    border-radius: 100px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: transparent;
+    transition: all 0.4s ease-out;
+
+    padding: 7px 14px;
+    font-size: 20px;
+}
+.btn--x--gray--medium:hover {
+    background: gray;
+    border: none;
+}
