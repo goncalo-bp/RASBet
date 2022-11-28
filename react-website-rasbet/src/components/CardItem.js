@@ -1,18 +1,17 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function CardItem() {
+export const CardItem = ({children,text, label}) => {
     return (
-        <>
+        <>  
             <li className="cards__item">
+                
                 <Link className="cards__item__link">
                     <div className='cards__item__info'>
-                        <h5 className='cards__item__text' />
+                        <h5 className='cards__item__text'/>
                     </div>
                 </Link>
             </li>
         </>
     )
 }
-
-export default CardItem
