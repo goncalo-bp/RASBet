@@ -1,5 +1,5 @@
 import React from 'react'
-import CardItem from './CardItem'
+import {CardItem} from './CardItem'
 
 function Cards() {
     return (
@@ -11,7 +11,8 @@ function Cards() {
                         <CardItem 
                         text="Benfica x Vizela"
                         label='Portugal'
-                        />
+                        >Benfica x Vizela
+                            </CardItem>
                     </ul>
                 </div>
             </div>
