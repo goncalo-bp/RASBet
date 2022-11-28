@@ -1,0 +1,44 @@
+.edit-fundo {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: inherit;
+    width: 100%;
+    background-color: #E0E0E0;
+    position: absolute;
+}
+
+.edit-content {
+    height: inherit;
+    width: 70%;
+    border-radius: 5%;
+    padding: 2%;
+    margin: 40px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-header {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-tipo-aposta {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0px;
+}
+
+
+

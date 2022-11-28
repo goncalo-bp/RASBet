@@ -263,3 +263,58 @@
     color: #116530;
     transition: all 0.3s ease-out;
 }
+
+/* ============================================= */
+/*   PRIMARY GRAY WIHTOUT BORDER RADIUS          */
+/* ============================================= */
+.btn--primary--gray--medium {
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: white;
+    color: black;
+    transition: all 0.3s ease-out;
+
+    padding: 8px 30px;
+    font-size: 20px;
+}
+.btn--primary--gray--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: white;
+    color: black;
+    transition: all 0.3s ease-out;
+
+    padding: 12px 30px;
+    font-size: 30px;
+}
+.btn--primary--gray--medium:hover{
+    padding: 10px 20px;
+    background: black;
+    color: white;
+    transition: all 0.3s ease-out;
+}
+.btn--primary--gray--large:hover {
+    padding: 12px 18px;
+    background: black;
+    color: white;
+    transition: all 0.3s ease-out;
+}
+.btn--primary--gray--medium:active{
+    padding: 10px 20px;
+    background: black;
+    color: white;
+    transition: all 0.3s ease-out;
+}
+.btn--primary--gray--large:active {
+    padding: 12px 18px;
+    background: black;
+    color: white;
+    transition: all 0.3s ease-out;
+}

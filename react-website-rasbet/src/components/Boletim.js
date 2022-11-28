@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import './Form_R.css';
 import Popup from './Popup';
-import './AlterarInfo.css';
+import './Boletim.css';
 import { Button } from './Button';
 
 export default function Form_L() {
@@ -85,22 +84,12 @@ return (
 			{errorMessage()}
 		</Popup>
 		<div className='edit-header'>
-			<h1>Carlos Pereira</h1>
+			<h1 style = {{fontSize:'70px'}}> Boletim</h1>
 			<br/>
-      		<h2>Saldo : 1000€</h2>
-			<br/>
-      		<hr style={{
-    		color: '#E0E0E0',
-    		height: '3px',
-			width: '80%'
-  			}}
-			/>
 		</div>
-		<br/>
-		<br/>
-		<div className='edit-form'>
-			<Button dest="/home/levantar" className="btn--primary--orange--large">Levantar</Button>
-			<Button dest="/home/depositar" className="btn--primary--orange--large">Depositar</Button>
+		<div className='edit-tipo-aposta'>
+			<Button className="btn--primary--gray--medium">Levantar</Button>
+			<Button className="btn--primary--gray--medium">Depositar</Button>
 		</div>
 		<br/>
 		<Button dest="/home/historico" className="btn--primary--green--large">Histórico de Transações <i className='far fa-play-circle'/></Button>
