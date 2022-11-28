@@ -92,16 +92,8 @@ return (
 			<Button className="btn--primary--gray--medium">Depositar</Button>
 		</div>
 		<br/>
-		<Button dest="/home/historico" className="btn--primary--green--large">Histórico de Transações <i className='far fa-play-circle'/></Button>
-		<input onChange={handleEmail} className="input--conta"
-		value={email} type="email" placeholder='E-mail'/>
-		<input onChange={handlePassword} className="input--conta"
-		value={password} type="password" placeholder='Palavra-passe' />
-		<input onChange={handleNewPassword} className="input--conta"
-		value={newPassword} type="newPassword" placeholder='Nova Palavra-passe' />
-		<button onClick={handleSubmit} className="btn--primary--orange--large" type="submit">
-		Mudar Palavra-passe
-		</button>
+        <div className='edit-tipo-aposta'>
+        </div>
 	</form>
 </div>
 );
