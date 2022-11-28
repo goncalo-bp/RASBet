@@ -8,7 +8,7 @@ function Home() {
   return (
     <>
       <Navbar />
-      <HeroSection />
+      {/*<HeroSection />  EXEMPLO DE BOTOES*/}
       <Cards />
     </>
   );

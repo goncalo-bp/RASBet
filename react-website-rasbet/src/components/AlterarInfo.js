@@ -30,10 +30,6 @@ const handleNewPassword = (e) => {
 	setNewPassword(e.target.value);
 };
 
-const toLevantar = () => {
-	window.location.replace('http://localhost:3000/home');
-}
-
 function toJson(email,password,newPassword) {
 	return {
 		"email": email,
