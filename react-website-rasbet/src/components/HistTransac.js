@@ -39,9 +39,6 @@ function HistoricoTransacao() {
             console.log(data);
             for (var i = 0; data[`transaction${i}`] != undefined; i++) {
                 handleTableData(data[`transaction${i}`]);
-                handleTableData(data[`transaction${i}`]);
-                handleTableData(data[`transaction${i}`]);
-                handleTableData(data[`transaction${i}`]);
             }
             console.log(tableData);
         })
