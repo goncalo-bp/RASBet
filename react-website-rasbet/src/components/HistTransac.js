@@ -65,7 +65,9 @@ function HistoricoTransacao() {
                 <br/>
                 <h2>Saldo : {saldo}€</h2>
                 <br/>
-                <Table tableData={tableData}/>
+                <div className='table-container'>
+                    <Table tableData={tableData}/>
+                </div>
             </div>
         </div>
     )

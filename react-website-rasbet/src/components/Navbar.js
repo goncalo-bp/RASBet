@@ -59,7 +59,7 @@ function Navbar() {
                         </li>
                         }
                     </ul>
-                    {button && <Button className='btn--outline--green--large' href='/'>Sair</Button>} {/*TODO - dar logout direito*/}
+                    {button && <Button className='btn--outline--green--large' dest='/'>Sair</Button>} {/*TODO - dar logout direito*/}
                 </div>
             </nav>
         </>
