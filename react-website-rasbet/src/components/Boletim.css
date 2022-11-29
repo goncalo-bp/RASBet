@@ -53,7 +53,7 @@
 .edit-tipo-odds{
     border: 2px gray solid;
     margin-top: 1px;
-    height: 20%;
+    height: 30%;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -61,5 +61,12 @@
     padding: 20px;
 }
 
+.edit-odd {
+    width: 70px;
+    justify-content: center;
+    border-radius: 8px;
+    display: flex;
+    border: 2px black solid;
+}
 
 
