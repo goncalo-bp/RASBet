@@ -8,8 +8,10 @@ function Cards() {
             <div className="cards__container">
                 <div className="cards__wrapper">
                     <ul className="cards__items">
-                        <CardItem text="Benfica x Porto"
-                        label='Portugal'
+                        <CardItem text="Benfica - Porto"
+                        data='2022/11/29'
+                        hora='19:30'
+                        equipas={[['Benfica','1.50'],['Empate','3.50'],['Porto','2.50']]}
                         />
                     </ul>
                 </div>
