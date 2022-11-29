@@ -10,8 +10,9 @@ function Home() {
     <>
       <Navbar />
       {/*{{/*<HeroSection />  EXEMPLO DE BOTOES
-      <Cards />*/}
-      <Boletim />
+      <Boletim />*/}
+      
+      <Cards />
     </>
   );
 }

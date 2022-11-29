@@ -8,11 +8,9 @@ function Cards() {
             <div className="cards__container">
                 <div className="cards__wrapper">
                     <ul className="cards__items">
-                        <CardItem 
-                        text="Benfica x Vizela"
+                        <CardItem text="Benfica x Porto"
                         label='Portugal'
-                        >Benfica x Vizela
-                            </CardItem>
+                        />
                     </ul>
                 </div>
             </div>
