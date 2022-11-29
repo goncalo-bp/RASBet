@@ -1,0 +1,35 @@
+.table {
+    width: 90%;
+    border-collapse: collapse;
+    text-align: center;
+    overflow: hidden;
+}
+
+.thead {
+    position: sticky;
+    z-index: 100;
+}
+
+.tr-head {
+    background: transparent;
+    padding-bottom: 100px;
+}
+
+.th {
+    padding: 5px 0px;
+    border-bottom: 2px solid #116530;
+    border-top: 2px solid #116530;
+    color: #116530;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.tr-body {
+    background: #fff;
+}
+
+.td {
+    padding: 10px 0px;
+    border: 1px solid var(--bg2);
+    font-size: 16px;
+}
