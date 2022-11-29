@@ -173,7 +173,7 @@ class DBQueries:
         return self.mydb.query(DBConstants.get_promotions)
 
         # Históricos
-    def getHistoricoApostas(self, idUser, tipo):
+    def getHistoricoApostas(self, idUser):
         '''
             Retorna o histórico de apostas
         '''
