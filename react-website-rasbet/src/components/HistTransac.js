@@ -39,6 +39,9 @@ function HistoricoTransacao() {
             console.log(data);
             for (var i = 0; data[`transaction${i}`] != undefined; i++) {
                 handleTableData(data[`transaction${i}`]);
+                handleTableData(data[`transaction${i}`]);
+                handleTableData(data[`transaction${i}`]);
+                handleTableData(data[`transaction${i}`]);
             }
             console.log(tableData);
         })
@@ -65,7 +68,9 @@ function HistoricoTransacao() {
                 <br/>
                 <h2>Saldo : {saldo}€</h2>
                 <br/>
-                <Table tableData={tableData}/>
+                <div className='table-container'>
+                    <Table tableData={tableData}/>
+                </div>
             </div>
         </div>
     )

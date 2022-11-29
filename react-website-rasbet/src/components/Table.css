@@ -1,3 +1,4 @@
+/*
 .table {
     width: 90%;
     border-collapse: collapse;
@@ -26,10 +27,85 @@
 
 .tr-body {
     background: #fff;
+    border-bottom: 1px dotted #116530;
 }
 
 .td {
     padding: 10px 0px;
-    border: 1px solid var(--bg2);
     font-size: 16px;
+}
+
+.tr-body:hover{
+    background: #cecece; TODO por mais claro
+    transition: all 0.3s ease-out;
+}
+
+*/
+
+
+.table {
+    width: 100%;
+    text-align: left;
+}
+
+.thead {
+    display: block;
+    border-bottom: 2px solid #116530;
+    border-top: 2px solid #116530;
+    color: #116530;
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+}
+
+.tbody {
+    width: 100%;
+    max-height: 300px;
+    height: 300px;
+    overflow: scroll;
+    display: block;
+    scroll-behavior: smooth;
+}
+
+.tr-head,
+.tr-body {
+    display: block;
+    width: 100%;
+}
+
+.th:nth-child(4),
+.td:nth-child(4) {
+    width: 250px;
+    max-width: 250px;
+}
+
+.th:nth-child(3),
+.td:nth-child(3) {
+    width: 250px;
+    max-width: 250px;
+}
+
+.th:nth-child(2),
+.td:nth-child(2) {
+    width: 250px;
+    max-width: 250px;
+}
+
+.th:nth-child(1),
+.td:nth-child(1) {
+    width: 250px;
+    max-width: 250px;
+}
+
+
+.table tbody > tr:nth-child(odd) {
+    background-color: rgb(246, 246, 246);
+}
+
+.th,
+.td {
+    padding: 5px 0px;
+    text-align: center;
 }

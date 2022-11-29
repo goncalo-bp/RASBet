@@ -58,46 +58,9 @@
 }
 
 .table-container {
-    display: grid;
-    grid-template-columns: repeat(4, auto);
-    grid-gap: 15vh;
-    list-style: none;
-    text-align: center;
+    display: flex;
     justify-content: center;
+    width: 100%;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
 }
-
-.header-container {
-    list-style: none;
-    text-align: center;
-    justify-content: center;
-    padding-top: 7px;
-    padding-bottom: 7px;
-    padding-left: 20px;
-    padding-right: 20px;
-    text-align: center;
-    border-top: 2px solid #116530;
-    border-bottom: 2px solid #116530;
-}
-.header-field {
-    color: #116530;
-    font-size: 1.2rem;
-}
-
-.transaction-field {
-    display: grid;
-    grid-template-columns: repeat(4, auto);
-    grid-gap: 2vh;
-    list-style: none;
-    text-align: center;
-    justify-content: center;
-    padding-top: 7px;
-    padding-bottom: 7px;
-    padding-left: 20px;
-    padding-right: 20px;
-    text-align: center;
-}
-.transaction-value {
-    color: #242424;
-    font-size: 1.2rem;
-}
-
