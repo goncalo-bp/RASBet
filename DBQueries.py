@@ -174,12 +174,10 @@ class DBQueries:
 
         # Históricos
     def getHistoricoApostas(self, idUser, tipo):
-        k = 0
-        if tipo == 'simples':
-            k = self.mydb.query(DBConstants.get_history_bets, (idUser,))
-        else:
-            k = self.mydb.query(DBConstants.get_history_bets_m, (idUser,))
-        return k
+        '''
+            Retorna o histórico de apostas
+        '''
+        return self.mydb.query(DBConstants.get_history_bets, (idUser,))
         
     def getHistoricoTransacoes(self, idUser):
         '''
