@@ -99,7 +99,7 @@ def get_betList():
 
 @app.route('/registoaposta', methods = ['POST'])
 @cross_origin()
-def get_betList():
+def register_aposta():
     listaJogos = request.json.get("listaJogos", None)
     montante = request.json.get("valor", None)
     id = request.json.get("id", None)
@@ -110,7 +110,7 @@ def get_betList():
 
 @app.route('/apostas/<tipo>', methods = ['POST'])
 @cross_origin()
-def get_betList(tipo):
+def get_betLista(tipo):
     id = request.json.get("id", None)
     #SELECT idAposta, oddTotal, valorApostado, ApostaGanha FROM Aposta WHERE idUser=%s;'
     betList = dbQueries.getHistoricoApostas(id)
@@ -162,32 +162,76 @@ def get_desportos():
     print(dbQueries.getSports())
     return dbQueries.getSports()
 
+##@app.route('/sports/<sport>', methods = ['GET'])
+##@cross_origin()
+##def get_gamess(sport):
+##    toJson = {}
+##    jogo = 0
+##    idList = dbQueries.getBySport(sport,0)
+##    for id in idList:
+##        perGame = {}
+##        game = dbQueries.getGameInfo(id)
+##        i=0
+##        for team in game:
+##            equipa = {}
+##            equipa['name'] = team[0]
+##            equipa['odd'] = team[1]
+##            if len(game) == 3:
+##                if team[0] == 'Draw':
+##                    perGame[f'equipa1'] = equipa
+##                elif team[2] == 1:
+##                    perGame[f'equipa0'] = equipa
+##                else:
+##                    perGame[f'equipa2'] = equipa
+##            
+##            else:
+##                perGame[f'equipa{i}'] = equipa
+##                i = i+1
+##        
+##        datetimeX = dbQueries.getGameDate(id)[0]
+##        print(datetimeX)
+##
+##        perGame['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
+##        perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
+##        perGame['id'] = id
+##        
+##        toJson[f'jogo{jogo}'] = perGame
+##        jogo += 1
+##
+##    return toJson,200
+
 @app.route('/sports/<sport>', methods = ['GET'])
 @cross_origin()
 def get_gamess(sport):
-    toJson = {}
+    toJson = []
     jogo = 0
-    idList = dbQueries.getBySport(sport)
+    idList = dbQueries.getBySport(sport,0)
     for id in idList:
         perGame = {}
         game = dbQueries.getGameInfo(id)
         i=0
+        perGame['equipas'] = []
         for team in game:
             equipa = {}
             equipa['name'] = team[0]
             equipa['odd'] = team[1]
             if len(game) == 3:
                 if team[0] == 'Draw':
-                    perGame[f'equipa1'] = equipa
+                    if len(perGame['equipas']) != 0:
+                        perGame['equipas'].insert(1,equipa)
+                    else:
+                        perGame['equipas'].append(equipa)
                 elif team[2] == 1:
-                    perGame[f'equipa0'] = equipa
+                    perGame['equipas'].insert(0,equipa)
                 else:
-                    perGame[f'equipa2'] = equipa
-            
+                    perGame['equipas'].append(equipa)
+
             else:
-                perGame[f'equipa{i}'] = equipa
+                perGame['equipas'].append(equipa)
                 i = i+1
         
+
+
         datetimeX = dbQueries.getGameDate(id)[0]
         print(datetimeX)
 
@@ -195,7 +239,7 @@ def get_gamess(sport):
         perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
         perGame['id'] = id
         
-        toJson[f'jogo{jogo}'] = perGame
+        toJson.append(perGame)
         jogo += 1
 
     return toJson,200

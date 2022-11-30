@@ -1,20 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Popup from './Popup';
 import './ListaJogos.css';
 import { Button } from './Button';
 
-export default function Form_L() {
 
-    const [jogo, setJogo] = useState(0);
-    const [, setId] = useState(1); //TODO - ir buscar o id do utilizador
-    const [tableData, setTableData] = useState([]);
+export default function ListaJogos() {
+
+    const [jogos,setJogos] = useState([]);
+    const [equipa, setEquipa] = useState(0);
+    const [odd, setOdd] = useState(0);
+    const [data, setData] = useState(1);
+    const [hour, setHour] = useState(1);
+    const [id, setId] = useState(1);
     
     function toJson(id) {
 		return { "id": id}
 	}
 
-    const handleTableData = (e) => {
-        setTableData(current => [...current, e]);
+    const handleData = (e) => {
+        setData(e.target.value);
+    };
+
+    
+    const handleListaJogos= (e) => {
+        handleData(e.date);
+        for (var i = 0; e[`equipa${i}`] != undefined; i++){
+            setEquipa(e[`equipa${i}`].name);
+            setOdd(e[`odd${i}`].odd);
+        }
     };
 
     const getHistorico = (e) => {
@@ -29,9 +42,7 @@ export default function Form_L() {
             else return response.json();
         }).then((data) => {
             console.log(data);
-            for (var i = 0; data[`jogo${i}`] != undefined; i++) {
-                //handleTableData(data[`jogo${i}`]);
-            }
+            setJogos(data);
         })
         .catch(error => {
             console.log("error: ", error);
@@ -39,24 +50,29 @@ export default function Form_L() {
     };
 
 
+    useEffect(() => {
+        getHistorico();
+    }, []);
 
 return (
 <div className="edit-fundo">
 	<form className='edit-content-boletim'>
 		<div className='edit-lista-jogos'>
 			<div className='edit-lista-jogo'>
-				<div className='edit-tipo-jogo'>
-					<span>Sporting - Varzim
-                    <div className='edit-tipo-data'><span>20/11/2022 16:00</span>
-                    </div> 
-                    </span>
-					<span><Button className='btn--primary--white--large'>Sporting 1.98</Button></span>
-					<span><Button className='btn--primary--white--large'>Empate 3.20</Button></span>
-					<span><Button className='btn--primary--white--large'>Varzim 5.60</Button></span>
-				</div>
+                {jogos.map((jogo,index) => {
+                    return (
+                    <div className='edit-tipo-jogo'>
+					    <span>{jogo.id} {/* ! temos de ir buscar a API} */}
+                        <div className='edit-tipo-data'><span>{jogo.date} {jogo.hour}</span>
+                        </div> 
+                        </span>
+                        {jogo.equipas.map((equipa,index) => {return (
+                        <span><Button className='btn--primary--white--large'>{equipa.name} {equipa.odd}</Button></span>)})}
+				    </div>)
+                })}
             </div>
 		</div>
-	</form>
+	</form> 
 </div>
 );
 }

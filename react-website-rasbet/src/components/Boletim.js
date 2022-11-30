@@ -3,7 +3,7 @@ import Popup from './Popup';
 import './Boletim.css';
 import { Button } from './Button';
 
-export default function Form_L() {
+export default function Boletim() {
 
 const [value, setValue] = useState('');
 const [oddTotal, setOddTotal] = useState(0);
