@@ -128,3 +128,63 @@ def get_historico_transacoes():
     
 if __name__ == '__main__':
    app.run(host='127.0.0.1', port=5002)
+
+@app.route('/apostas/<tipo>', methods = ['POST'])
+@cross_origin()
+def get_betList(tipo):
+    id = request.json.get("id", None)
+    #SELECT idAposta, oddTotal, valorApostado, ApostaGanha FROM Aposta WHERE idUser=%s;'
+    betList = dbQueries.getHistoricoApostas(id)
+    toJson = []
+
+    for bet in betList:
+        betId = bet[0]
+        perBet = {}
+        print(betId)
+        #RETURN (listaJogo) -> (<MontanteApostado>,<total ganho>,[([(Estoril,jogaEmCasa)],<Quem ganhou>)])
+        listaJogo = dbQueries.listaJogosPorAposta(betId)
+        if (tipo == 'simples' and len(listaJogo[2]) > 1) or (tipo == 'multipla' and len(listaJogo[2]) < 2):
+            continue
+ 
+        perBet['jogo'] = []
+        for jogo in listaJogo[2]:
+            equipasNoJogo = ""
+            print(jogo)
+            for equipa in jogo:
+                #print('EQUIPA:' + equipa + " " + str(len(jogo[0])))
+                if len(jogo) == 3:
+                    
+                    if equipa[0] == 'Draw':
+                        continue
+
+                    if equipa[1] == 1:
+                        equipasNoJogo = equipa[0] + " x " + equipasNoJogo
+                    else:
+                        equipasNoJogo = equipasNoJogo + equipa[0]
+            
+            resultado = jogo[1][0]
+            perBet['jogo'].append((equipasNoJogo, resultado))
+        
+        
+        perBet['montante'] = listaJogo[0]
+        perBet['ganho'] = listaJogo[1]
+            
+
+        print(toJson)
+        print(perBet)
+
+        toJson.append(perBet)   
+
+    return toJson, 200
+
+@app.route('/saldoCarteira', methods = ['POST'])
+@cross_origin()
+def get_balance():
+    id = request.json.get("id", None)
+
+    saldo = dbQueries.getBalance(id)
+    toJSON = {}
+
+    toJSON['saldo'] = saldo
+
+    return toJson, 200
