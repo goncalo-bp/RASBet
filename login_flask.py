@@ -52,48 +52,7 @@ def register():
         return jsonify(success="True"),200
     except:
         return {"msg": "Email or NIF already existent"}, 401
-
-@app.route('/games', methods = ['POST'])
-@cross_origin()
-def get_games():
-    sport = request.json.get("sport", None)
-    suspenso = request.json.get("suspenso", None)
-    toJson = {}
-    jogo = 0
-    idList = dbQueries.getBySport(sport,suspenso)
-    for id in idList:
-        perGame = {}
-        game = dbQueries.getGameInfo(id)
-        i=0
-        for team in game:
-            equipa = {}
-            equipa['name'] = team[0]
-            equipa['odd'] = team[1]
-            if len(game) == 3:
-                if team[0] == 'Draw':
-                    perGame[f'equipa1'] = equipa
-                elif team[2] == 1:
-                    perGame[f'equipa0'] = equipa
-                else:
-                    perGame[f'equipa2'] = equipa
-            
-            else:
-                perGame[f'equipa{i}'] = equipa
-                i = i+1
-        
-        datetimeX = dbQueries.getGameDate(id)[0]
-        print(datetimeX)
-
-        perGame['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
-        perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
-        perGame['id'] = id
-        
-        
-        toJson[f'jogo{jogo}'] = perGame
-        jogo += 1
-
-    return toJson,200
-
+    
 @app.route('/transactions', methods = ['POST'])
 @cross_origin()
 def get_historico_transacoes():
@@ -125,9 +84,29 @@ def get_historico_transacoes():
         i += 1
 
     return toJson, 200
-    
-if __name__ == '__main__':
-   app.run(host='127.0.0.1', port=5002)
+
+@app.route('/saldoCarteira', methods = ['POST'])
+@cross_origin()
+def get_betList():
+    id = request.json.get("id", None)
+
+    saldo = dbQueries.getBalance(id)
+    toJSON = {}
+
+    toJSON['saldo'] = saldo
+
+    return toJson, 200
+
+@app.route('/registoaposta', methods = ['POST'])
+@cross_origin()
+def get_betList():
+    listaJogos = request.json.get("listaJogos", None)
+    montante = request.json.get("valor", None)
+    id = request.json.get("id", None)
+
+    criarAposta(id, montante, listaJogos)
+
+    return 200
 
 @app.route('/apostas/<tipo>', methods = ['POST'])
 @cross_origin()
@@ -177,14 +156,49 @@ def get_betList(tipo):
 
     return toJson, 200
 
-@app.route('/saldoCarteira', methods = ['POST'])
+@app.route('/sports', methods = ['GET'])
 @cross_origin()
-def get_balance():
-    id = request.json.get("id", None)
+def get_desportos():    
+    print(dbQueries.getSports())
+    return dbQueries.getSports()
 
-    saldo = dbQueries.getBalance(id)
-    toJSON = {}
+@app.route('/sports/<sport>', methods = ['GET'])
+@cross_origin()
+def get_gamess(sport):
+    toJson = {}
+    jogo = 0
+    idList = dbQueries.getBySport(sport)
+    for id in idList:
+        perGame = {}
+        game = dbQueries.getGameInfo(id)
+        i=0
+        for team in game:
+            equipa = {}
+            equipa['name'] = team[0]
+            equipa['odd'] = team[1]
+            if len(game) == 3:
+                if team[0] == 'Draw':
+                    perGame[f'equipa1'] = equipa
+                elif team[2] == 1:
+                    perGame[f'equipa0'] = equipa
+                else:
+                    perGame[f'equipa2'] = equipa
+            
+            else:
+                perGame[f'equipa{i}'] = equipa
+                i = i+1
+        
+        datetimeX = dbQueries.getGameDate(id)[0]
+        print(datetimeX)
 
-    toJSON['saldo'] = saldo
+        perGame['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
+        perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
+        perGame['id'] = id
+        
+        toJson[f'jogo{jogo}'] = perGame
+        jogo += 1
 
-    return toJSON, 200
+    return toJson,200
+
+if __name__ == '__main__':
+   app.run(host='127.0.0.1', port=5002)
