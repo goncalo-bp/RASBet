@@ -87,7 +87,7 @@ def get_historico_transacoes():
 
 @app.route('/saldoCarteira', methods = ['POST'])
 @cross_origin()
-def get_betList():
+def get_saldoCarteira():
     id = request.json.get("id", None)
 
     saldo = dbQueries.getBalance(id)
@@ -95,7 +95,7 @@ def get_betList():
 
     toJSON['saldo'] = saldo
 
-    return toJson, 200
+    return toJSON, 200
 
 @app.route('/registoaposta', methods = ['POST'])
 @cross_origin()
@@ -104,7 +104,7 @@ def register_aposta():
     montante = request.json.get("valor", None)
     id = request.json.get("id", None)
 
-    criarAposta(id, montante, listaJogos)
+    #criarAposta(id, montante, listaJogos)
 
     return 200
 

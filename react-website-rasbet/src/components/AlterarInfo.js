@@ -103,7 +103,11 @@ return (
 			<Button dest="/home/depositar" className="btn--primary--orange--large">Depositar</Button>
 		</div>
 		<br/>
-		<Button dest="/home/historico" className="btn--primary--green--large">Histórico de Transações <i className='far fa-play-circle'/></Button>
+		<div className='edit-form'>
+			<Button dest="/home/historico" className="btn--primary--green--large">Histórico de Transações <i className='far fa-play-circle'/></Button>
+			<Button dest="/home/apostas" className="btn--primary--green--large">Histórico de Apostas <i className='far fa-play-circle'/></Button>
+		</div>
+		
 		<input onChange={handleEmail} className="input--conta"
 		value={email} type="email" placeholder='E-mail'/>
 		<input onChange={handlePassword} className="input--conta"

@@ -7,6 +7,7 @@ import Table from "./Table";
 function HistoricoApostas() {
     const [id, setId] = useState(1); //TODO - ir buscar o id do utilizador
     const [tableData, setTableData] = useState([]);
+    const [nome, setNome] = useState("Carlos Pereira");
 
     const [button,setButton] = useState(true);
 
@@ -28,14 +29,9 @@ function HistoricoApostas() {
 		return { "id": id}
 	}
 
-    const handleSaldo = (e) => {
-        setSaldo(100.00);
-        //setSaldo(e.target.value);
-    };
-
-    const getHistorico = (e) => {
+    const getSimples = (e) => {
         //e.preventDefault();
-        fetch('http://localhost:5002/transactions', {  // Enter your IP address here
+        fetch('http://localhost:5002/apostas/simples', {  // Enter your IP address here
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify(toJson(id)),
@@ -48,7 +44,29 @@ function HistoricoApostas() {
             else return response.json();
         }).then((data) => {
             console.log(data);
-            setTableData(data);
+            //setTableData(data);
+        })
+        .catch(error => {
+            console.log("error: ", error);
+        });
+    };
+
+    const getMultiplas = (e) => {
+        //e.preventDefault();
+        fetch('http://localhost:5002/apostas/multipla', {  // Enter your IP address here
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify(toJson(id)),
+            headers: {"Content-Type": "application/json"}
+        })
+        .then((response) => {
+            if(!response.ok) {
+                throw Error(response.status);
+            }
+            else return response.json();
+        }).then((data) => {
+            console.log(data);
+            //setTableData(data);
         })
         .catch(error => {
             console.log("error: ", error);
@@ -56,8 +74,8 @@ function HistoricoApostas() {
     };
 
     useEffect(() => {
-        getHistorico();
-        handleSaldo();
+        getSimples();
+        getMultiplas();
     }, []);
 
     return (
@@ -68,17 +86,27 @@ function HistoricoApostas() {
                         {button && <Button dest='/home/edit' className={'btn--circle--green--small'}><i className="fa-solid fa-arrow-left" ></i></Button>}
                         {!button && <Button dest='/home/edit' className={'btn--circle--green--tiny'}><i className="fa-solid fa-arrow-left" ></i></Button>}
                     </div>
-                    <h1 className='title-text'>Histórico de Transações</h1>
+                    <h1 className='title-text'>{nome}</h1>
                 </div>
                 <br/>
-                <h2>Saldo : {saldo}€</h2>
+                <h2>Histórico de Apostas</h2>
                 <br/>
+                <span>
+                    <div className='bet-type'>
+                        <Button className='btn--outline--full--orange--large'>
+                            Simples
+                        </Button>
+                        <Button className='btn--outline--full--orange--large'>
+                            Múltiplas
+                        </Button>
+                    </div>
+                </span>
                 <div className='table-container'>
-                    <Table tableData={tableData}/>
+                    
                 </div>
             </div>
         </div>
     )
 }
 
-export default HistoricoTransacao
+export default HistoricoApostas

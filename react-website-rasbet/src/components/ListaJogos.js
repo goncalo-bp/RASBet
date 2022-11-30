@@ -31,7 +31,7 @@ export default function ListaJogos() {
     };
 
     const getHistorico = (e) => {
-        //e.preventDefault();
+        //e.preventDefault(); // TODO - mudar para qualquer nome do desporto
         fetch('http://localhost:5002/sports/Futebol', {  // Enter your IP address here
             method: 'GET',
         })

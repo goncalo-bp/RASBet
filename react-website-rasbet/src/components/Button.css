@@ -129,6 +129,48 @@
 }
 
 /* ============================================= */
+/*              OUTLINE FULL ORANGE              */
+/* ============================================= */
+.btn--outline--full--orange--medium{
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: transparent;
+    color: #FF7300;
+    border: 1px solid #FF7300;
+    transition: all 0.3s ease-out;
+
+    padding: 8px 20px;
+    font-size: 18px;
+}
+.btn--outline--full--orange--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: transparent;
+    color: #FF7300;
+    border: 1px solid #FF7300;
+    transition: all 0.3s ease-out;
+
+    padding: 12px 26px;
+    font-size: 20px;
+}
+
+.btn--outline--full--orange--medium:hover,
+.btn--outline--full--orange--large:hover {
+    background: #FF7300;
+    border: 1px solid #FF7300;
+    color: #fff;
+    transition: all 0.3s ease-out;
+}
+
+/* ============================================= */
 /*                PRIMARY ORANGE                 */
 /* ============================================= */
 .btn--primary--orange--medium {

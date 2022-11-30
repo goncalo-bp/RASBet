@@ -7,6 +7,7 @@ import Edit from './components/pages/Edit';
 import Levantar from './components/pages/Levantar';
 import Depositar from './components/pages/Depositar';
 import Historico from './components/pages/Historico';
+import Apostas from './components/pages/Apostas';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route exact path="/home/levantar"  element={<Levantar/>} />
         <Route exact path="/home/depositar"  element={<Depositar/>} />
         <Route exact path="/home/historico"  element={<Historico/>} />
+        <Route exact path="/home/apostas"  element={<Apostas/>} />
       </Routes> 
       </Router>
     </>
