@@ -13,11 +13,6 @@ export default function Form_L() {
 		return { "id": id}
 	}
 
-    const handleSaldo = (e) => {
-        setSaldo(100.00);
-        //setSaldo(e.target.value);
-    };
-
     const handleTableData = (e) => {
         setTableData(current => [...current, e]);
     };
