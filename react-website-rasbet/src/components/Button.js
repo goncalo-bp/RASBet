@@ -14,7 +14,7 @@ const NAMES = ['btn--primary--medium', 'btn--primary--large',
                'btn--outline--green--medium', 'btn--outline--green--large',
                'btn--primary--gray--medium', 'btn--primary--gray--large',
                'btn--circle--green--small', 'btn--circle--green--tiny',
-               'btn--x--gray--medium'
+               'btn--x--gray--medium','btn--primary--white--large'
             ]
 
 export const Button = ({ children, type, onClick, className, dest }) => {

@@ -4,15 +4,18 @@ import Cards from '../Cards';
 import HeroSection from '../HeroSection';
 import Navbar from '../Navbar';
 import Boletim from '../Boletim';
+import ListaJogos from '../ListaJogos';
+import './Home.css';
 
 function Home() {
   return (
     <>
       <Navbar />
-      {/*{{/*<HeroSection />  EXEMPLO DE BOTOES
-      <Boletim />*/}
-      
-      <Cards />
+      <div className="edit-pagina-inicial">
+        <div className="edit-jogos">
+          <ListaJogos />
+        </div>
+      </div>
     </>
   );
 }

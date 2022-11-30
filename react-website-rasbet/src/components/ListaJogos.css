@@ -65,10 +65,24 @@
     height: 20%;
     width: 100%;
     border: 2px gray solid;
+    border-style: dashed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 40px;
+    padding: 20px;
+    font-size: 25px;
+}
+
+.edit-tipo-data {
+    height: 20%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     padding-left: 40px;
     padding: 10px;
+    font-size: 15px;
+    color: darkgray;
 }
 
 .edit-tipo-odds{

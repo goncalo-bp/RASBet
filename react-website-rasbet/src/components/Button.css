@@ -394,3 +394,30 @@
     background: gray;
     border: none;
 }
+
+/* ============================================= */
+/*                 ODD BUTTON                    */
+/* ============================================= */
+
+.btn--primary--white--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    transition: all 0.3s ease-out;
+
+    padding: 10px 26px;
+    font-size: 20px;
+}
+.btn--primary--white--large:hover {
+    padding: 12px 18px;
+    background: #FF7300;
+    border: 1px solid transparent;
+    color: white;
+    transition: all 0.3s ease-out;
+}
