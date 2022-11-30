@@ -1,11 +1,11 @@
 .edit-fundo {
     position: absolute;
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     height: inherit;
     width: 100%;
-    height: auto;
     background-color: #E0E0E0;
     position: absolute;
 }

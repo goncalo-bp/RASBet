@@ -1,18 +1,6 @@
-.edit-fundo {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.content-boletim {
     height: inherit;
-    width: 100%;
-    height: auto;
-    background-color: #E0E0E0;
-    position: absolute;
-}
-
-.edit-content-boletim {
-    height: inherit;
-    width: 70%;
+    width: 40%;
     border-radius: 30px;
     padding: 2%;
     margin: 40px;

@@ -10,14 +10,16 @@ const NAMES = ['btn--primary--medium', 'btn--primary--large',
                'btn--outline--green--medium', 'btn--outline--green--large',
                'btn--primary--gray--medium', 'btn--primary--gray--large',
                'btn--circle--green--small', 'btn--circle--green--tiny',
-               'btn--x--gray--medium','btn--primary--white--large'
+               'btn--x--gray--medium','btn--primary--white--large',
+               'btn--onclick--white--large'
             ]
 
-export const Button = ({ children, onClick, className, dest }) => {
+export const Button = ({ children, onClick, className, dest, id }) => {
     const checkClassName = NAMES.includes(className) ? className : NAMES[0]
     const checkDest = dest ? dest : null
+    const checkID = id ? id : null
     return (
-        <a href={checkDest} className={checkClassName} onClick={onClick}>{children}</a>
+        <a id={checkID} href={checkDest} className={checkClassName} onClick={onClick}>{children}</a>
     )
 };
 
