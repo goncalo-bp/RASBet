@@ -17,7 +17,7 @@ class DBConstants:
     get_promotions     = 'SELECT * FROM Promoção'
     remove_promotion   = 'DELETE FROM Promoção WHERE idPromoçao=%s;'
     get_history_bets   = 'SELECT idAposta, dataAposta, valorApostado FROM Aposta WHERE idUser=%s;'
-    get_history_trans  = 'SELECT idTransação, dataTransação, saldoAntes, valorTransação FROM Transação WHERE idUser=%s;'
+    get_history_trans  = 'SELECT idTransação, dataTransação, descricao, valorTransação, saldoAntes FROM Transação WHERE idUser=%s;'
     get_balance        = 'SELECT saldoCarteira FROM Carteira WHERE idCarteira = (SELECT idCarteira FROM Utilizador WHERE idUser=%s);'
     reg_transaction    = 'INSERT INTO Transação(saldoAntes,valorTransação,idUser,descricao) VALUES(%s,%s,%s,%s)'
     reg_aposta         = 'INSERT INTO Aposta(idUser, valorApostado, numeroJogos) VALUES(%s,%s,%s)'

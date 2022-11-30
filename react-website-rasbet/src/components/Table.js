@@ -18,7 +18,7 @@ function Table({tableData}){
                             <tr className='tr-body' key={index}>
                                 <td className='td'>{value.date}</td>
                                 <td className='td'>{value.value}</td>
-                                <td className='td'>{value.hour}</td> {/* TODO mudar para saldo */}
+                                <td className='td'>{value.saldoapos}</td> {/* TODO mudar para saldo */}
                                 <td className='td'>{value.description}</td>
                             </tr>
                         )

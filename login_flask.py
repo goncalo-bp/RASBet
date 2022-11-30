@@ -99,7 +99,7 @@ def get_games():
 def get_historico_transacoes():
     id = request.json.get("id", None)
     transactionList = dbQueries.getHistoricoTransacoes(id)
-    toJson = {}
+    toJson = []
 
     i = 0
 
@@ -107,8 +107,9 @@ def get_historico_transacoes():
         perTransaction = {}
         datetimeX = transaction[1]
         perTransaction['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
-        perTransaction['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
+        #perTransaction['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
         perTransaction['value'] = transaction[3]
+        perTransaction['saldoapos'] = transaction[4] + transaction[3]
         k = ""
         if transaction[2] == 'A':
             k = "Aposta colocada"
@@ -120,7 +121,7 @@ def get_historico_transacoes():
             k = "Aposta ganha"
         perTransaction['description'] = k
 
-        toJson[f'transaction{i}'] = perTransaction
+        toJson.append(perTransaction)
         i += 1
 
     return toJson, 200

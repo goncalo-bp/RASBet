@@ -8,6 +8,21 @@ function HistoricoTransacao() {
     const [saldo, setSaldo] = useState(0);
     const [id, setId] = useState(1); //TODO - ir buscar o id do utilizador
     const [tableData, setTableData] = useState([]);
+    const [button,setButton] = useState(true);
+
+    const showButton = () => {
+        if(window.innerWidth <= 740) {
+            setButton(false);
+        } else {
+            setButton(true);
+        }
+    };
+  
+    useEffect(() => {
+        showButton();
+    }, []);
+  
+    window.addEventListener('resize', showButton);
     
     function toJson(id) {
 		return { "id": id}
@@ -16,10 +31,6 @@ function HistoricoTransacao() {
     const handleSaldo = (e) => {
         setSaldo(100.00);
         //setSaldo(e.target.value);
-    };
-
-    const handleTableData = (e) => {
-        setTableData(current => [...current, e]);
     };
 
     const getHistorico = (e) => {
@@ -37,10 +48,7 @@ function HistoricoTransacao() {
             else return response.json();
         }).then((data) => {
             console.log(data);
-            for (var i = 0; data[`transaction${i}`] != undefined; i++) {
-                handleTableData(data[`transaction${i}`]);
-            }
-            console.log(tableData);
+            setTableData(data);
         })
         .catch(error => {
             console.log("error: ", error);
@@ -48,7 +56,6 @@ function HistoricoTransacao() {
     };
 
     useEffect(() => {
-        setTableData([]);
         getHistorico();
         handleSaldo();
     }, []);
@@ -58,7 +65,8 @@ function HistoricoTransacao() {
             <div className='box-container'>
                 <div className='title-container'>
                     <div className='back'>
-                        <Button dest='/home/edit' className={'btn--circle--green--small'}><i className="fa-solid fa-arrow-left" ></i></Button>
+                        {button && <Button dest='/home/edit' className={'btn--circle--green--small'}><i className="fa-solid fa-arrow-left" ></i></Button>}
+                        {!button && <Button dest='/home/edit' className={'btn--circle--green--tiny'}><i className="fa-solid fa-arrow-left" ></i></Button>}
                     </div>
                     <h1 className='title-text'>Histórico de Transações</h1>
                 </div>

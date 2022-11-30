@@ -67,6 +67,7 @@
     overflow: scroll;
     display: block;
     scroll-behavior: smooth;
+    font-size: 18px;
 }
 
 .tr-head,
@@ -104,8 +105,88 @@
     background-color: rgb(246, 246, 246);
 }
 
-.th,
+.th {
+    padding: 5px 0px;
+    text-align: center;
+    font-size: 18px;
+}
 .td {
     padding: 5px 0px;
     text-align: center;
+    font-size: 16px;
+}
+
+@media screen and (max-width: 740px) {
+    .table {
+        width: 100%;
+        text-align: left;
+    }
+    
+    .thead {
+        display: block;
+        border-bottom: 2px solid #116530;
+        border-top: 2px solid #116530;
+        color: #116530;
+        font-weight: 600;
+        font-size: 14px;
+        text-align: center;
+        overflow-x: scroll;
+        scroll-behavior: smooth;
+    }
+    
+    .tbody {
+        width: 100%;
+        max-height: 280px;
+        height: 280px;
+        overflow: scroll;
+        display: block;
+        scroll-behavior: smooth;
+        font-size: 14px;
+    }
+    
+    .tr-head,
+    .tr-body {
+        display: block;
+        width: 100%;
+    }
+    
+    .th:nth-child(4),
+    .td:nth-child(4) {
+        width: 150px;
+        max-width: 150px;
+    }
+    
+    .th:nth-child(3),
+    .td:nth-child(3) {
+        width: 150px;
+        max-width: 150px;
+    }
+    
+    .th:nth-child(2),
+    .td:nth-child(2) {
+        width: 150px;
+        max-width: 150px;
+    }
+    
+    .th:nth-child(1),
+    .td:nth-child(1) {
+        width: 150px;
+        max-width: 150px;
+    }
+    
+    
+    .table tbody > tr:nth-child(odd) {
+        background-color: rgb(246, 246, 246);
+    }
+    
+    .th {
+        padding: 5px 0px;
+        text-align: center;
+        font-size: 16px;
+    }
+    .td {
+        padding: 5px 0px;
+        text-align: center;
+        font-size: 14px;
+    }
 }
