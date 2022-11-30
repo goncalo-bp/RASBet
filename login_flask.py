@@ -156,50 +156,6 @@ def get_betLista(tipo):
 
     return toJson, 200
 
-@app.route('/sports', methods = ['GET'])
-@cross_origin()
-def get_desportos():    
-    print(dbQueries.getSports())
-    return dbQueries.getSports()
-
-##@app.route('/sports/<sport>', methods = ['GET'])
-##@cross_origin()
-##def get_gamess(sport):
-##    toJson = {}
-##    jogo = 0
-##    idList = dbQueries.getBySport(sport,0)
-##    for id in idList:
-##        perGame = {}
-##        game = dbQueries.getGameInfo(id)
-##        i=0
-##        for team in game:
-##            equipa = {}
-##            equipa['name'] = team[0]
-##            equipa['odd'] = team[1]
-##            if len(game) == 3:
-##                if team[0] == 'Draw':
-##                    perGame[f'equipa1'] = equipa
-##                elif team[2] == 1:
-##                    perGame[f'equipa0'] = equipa
-##                else:
-##                    perGame[f'equipa2'] = equipa
-##            
-##            else:
-##                perGame[f'equipa{i}'] = equipa
-##                i = i+1
-##        
-##        datetimeX = dbQueries.getGameDate(id)[0]
-##        print(datetimeX)
-##
-##        perGame['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
-##        perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
-##        perGame['id'] = id
-##        
-##        toJson[f'jogo{jogo}'] = perGame
-##        jogo += 1
-##
-##    return toJson,200
-
 @app.route('/sports/<sport>', methods = ['GET'])
 @cross_origin()
 def get_gamess(sport):
@@ -211,26 +167,32 @@ def get_gamess(sport):
         game = dbQueries.getGameInfo(id)
         i=0
         perGame['equipas'] = []
+
+        perGame['nome'] = ""
+
+        ordenado = {}
+
         for team in game:
             equipa = {}
             equipa['name'] = team[0]
             equipa['odd'] = team[1]
             if len(game) == 3:
                 if team[0] == 'Draw':
-                    if len(perGame['equipas']) != 0:
-                        perGame['equipas'].insert(1,equipa)
-                    else:
-                        perGame['equipas'].append(equipa)
+                    ordenado['team1'] = equipa
                 elif team[2] == 1:
-                    perGame['equipas'].insert(0,equipa)
+                    perGame['nome'] = team[0] + " x " + perGame['nome']
+                    ordenado['team0'] = equipa
                 else:
-                    perGame['equipas'].append(equipa)
+                    perGame['nome'] += team[0]
+                    ordenado['team2'] = equipa
 
             else:
                 perGame['equipas'].append(equipa)
                 i = i+1
         
-
+        if len(game) == 3:
+            for i in range(3):
+                perGame['equipas'].append(ordenado[f'team{i}'])
 
         datetimeX = dbQueries.getGameDate(id)[0]
         print(datetimeX)

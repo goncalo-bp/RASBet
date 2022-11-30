@@ -56,23 +56,23 @@ export default function ListaJogos() {
 
 return (
 <div className="edit-fundo">
-	<form className='edit-content-boletim'>
-		<div className='edit-lista-jogos'>
-			<div className='edit-lista-jogo'>
+    <form className='edit-content-boletim'>
+        <div className='edit-lista-jogos'>
+            <div className='edit-lista-jogo'>
                 {jogos.map((jogo,index) => {
                     return (
                     <div className='edit-tipo-jogo'>
-					    <span>{jogo.id} {/* ! temos de ir buscar a API} */}
+                        <span>{jogo.nome} {/* ! temos de ir buscar a API} */}
                         <div className='edit-tipo-data'><span>{jogo.date} {jogo.hour}</span>
                         </div> 
                         </span>
                         {jogo.equipas.map((equipa,index) => {return (
                         <span><Button className='btn--primary--white--large'>{equipa.name} {equipa.odd}</Button></span>)})}
-				    </div>)
+                    </div>)
                 })}
             </div>
-		</div>
-	</form> 
+        </div>
+    </form> 
 </div>
 );
 }
