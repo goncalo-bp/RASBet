@@ -47,6 +47,8 @@ export default function Form_L() {
 				}
 				else return response.json();
 			}).then( (data) => {
+				localStorage.setItem('id', data.id);
+				localStorage.setItem('name', data.name);
 				window.location.replace('http://localhost:3000/home');
 			})
 			.catch( (error,status) => {

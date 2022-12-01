@@ -76,19 +76,21 @@ class DBQueries:
         data = self.mydb.query(DBConstants.get_log_info, (email,))
         r = 1
         usrId = True
+        nome = ""
         if len(data) == 0:
             r = -1
             usrId = False
-        elif not sha256_crypt.verify(password,data[0][1]):
+        elif not sha256_crypt.verify(password,data[0][2]):
             r = 0 
             usrId = False
-        elif data[0][3]:
-            r = 2
         elif data[0][4]:
+            r = 2
+        elif data[0][5]:
             r = 3
         if usrId:
-            usrId = data[0][2]
-        return r, usrId
+            usrId = data[0][3]
+            nome = data[0][0]
+        return r, usrId, nome
 
     def addTeam(self, name, gameId, odd, home):
         '''

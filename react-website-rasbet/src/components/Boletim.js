@@ -6,21 +6,13 @@ import { Button } from './Button';
 export default function Boletim(aposta) {
 var apostas = aposta.apostas
 const [value, setValue] = useState('');
-//const [oddTotal, setOddTotal] = useState(0);
+const [oddTotal, setOddTotal] = useState(0);
 const [totalGanhos, setTotalGanhos] = useState(0);
 
 const [tipoAposta, setTipoAposta] = useState(''); // s = simples, m = multipla
 
 const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/pass incorretos
 const [btnPopup, setBtnPopup] = useState(false);
-
-function addOdd(e){
-	//oddTotal += e.target.value;
-}
-
-function removeOdd(e){
-	//oddTotal -= e.target.value;
-}
 
 function changeType(id,tipo){
 	var id2 = (id === "tipo1" ? "tipo2" : "tipo1");
@@ -40,6 +32,7 @@ function changeType(id,tipo){
 			return "s";
 		
 	}
+	act_TotalGanhos();
 	return tipoAposta;
 }
 
@@ -47,23 +40,26 @@ const handleType = (e) => {
 	var id = e.target.id;
 	var tipo = e.target.className;
 	
-	var tipoAtualizado = changeType(id,tipo)
-
-	if(tipoAtualizado !== tipoAposta){
-		
-	}
-	
+	changeType(id,tipo)
 };
 
 
 // Handling the password change
 const handleValue = (e) => {
 	setValue(e.target.value);
-	setTotalGanhos(e.target.value * 1);
+	setTotalGanhos((e.target.value * getOddTotal()).toFixed(2));
+};
+
+function act_TotalGanhos(){
+	var mont = document.getElementById("montante");
+	if (mont === null)
+		return 0;
+	var val = mont.value * getOddTotal();
+
+	document.getElementById("total").textContent = val.toFixed(2);
 };
 
 function apostasSelecionadas(){
-	console.log(apostas);
 	return (apostas.map(aposta => {
 		var info = document.getElementById(aposta).textContent.split(" ");
 		var nome = document.getElementById(aposta[0]).textContent
@@ -73,18 +69,19 @@ function apostasSelecionadas(){
 }
 
 const getOddTotal = () => {
-	var oddTotal = 0;
+	var odd = 0;
 	apostas.map(aposta => {
 		var info = document.getElementById(aposta).textContent.split(" ");
 		if(tipoAposta === "s")
-			oddTotal += parseFloat(info.at(-1));
+			odd += parseFloat(info.at(-1));
 			
 		else if(tipoAposta === "m")
-			oddTotal !== 0 ? oddTotal *= parseFloat(info.at(-1)) : oddTotal = 1 + parseFloat(info.at(-1));
+			odd !== 0 ? odd *= parseFloat(info.at(-1)) : odd = parseFloat(info.at(-1));
 		
 	})
-	oddTotal = oddTotal.toFixed(2);
-	return oddTotal;
+	odd = odd.toFixed(2);
+
+	return odd;
 }
 
 const concat = (e1,e2) =>{
@@ -105,10 +102,13 @@ function entradaAposta(nome, aposta, odd,id){
 	</div>)
 }
 
-function handleRemove(){
-
-	document.getElementById(concat(aposta,"rem"));
-	aposta.func()
+const handleRemove = (e) => {
+	var id = e.target.id;
+	console.log(id);
+	var selecao = document.getElementById(id.split("_")[0]);
+	console.log(selecao.id);
+	aposta.func(selecao);
+	act_TotalGanhos();
 }
 
 return (
@@ -123,15 +123,15 @@ return (
 		</div>
 		<br/>
 		<div className='edit-lista-jogos'>
-			{apostasSelecionadas()}
+			{apostasSelecionadas()} {act_TotalGanhos()}
 		</div>
 		<div className='edit-total-odd'>
 			<span className='edit-odd-total'> <span>Odd:</span>{getOddTotal()}</span>
-			<input onChange={handleValue} className="edit-valor-total"
+			<input id="montante" onChange={handleValue} className="edit-valor-total"
 		value={value} type="value" placeholder='Valor (€):'/>		
 		</div>
 		<div className='edit-total-ganho'>
-			<span className='edit-ganhos'> <span>Total de ganhos:</span>{totalGanhos}</span>
+			<span className='edit-ganhos'>Total de ganhos: <div id="total">{totalGanhos}</div></span>
 			<span className='btn--primary--orange--large'> <span>APOSTAR</span></span>
 		</div>
 	</form>

@@ -126,6 +126,7 @@
     width: auto;
     justify-content: center;
     display: flex;
+    flex-direction: column;
     border: 2px black solid;
     padding: 9px;
     gap: 10px;

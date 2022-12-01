@@ -3,7 +3,7 @@ class DBConstants:
     add_wallet         = 'INSERT INTO Carteira (saldoCarteira) VALUES(0.00);'
     get_wallet         = 'SELECT idCarteira FROM Utilizador WHERE idUser=%s;'
     update_wallet      = 'UPDATE Carteira SET saldoCarteira=%s WHERE idCarteira=%s;'
-    get_log_info       = 'SELECT email, password, idUser, isAdmin, isEspecialista FROM Utilizador WHERE email=(%s);'
+    get_log_info       = 'SELECT nome, email, password, idUser, isAdmin, isEspecialista FROM Utilizador WHERE email=(%s);'
     add_team           = 'INSERT INTO EquipasPorJogo(nomeEquipa, idJogo, Odd, jogaEmCasa) VALUES((%s),(%s),(%s),(%s));'    
     get_sports         = 'SELECT DISTINCT nomeDesporto FROM Jogo;'
     get_by_sport       = 'SELECT idJogo FROM Jogo WHERE nomeDesporto = (%s) AND suspenso=0 AND finalizado=0 AND NOW() < dataJogo;'

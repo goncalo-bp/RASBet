@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import './Form_R.css';
 import Popup from './Popup';
+import { redirect } from 'react-router-dom';
+
 export default function Form_R() {
 
 // States for registration
@@ -57,7 +59,7 @@ const handleNIF = (e) => {
 	}
 };
 
-function toJson(email,password,nif,date) {
+function toJson(name,email,password,nif,date) {
 	return {
 		"name" : name,
 		"email": email,
@@ -85,7 +87,7 @@ const handleSubmit = (e) => {
 
 	method: 'POST', 
 	mode: 'cors', 
-	body: JSON.stringify(toJson(email,password,nif,date)), // body data type must match "Content-Type" header
+	body: JSON.stringify(toJson(name,email,password,nif,date)), // body data type must match "Content-Type" header
 	headers: {"Content-Type": "application/json"}
 	})
 	.then( (response) => {
@@ -95,7 +97,7 @@ const handleSubmit = (e) => {
 		else return response.json();
 	}).then( (data) => {
 		console.log(data);
-		return <redirect push to="/login" />
+		window.location.href = 'http://localhost:3000/';
 	}).catch( (error) => {
 		console.log("error: ",error);
 		setError(1);

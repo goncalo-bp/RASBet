@@ -68,16 +68,21 @@ export default function ListaJogos() {
     }
 
     const handleClickCard = (e) => {
-        var id = e.target.id
+        console.log(e);
+        var id = e.target.id;
+        console.log(id);
+        if (id === undefined){
+            id = e.id;
+        }
         if(e.target.className === "btn--onclick--white--large"){
             document.getElementById(id).classList.add('btn--onclick');
             document.getElementById(id).classList.remove('btn--onclick--white--large');
             
             var new_apostas = addAposta(id);
-
         
         }
         else {
+            console.log("ola");
             document.getElementById(id).classList.add('btn--onclick--white--large');
             document.getElementById(id).classList.remove('btn--onclick');
 
