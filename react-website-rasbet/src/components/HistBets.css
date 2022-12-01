@@ -55,18 +55,63 @@
     text-align: center;
 }
 
-.table-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-}
-
 .bet-type {
     display: grid;
     grid-template-columns: repeat(2, auto);
     grid-gap: 30px;
+}
+
+.bets-container {
+    padding-top: 30px;
+    border-top: 1px dotted #242424;
+    display: flex;
+    justify-content: center;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+.entry {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 30px;
+    justify-content: center;
+    text-align: left;
+    align-items: center;
+    padding: 15px 20px;
+    border: 2px solid #116530;
+    border-radius: 30px;
+}
+
+.jogo {
+    padding: 5px 10px;
+    border-right: 1px solid #116530;
+}
+
+.nome-jogo {
+    color: #116530;
+    font-weight: bold;
+}
+
+.resultado {
+    margin-left: 20px;
+}
+
+.valores-txt {
+    padding: 10px 5px;
+}
+
+.montante {
+    color: #116530;
+    font-weight: bold;
+}
+
+.ganho {
+    color: #FF7300;
+    font-weight: bold;
+}
+
+.empty-message {
+    color: lightgray;
 }
 
 @media screen and (max-width: 740px) {
@@ -128,12 +173,64 @@
         text-align: center;
         font-size: 22px;
     }
+
+    /* TODO mudar a partir daqui */
+    .bet-type {
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        grid-gap: 30px;
+    }
     
-    .table-container {
+    .bets-container {
+        padding-top: 30px;
+        border-top: 1px dotted #242424;
         display: flex;
         justify-content: center;
-        width: 100%;
         overflow-y: scroll;
         scroll-behavior: smooth;
+    }
+    
+    .entry {
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        grid-gap: 30px;
+        justify-content: center;
+        text-align: left;
+        align-items: center;
+        padding: 15px 20px;
+        border: 2px solid #116530;
+        border-radius: 30px;
+    }
+    
+    .jogo {
+        padding: 5px 10px;
+        border-right: 1px solid #116530;
+    }
+    
+    .nome-jogo {
+        color: #116530;
+        font-weight: bold;
+    }
+    
+    .resultado {
+        margin-left: 20px;
+    }
+    
+    .valores-txt {
+        padding: 10px 5px;
+    }
+    
+    .montante {
+        color: #116530;
+        font-weight: bold;
+    }
+    
+    .ganho {
+        color: #FF7300;
+        font-weight: bold;
+    }
+    
+    .empty-message {
+        color: lightgray;
     }
 }
