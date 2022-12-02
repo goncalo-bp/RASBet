@@ -49,6 +49,7 @@ export default function Form_L() {
 			}).then( (data) => {
 				localStorage.setItem('id', data.id);
 				localStorage.setItem('name', data.name);
+				localStorage.setItem('wallet', data.wallet);
 				window.location.replace('http://localhost:3000/home');
 			})
 			.catch( (error,status) => {

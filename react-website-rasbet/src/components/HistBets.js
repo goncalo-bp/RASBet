@@ -103,7 +103,7 @@ function HistoricoApostas() {
                         {button && <Button dest='/home/edit' className={'btn--circle--green--small'}><i className="fa-solid fa-arrow-left" ></i></Button>}
                         {!button && <Button dest='/home/edit' className={'btn--circle--green--tiny'}><i className="fa-solid fa-arrow-left" ></i></Button>}
                     </div>
-                    <h1 className='title-text'>{nome}</h1>
+                    <h1 className='title-text'>{localStorage.getItem("name")}</h1>
                 </div>
                 <br/>
                 <h2>Histórico de Apostas</h2>

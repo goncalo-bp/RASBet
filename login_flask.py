@@ -18,7 +18,7 @@ def login():
     r, usrId, nome = dbQueries.loginUser(email,password)
     vIsAdmin=False
     vIsEspecialista=False
-    
+
     if r == -1:
         return {"msg": "Wrong email"}, 401
 
@@ -31,7 +31,10 @@ def login():
     elif r == 3:
         vIsEspecialista = True
   
-    return jsonify(id=usrId,isAdmin=vIsAdmin,isEspecialista=vIsEspecialista,name=nome), 200
+    else:
+        saldo = dbQueries.getBalance(usrId)
+
+    return jsonify(id=usrId,isAdmin=vIsAdmin,isEspecialista=vIsEspecialista,name=nome,wallet=saldo), 200
 
 @app.route('/register', methods = ['POST'])
 @cross_origin()
