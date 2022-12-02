@@ -1,7 +1,6 @@
 import React from 'react';
 import '../../App.css';
 import Navbar from '../Navbar';
-import Boletim from '../Boletim';
 import ListaJogos from '../ListaJogos';
 import './Home.css';
 

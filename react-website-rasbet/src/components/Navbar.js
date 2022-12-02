@@ -9,10 +9,30 @@ function Navbar() {
     const [button,setButton] = useState(true);
   
     const handleClick = () => setClick(!click);
-    const closeMobileMenu = () => setClick(false);
-  
+    const closeMobileMenu = (e) => {
+        var desp = e.target.firstChild.data;
+        switch(desp){
+            case "Home":
+                localStorage.setItem('desporto',"");
+                break;
+            case "Futebol":
+                localStorage.setItem('desporto',"Futebol");
+                break;
+            case "Basquetebol":
+                localStorage.setItem('desporto',"Basquetebol");
+                break;
+            case "Ténis":
+                localStorage.setItem('desporto',"Tenis");
+                break;
+            case "MotoGP":
+                localStorage.setItem('desporto',"MotoGP");
+                break;
+        }
+        setClick(false);
+    }    
+    
     const showButton = () => {
-        if(window.innerWidth <= 960) {
+        if(window.innerWidth <= 1000) {
             setButton(false);
         } else {
             setButton(true);
@@ -47,8 +67,23 @@ function Navbar() {
                         </Link>
                     </li>
                     <li className='nav-item'>
-                        <Link to='/desportos' className='nav-links' onClick={closeMobileMenu}>
-                            Desportos
+                        <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
+                            Futebol
+                        </Link>
+                    </li>
+                    <li className='nav-item'>
+                        <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
+                            Ténis
+                        </Link>
+                    </li>
+                    <li className='nav-item'>
+                        <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
+                            Basquetebol
+                        </Link>
+                    </li>
+                    <li className='nav-item'>
+                        <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
+                            MotoGP
                         </Link>
                     </li>
                     <li className='nav-item'>

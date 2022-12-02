@@ -40,5 +40,13 @@
     gap: 40px;
 }
 
-
+.popup-center {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
 

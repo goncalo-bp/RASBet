@@ -52,6 +52,9 @@ export default function Form_L() {
 				localStorage.setItem('name', data.name);
 				localStorage.setItem('wallet', data.wallet);
 				localStorage.setItem('isLogged', true);
+				localStorage.setItem('jogos', "");
+				localStorage.setItem('timestamp', new Date());
+				localStorage.setItem('desporto',"");
 				window.location.replace('http://localhost:3000/home');
 				if(data.isAdmin) {
 					window.location.replace('http://localhost:3000/home-admin');  

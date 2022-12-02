@@ -165,23 +165,23 @@ function HistoricoApostas() {
                                 {simples.jogo.map((value, index) => {
                                     return(
                                         <div className='jogo'>
-                                            <a className='nome-jogo'>
+                                            <div className='nome-jogo'>
                                                 <h3>{value[0]}</h3>
-                                            </a>
-                                            <a className='resultado'>
-                                                {value[1] == 'Draw' ? `Resultado: Empate` : `Vencedor: ${value[1]}`}
-                                            </a>
+                                            </div>
+                                            <div className='resultado'>
+                                                {value[1] === 'Draw' ? `Resultado: Empate` : `Vencedor: ${value[1]}`}
+                                            </div>
                                         </div>
                                     )})
                                 }
                             </div>
                             <div className='valores'>
                                 <div className='valores-text'>
-                                    Montante Apostado: <a className='montante'>{simples.montante}€</a>
+                                    Montante Apostado: <div className='montante'>{simples.montante}€</div>
                                 </div>
                                 <br/>
                                 <div className='valores-text'>
-                                    Total de banhos: <a className='ganho'>{simples.ganho}€</a>
+                                    Total de banhos: <div className='ganho'>{simples.ganho}€</div>
                                 </div>
                             </div>
                         </div>
@@ -195,23 +195,23 @@ function HistoricoApostas() {
                                             {entry.jogo.map((value, index) => {
                                                 return(
                                                     <div className='jogo'>
-                                                        <a className='nome-jogo'>
+                                                        <div className='nome-jogo'>
                                                             <h3>{value[0]}</h3>
-                                                        </a>
-                                                        <a className='resultado'>
-                                                            {value[1] == 'Draw' ? `Resultado: Empate` : `Vencedor: ${value[1]}`}
-                                                        </a>
+                                                        </div>
+                                                        <div className='resultado'>
+                                                            {value[1] === 'Draw' ? `Resultado: Empate` : `Vencedor: ${value[1]}`}
+                                                        </div>
                                                     </div>
                                                 )})
                                             }
                                         </div>
                                         <div className='valores'>
                                             <div className='valores-text'>
-                                                Montante apostado: <a className='montante'>{entry.montante}€</a>
+                                                Montante apostado: <div className='montante'>{entry.montante}€</div>
                                             </div>
                                             <br/>
                                             <div className='valores-text'>
-                                                Total de ganhos: <a className='ganho'>{entry.ganho}€</a>
+                                                Total de ganhos: <div className='ganho'>{entry.ganho}€</div>
                                             </div>
                                         </div>
                                     </div>

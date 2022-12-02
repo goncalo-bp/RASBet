@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Popup from './Popup';
 import './ListaJogos.css';
 import { Button } from './Button';
 import Boletim from './Boletim';
@@ -9,13 +8,7 @@ import Boletim from './Boletim';
 export default function ListaJogos() {
 
     const [jogos,setJogos] = useState([]);
-    const [equipa, setEquipa] = useState(0);
-    const [odd, setOdd] = useState(0);
-    const [data, setData] = useState(1);
-    const [hour, setHour] = useState(1);
-    const [id, setId] = useState(1);
     const [apostas, setApostas] = useState([]);
-
 
     const [inputText, setInputText] = useState("");
 
@@ -35,35 +28,10 @@ export default function ListaJogos() {
                 document.getElementById("M_"+i).style.display="flex";
             }
         }
-  };
-
-    //const filteredData = jogos.map((jogo,index1) => {
-    //    //if no input the return the original
-    //    if (inputText === '') {
-    //        return jogo;
-    //    }
-    //    //return the item which contains the user input
-    //    else {
-    //        var aux = jogo.name
-    //        console.log(aux)
-    //        return String(aux).toLowerCase().includes(inputText)
-    //    }
-    //});
-    
-    const handleData = (e) => {
-        setData(e.target.value);
     };
 
-    
-    const handleListaJogos= (e) => {
-        handleData(e.date);
-        for (var i = 0; e[`equipa${i}`] != undefined; i++){
-            setEquipa(e[`equipa${i}`].name);
-            setOdd(e[`odd${i}`].odd);
-        }
-    };
 
-    const getHistorico = (e) => {
+    const getJogos = (e) => {
         //e.preventDefault(); // TODO - mudar para qualquer nome do desporto
         fetch('http://localhost:5002/sports/Futebol', {  // Enter your IP address here
             method: 'GET',
@@ -75,6 +43,7 @@ export default function ListaJogos() {
             else return response.json();
         }).then((data) => {
             setJogos(data);
+            localStorage.setItem('jogos', JSON.stringify(data));
         })
         .catch(error => {
             console.log("error: ", error);
@@ -83,7 +52,20 @@ export default function ListaJogos() {
 
 
     useEffect(() => {
-        getHistorico();
+        var data = localStorage.getItem('jogos');
+        var timestamp =  localStorage.getItem('timestamp');
+    
+        timestamp = new Date(timestamp);
+        var now = new Date();
+
+
+
+        if(data === "" || Math.abs(now - timestamp) > 600000) { // atualiza quando esta a 0 ou quando passam 10 min
+            localStorage.setItem('timestamp', new Date());
+            getJogos();
+        }else{
+            setJogos(JSON.parse(localStorage.getItem('jogos')));
+        }
     }, []);
 
     function addAposta(id){
@@ -109,7 +91,7 @@ export default function ListaJogos() {
             document.getElementById(id).classList.add('btn--onclick');
             document.getElementById(id).classList.remove('btn--onclick--white--large');
             
-            var new_apostas = addAposta(id);
+            addAposta(id);
         
         }
         else {
@@ -117,7 +99,7 @@ export default function ListaJogos() {
             document.getElementById(id).classList.add('btn--onclick--white--large');
             document.getElementById(id).classList.remove('btn--onclick');
 
-            var new_apostas = remAposta(id);
+            remAposta(id);
 
         }
         
@@ -128,23 +110,6 @@ export default function ListaJogos() {
        return e1 + "" + e2;
     }
 
-    //const getApostasSelect = () => {
-    //    var apostas = [];
-    //    if(jogos !== []){
-//
-    //        jogos.map((jogo,index1) => {
-    //            jogos.equipas.map((equipa,index2) => {
-    //                var id = concat(index1,index2);
-    //                if(document.getElementById(id).className === "btn--onclick"){
-    //                    apostas.push(id);
-    //                }
-    //            })
-    //        })
-    //        
-    //    }
-    //    return apostas;
-    //}
-
 return (
 <div className="edit-fundo">
     <form className='edit-content-boletim'>
@@ -154,6 +119,7 @@ return (
         type="text"
         value={inputText}
         onChange={inputHandler}
+        placeholder="Pesquisar"
         />
             <ul id="edit-lista-jogo">
                 {jogos.map((jogo,index1) => {
