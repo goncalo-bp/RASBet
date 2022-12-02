@@ -55,8 +55,10 @@ export default function Form_L() {
 				localStorage.setItem('jogos', "");
 				localStorage.setItem('timestamp', new Date());
 				localStorage.setItem('desporto',"");
+				localStorage.setItem('isAdmin',"false");
 				window.location.replace('http://localhost:3000/home');
 				if(data.isAdmin) {
+					localStorage.setItem('isAdmin',"true");
 					window.location.replace('http://localhost:3000/home-admin');  
 				}
 				if(data.isEspecialista) {
