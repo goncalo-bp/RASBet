@@ -58,13 +58,18 @@ export default function Form_L() {
 				localStorage.setItem('isAdmin',"false");
 				window.location.replace('http://localhost:3000/home');
 				if(data.isAdmin) {
-					localStorage.setItem('isAdmin',"true");
+					localStorage.setItem('isAdmin', true);
+					localStorage.setItem('isEspecialista', false);
 					window.location.replace('http://localhost:3000/home-admin');  
 				}
 				if(data.isEspecialista) {
-					window.location.replace('http://localhost:3000/home/apostas');
+					localStorage.setItem('isEspecialista', true);
+					localStorage.setItem('isAdmin', false);
+					window.location.replace('http://localhost:3000/home-especialista');
 				}
 				if(!data.isAdmin && !data.isEspecialista) {
+					localStorage.setItem('isAdmin', false);
+					localStorage.setItem('isEspecialista', false);
 					window.location.replace('http://localhost:3000/home');
 				}
 			})

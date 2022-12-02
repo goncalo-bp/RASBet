@@ -4,7 +4,7 @@ import './Boletim.css';
 import { Button } from './Button';
 
 export default function Boletim(aposta) {
-	var apostas = aposta.apostas
+	var apostas = aposta.apostas;
 	const [value, setValue] = useState('');
 	const [oddTotal, setOddTotal] = useState(0);
 	const [totalGanhos, setTotalGanhos] = useState(0);
@@ -14,7 +14,7 @@ export default function Boletim(aposta) {
 	const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/pass incorretos
 	const [btnPopup, setBtnPopup] = useState(false);
 
-
+    
 	function changeType(id,tipo){
 		var id2 = (id === "tipo1" ? "tipo2" : "tipo1");
 		if(tipo === "btn--primary--gray--medium"){
@@ -175,12 +175,8 @@ return (
 			{mensagem()}
 		</Popup>
 		<div className='edit-header'>
-			<h1 style = {{fontSize:'70px'}}> Boletim</h1>
+			<h1 style = {{fontSize:'70px'}}> Progresso</h1>
 			<br/>
-		</div>
-		<div className='edit-tipo-aposta'>
-			<Button id={"tipo1"} className="btn--primary--gray--medium" onClick={handleType}>Simples</Button>
-			<Button id={"tipo2"} className="btn--primary--gray--medium" onClick={handleType}>Múltipla</Button>
 		</div>
 		<br/>
 		<div className='edit-lista-jogos'>
