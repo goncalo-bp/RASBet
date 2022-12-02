@@ -5,6 +5,7 @@ import { Button } from './Button';
 import Boletim from './Boletim';
 
 
+
 export default function ListaJogos() {
 
     const [jogos,setJogos] = useState([]);
@@ -14,6 +15,30 @@ export default function ListaJogos() {
     const [hour, setHour] = useState(1);
     const [id, setId] = useState(1);
     const [apostas, setApostas] = useState([]);
+
+
+    const [inputText, setInputText] = useState("");
+
+    let inputHandler = (e) => {
+    //convert input text to lower case
+    var valor = e.target.value;
+    var lowerCase = String(valor).toLowerCase();
+    setInputText(lowerCase);
+  };
+
+    
+    const filteredData = jogos.map((jogo,index1) => {
+        //if no input the return the original
+        if (inputText === '') {
+            return jogo;
+        }
+        //return the item which contains the user input
+        else {
+            var aux = jogo.name
+            console.log(aux)
+            return String(aux).toLowerCase().includes(inputText)
+        }
+    });
     
     function toJson(id) {
 		return { "id": id}
@@ -118,19 +143,25 @@ return (
 <div className="edit-fundo">
     <form className='edit-content-boletim'>
         <div className='edit-lista-jogos'>
-            <div className='edit-lista-jogo'>
-                {jogos.map((jogo,index1) => {
+        <input
+        type="text"
+        value={inputText}
+        onChange={inputHandler}
+        />
+            <ul id="edit-lista-jogo">
+                {filteredData.map((jogo,index1) => {
                     return (
-                    <div className='edit-tipo-jogo'>
-                        <span><div id={index1}>{jogo.nome}</div> {/* ! temos de ir buscar a API} */}
-                        <div className='edit-tipo-data'><span>{jogo.date} {jogo.hour}</span>
-                        </div> 
-                        </span>
-                        {jogo.equipas.map((equipa,index2) => {return (
-                        <span><Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>{equipa.name} {equipa.odd}</Button></span>)})}
-                    </div>)
+                        <li id='edit-tipo-jogo' className='edit-tipo-jogo'>
+                            <span id='nome-jogo'><div id={index1}>{jogo.nome}</div> 
+                            <div className='edit-tipo-data'><span>{jogo.date} {jogo.hour}</span>
+                            </div> 
+                            </span>
+                            {jogo.equipas.map((equipa,index2) => {return (
+                            <span><Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>{equipa.name} {equipa.odd}</Button></span>)})}
+                        </li>
+                    )
                 })}
-            </div>
+            </ul>
         </div>
     </form> 
     <Boletim apostas={apostas} func={handleClickCard}/>
