@@ -13,6 +13,7 @@ export default function ListaJogos() {
     const [countMissingOdd, setCountMissingOdd] = useState(0);
     
     const [admin, setAdmin] = useState(false);
+    const [especialista, setEspecialista] = useState(false);
 
     const [date, setDate] = useState('');
     const [containsDate, setContainsDate] = useState(false);
@@ -33,35 +34,39 @@ export default function ListaJogos() {
     const [inputText, setInputText] = useState("");
 
     function checkDate(d1, d2) {
-        if (d1 === '') {
-            setContainsDate(true);
-        }
-        if (d1.length === 4) {
-            d1 === d2.substring(0, 4) ? 
-            setContainsDate(true) : 
-            setContainsDate(false);
-        }
-        if (d1.length === 7) {
-            d1.substring(0, 4) === d2.substring(0, 4) && 
-            d1.substring(5, 7) === d2.substring(5, 7) ? 
-            setContainsDate(true) : 
-            setContainsDate(false);
-        }
+        var bool;
+        //if (d1 === '') {
+        //    setContainsDate(true);
+        //}
+        //if (d1.length === 4) {
+        //    d1 === d2.substring(0, 4) ? 
+        //    setContainsDate(true) : 
+        //    setContainsDate(false);
+        //}
+        //if (d1.length === 7) {
+        //    d1.substring(0, 4) === d2.substring(0, 4) && 
+        //    d1.substring(5, 7) === d2.substring(5, 7) ? 
+        //    setContainsDate(true) : 
+        //    setContainsDate(false);
+        //}
         if (d1.length === 10) {
             d1.substring(0, 4) === d2.substring(0, 4) && 
             d1.substring(5, 7) === d2.substring(5, 7) &&
             d1.substring(8, 10) === d2.substring(8, 10) ? 
-            setContainsDate(true) : 
-            setContainsDate(false);
+            bool = true : 
+            bool = false;
         }
+
+        return bool;
     }
 
     let handleDate = (e) => {
-        setDate(e.target.value);
-        
+        var data_act = e.target.value;
+        setDate(data_act);
+
         for(var i = 0; i < jogos.length; i++){
             var jogo = document.getElementById("Date_"+i).textContent;
-            checkDate(date, jogo.substring(0,10));
+            var containsDate = checkDate(data_act, jogo.substring(0,10));
             if (containsDate === true) {
                 document.getElementById("M_"+i).style.display="flex";
             }
@@ -72,14 +77,13 @@ export default function ListaJogos() {
     };
 
     let inputHandler = (e) => {
-        console.log(e.target);
         //convert input text to lower case
         var valor = e.target.value;
         var lowerCase = String(valor).toLowerCase();
         setInputText(lowerCase);
 
         for(var i = 0; i < jogos.length; i++){
-            var game_name = document.getElementById(i).textContent.toLowerCase()
+            var game_name = document.getElementById("Date_"+i).textContent.toLowerCase()
             if(!game_name.includes(lowerCase)){
                 document.getElementById("M_"+i).style.display="none";
             }
@@ -118,11 +122,13 @@ export default function ListaJogos() {
     useEffect(() => {
 
         if(localStorage.getItem('isAdmin') === 'true') {
+            setAdmin(true);
             document.getElementById("boletim").style.display="none";
             document.getElementById("progresso").style.display="none";
         }
 
         else if (localStorage.getItem("isEspecialista") === 'true') {
+            setEspecialista(true);
             document.getElementById("boletim").style.display="none";
             document.getElementById("progresso").style.display="flex";
         }
@@ -169,7 +175,6 @@ export default function ListaJogos() {
             document.getElementById(id).classList.remove('btn--onclick--white--large');
             
             addAposta(id);
-        
         }
         else {
             console.log("ola");
@@ -177,15 +182,33 @@ export default function ListaJogos() {
             document.getElementById(id).classList.remove('btn--onclick');
 
             remAposta(id);
-
         }
-        
-        
     };
 
     const concat = (e1,e2) =>{
        return e1 + "" + e2;
     }
+
+    const setToDate = (e) => {
+        e.target.type="date";
+    }
+
+    document.addEventListener("click", (evt) => {
+        const date = document.getElementById("searchDate");
+        let targetEl = evt.target; // clicked element      
+        do {
+          if(targetEl === date) {
+            // This is a click inside, does nothing, just return.
+            document.getElementById("searchDate").type = "date";
+            return;
+          }
+          // Go up the DOM
+          targetEl = targetEl.parentNode;
+        } while (targetEl);
+        // This is a click outside.      
+        if(date.value==='') 
+            document.getElementById("searchDate").type = "text";
+      });
 
     return (
         <div className="edit-fundo">
@@ -203,13 +226,14 @@ export default function ListaJogos() {
                         />
                     </span>
                     <span>
-                        <a>Data: </a>
+                        Data:
                         <input
                         onChange={handleDate}
-                        id="search"
+                        id="searchDate"
                         type="text"
                         value={date}
-                        placeholder="yyyy/mm/dd"
+                        placeholder="Escolha uma data"
+                        onClick={setToDate}
                         />
                     </span>
                 </span>
@@ -220,7 +244,7 @@ export default function ListaJogos() {
                                     <div className='jogo-container'>
                                         <div id='nome-jogo'>
                                             <div id={index1}>{jogo.nome}</div> 
-                                            <div id={`Date_${index1}`} className='edit-tipo-data'>
+                                            <div id={'Date_'+index1} className='edit-tipo-data'>
                                                 {jogo.date} {jogo.hour}
                                             </div> 
                                         </div>
@@ -236,9 +260,7 @@ export default function ListaJogos() {
                                             )})}
                                         </div>
                                     </div>
-                                    <div id='missingOdds' className='edit-tipo-missing-odds'>
-                                    
-                                    </div>
+                                    {especialista && <div id='missingOdds' className='edit-tipo-missing-odds'></div>}
                                     {admin && <Button className='btn--x--gray--medium'>x</Button>}
                                 </li>
                             )

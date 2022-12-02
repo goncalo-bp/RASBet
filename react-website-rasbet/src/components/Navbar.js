@@ -15,9 +15,6 @@ function Navbar() {
     const closeMobileMenu = (e) => {
         var desp = e.target.firstChild.data;
         switch(desp){
-            case "Home":
-                localStorage.setItem('desporto',"");
-                break;
             case "Futebol":
                 localStorage.setItem('desporto',"Futebol");
                 break;
@@ -60,18 +57,13 @@ function Navbar() {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <Link to="/home" className="navbar-logo" onClick={closeMobileMenu}>
+                <div className="navbar-logo">
                     RASBET
-                </Link>
+                </div>
                 <div className='menu-icon' onClick={handleClick}>
                     <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
                 </div>
                 <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-                    <li className='nav-item'>
-                        <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
-                            Home
-                        </Link>
-                    </li>
                     <li className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             Futebol

@@ -184,28 +184,28 @@ def get_gamess(sport):
         perGame['nome'] = ""
 
         ordenado = {}
+        if sport == "Futebol":
+            for team in game:
+                equipa = {}
+                equipa['name'] = team[0]
+                equipa['odd'] = team[1]
+                if len(game) == 3:
+                    if team[0] == 'Draw':
+                        ordenado['team1'] = equipa
+                    elif team[2] == 1:
+                        perGame['nome'] = team[0] + " x " + perGame['nome']
+                        ordenado['team0'] = equipa
+                    else:
+                        perGame['nome'] += team[0]
+                        ordenado['team2'] = equipa
 
-        for team in game:
-            equipa = {}
-            equipa['name'] = team[0]
-            equipa['odd'] = team[1]
-            if len(game) == 3:
-                if team[0] == 'Draw':
-                    ordenado['team1'] = equipa
-                elif team[2] == 1:
-                    perGame['nome'] = team[0] + " x " + perGame['nome']
-                    ordenado['team0'] = equipa
                 else:
-                    perGame['nome'] += team[0]
-                    ordenado['team2'] = equipa
+                    perGame['equipas'].append(equipa)
+                    i = i+1
 
-            else:
-                perGame['equipas'].append(equipa)
-                i = i+1
-        
-        if len(game) == 3:
-            for i in range(3):
-                perGame['equipas'].append(ordenado[f'team{i}'])
+            if len(game) == 3:
+                for i in range(3):
+                    perGame['equipas'].append(ordenado[f'team{i}'])
 
         datetimeX = dbQueries.getGameDate(id)[0]
         print(datetimeX)
