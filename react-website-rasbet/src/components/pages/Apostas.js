@@ -6,8 +6,14 @@ import Navbar from '../Navbar';
 function Apostas() {
   return (
     <>
-      <Navbar />
-      <HistoricoApostas />
+    {localStorage.getItem('isLogged') === 'true'?
+      <>
+        <Navbar />
+        <HistoricoApostas />
+      </>
+      :
+      window.location.replace('http://localhost:3000/')
+    }
     </>
   );
 }

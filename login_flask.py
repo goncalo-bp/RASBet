@@ -113,11 +113,17 @@ def register_aposta():
 
     return 200
 
-@app.route('/apostas/<tipo>', methods = ['POST'])
+@app.route('/apostas', methods = ['POST'])
 @cross_origin()
-def get_betLista(tipo):
+def get_betListId():
     id = request.json.get("id", None)
-    #SELECT idAposta, oddTotal, valorApostado, ApostaGanha FROM Aposta WHERE idUser=%s;'
+    dict = {}
+    dict['simples'] = getBetListId(id,'simples')
+    dict['multipla'] = getBetListId(id,'multipla')
+    return dict
+
+
+def getBetListId(id,tipo):
     betList = dbQueries.getHistoricoApostas(id)
     toJson = []
 

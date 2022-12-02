@@ -5,8 +5,14 @@ import Navbar from '../Navbar';
 function Edit() {
   return (
     <>
-      <Navbar />
-      <AlterarInfo />
+    {localStorage.getItem('isLogged') === 'true'?
+      <>
+        <Navbar />
+        <AlterarInfo />
+      </>
+      :
+      window.location.replace('http://localhost:3000/')
+    }
     </>
   );
 }

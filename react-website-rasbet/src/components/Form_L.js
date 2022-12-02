@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Form_R.css';
 import Popup from './Popup';
 
@@ -50,6 +50,7 @@ export default function Form_L() {
 				localStorage.setItem('id', data.id);
 				localStorage.setItem('name', data.name);
 				localStorage.setItem('wallet', data.wallet);
+				localStorage.setItem('isLogged', true);
 				window.location.replace('http://localhost:3000/home');
 			})
 			.catch( (error,status) => {
@@ -68,6 +69,10 @@ export default function Form_L() {
 		</div>
 		);
 	};
+
+	useEffect(() => {
+		localStorage.setItem('isLogged', false);
+	}, []);
 
 	return (
 		<div className="form">

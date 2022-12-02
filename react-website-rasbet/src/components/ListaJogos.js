@@ -140,31 +140,31 @@ export default function ListaJogos() {
     //}
 
 return (
-<div className="edit-fundo">
-    <form className='edit-content-boletim'>
-        <div className='edit-lista-jogos'>
-        <input
-        type="text"
-        value={inputText}
-        onChange={inputHandler}
-        />
-            <ul id="edit-lista-jogo">
-                {filteredData.map((jogo,index1) => {
-                    return (
-                        <li id='edit-tipo-jogo' className='edit-tipo-jogo'>
-                            <span id='nome-jogo'><div id={index1}>{jogo.nome}</div> 
-                            <div className='edit-tipo-data'><span>{jogo.date} {jogo.hour}</span>
-                            </div> 
-                            </span>
-                            {jogo.equipas.map((equipa,index2) => {return (
-                            <span><Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>{equipa.name} {equipa.odd}</Button></span>)})}
-                        </li>
-                    )
-                })}
-            </ul>
-        </div>
-    </form> 
-    <Boletim apostas={apostas} func={handleClickCard}/>
-</div>
+    <div className="edit-fundo">
+        <form className='edit-content-boletim'>
+            <div className='edit-lista-jogos'>
+            <input
+            type="text"
+            value={inputText}
+            onChange={inputHandler}
+            />
+                <ul id="edit-lista-jogo">
+                    {filteredData.map((jogo,index1) => {
+                        return (
+                            <li id='edit-tipo-jogo' className='edit-tipo-jogo'>
+                                <span id='nome-jogo'><div id={index1}>{jogo.nome}</div> 
+                                <div className='edit-tipo-data'><span>{jogo.date} {jogo.hour}</span>
+                                </div> 
+                                </span>
+                                {jogo.equipas.map((equipa,index2) => {return (
+                                    <span><Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>{equipa.name} {equipa.odd}</Button></span>)})}
+                            </li>
+                        )
+                    })}
+                </ul>
+            </div>
+        </form> 
+        <Boletim apostas={apostas} func={handleClickCard}/>
+    </div>
 );
 }

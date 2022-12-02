@@ -4,7 +4,13 @@ import Navbar from '../Navbar';
 function Levantar() {
   return (
     <>
-      <Navbar />
+    {localStorage.getItem('isLogged') === 'true'?
+      <>
+        <Navbar />
+      </>
+      :
+      window.location.replace('http://localhost:3000/')
+    }
     </>
   );
 }

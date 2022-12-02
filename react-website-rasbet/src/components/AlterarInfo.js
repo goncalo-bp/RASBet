@@ -187,50 +187,49 @@ const getSaldo = () => {
 }
 
 return (
-<div className="edit-fundo">
-	<form className='edit-content'>
-		<Popup trigger={btnPopup} setTrigger={setBtnPopup}>
-			{errorMessage()}
-		</Popup>
-		<Popup trigger={lev_Popup} setTrigger={setlev_Popup}>
-			{levantar()}
-		</Popup>
-		<Popup trigger={dep_Popup} setTrigger={setdep_Popup}>
-			{depositar()}
-		</Popup>
-
-		<div className='edit-header'>
-			<h1>{localStorage.getItem("name")}</h1>
+	<div className="edit-fundo">
+		<form className='edit-content'>
+			<Popup trigger={btnPopup} setTrigger={setBtnPopup}>
+				{errorMessage()}
+			</Popup>
+			<Popup trigger={lev_Popup} setTrigger={setlev_Popup}>
+				{levantar()}
+			</Popup>
+			<Popup trigger={dep_Popup} setTrigger={setdep_Popup}>
+				{depositar()}
+			</Popup>
+			<div className='edit-header'>
+				<h1>{localStorage.getItem("name")}</h1>
+				<br/>
+				<h2 id="saldo">Saldo : {localStorage.getItem("wallet")}€</h2>
+				<br/>
+				<hr style={{
+					color: '#E0E0E0',
+					height: '3px',
+					width: '80%'
+					}}
+					/>
+			</div>
 			<br/>
-      		<h2 id="saldo">Saldo : {localStorage.getItem("wallet")}€</h2>
 			<br/>
-      		<hr style={{
-    		color: '#E0E0E0',
-    		height: '3px',
-			width: '80%'
-  			}}
-			/>
-		</div>
-		<br/>
-		<br/>
-		<div className='edit-form'>
-			<Button onClick={handleLev} className="btn--primary--orange--large">Levantar</Button>
-			<Button onClick={handleDep} className="btn--primary--orange--large">Depositar</Button>
-		</div>
-		<br/>
-		<div className='edit-form'>
-			<Button dest="/home/historico" className="btn--primary--green--large">Histórico de Transações <i className='far fa-play-circle'/></Button>
-			<Button dest="/home/apostas" className="btn--primary--green--large">Histórico de Apostas <i className='far fa-play-circle'/></Button>
-		</div>
-		
-		<input onChange={handleNome} className="input--conta"
-		value={nome} type="email" placeholder='Novo Nome'/>
-		<input onChange={handleNewPassword} className="input--conta"
-		value={newPassword} type="newPassword" placeholder='Nova Palavra-passe' />
-		<button onClick={handleSubmit} className="btn--primary--orange--large" type="submit">
-		Mudar Dados
-		</button>
-	</form>
-</div>
+			<div className='edit-form'>
+				<Button onClick={handleLev} className="btn--primary--orange--large">Levantar</Button>
+				<Button onClick={handleDep} className="btn--primary--orange--large">Depositar</Button>
+			</div>
+			<br/>
+			<div className='edit-form'>
+				<Button dest="/home/historico" className="btn--primary--green--large">Histórico de Transações <i className='far fa-play-circle'/></Button>
+				<Button dest="/home/apostas" className="btn--primary--green--large">Histórico de Apostas <i className='far fa-play-circle'/></Button>
+			</div>
+			
+			<input onChange={handleNome} className="input--conta"
+			value={nome} type="email" placeholder='Novo Nome'/>
+			<input onChange={handleNewPassword} className="input--conta"
+			value={newPassword} type="newPassword" placeholder='Nova Palavra-passe' />
+			<button onClick={handleSubmit} className="btn--primary--orange--large" type="submit">
+			Mudar Dados
+			</button>
+		</form>
+	</div>
 );
 }

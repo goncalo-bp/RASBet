@@ -5,8 +5,14 @@ import Navbar from '../Navbar';
 function Historico() {
   return (
     <>
-      <Navbar />
-      <HistoricoTransacao />
+    {localStorage.getItem('isLogged') === 'true'?
+      <>
+        <Navbar />
+        <HistoricoTransacao />
+      </>
+      :
+      window.location.replace('http://localhost:3000/')
+    }
     </>
   );
 }

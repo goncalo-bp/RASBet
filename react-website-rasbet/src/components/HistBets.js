@@ -4,8 +4,6 @@ import '../App.css'
 import './HistBets.css'
 
 function HistoricoApostas() {
-    const [id, setId] = useState(1); //TODO - ir buscar o id do utilizador
-
     const [simples, setSimples] = useState([]);
     const [multipla, setMultipla] = useState([]);
 
@@ -13,8 +11,6 @@ function HistoricoApostas() {
     const [btnMultipla, setBtnMultipla] = useState(false);
 
     const [empty, setEmpty] = useState({control : false});
-
-    const [nome, setNome] = useState("Carlos Pereira");
 
     const [button,setButton] = useState(true);
 
@@ -33,15 +29,15 @@ function HistoricoApostas() {
     window.addEventListener('resize', showButton);
     
     function toJson(id) {
-		return { "id": id}
+		return {"id": id}
 	}
 
-    const getSimples = (e) => {
+    const getBets = (e) => {
         //e.preventDefault();
-        fetch('http://localhost:5002/apostas/simples', {  // Enter your IP address here
+        fetch('http://localhost:5002/apostas', {  // Enter your IP address here
             method: 'POST',
             mode: 'cors',
-            body: JSON.stringify(toJson(id)),
+            body: JSON.stringify(toJson(localStorage.getItem('id'))),
             headers: {"Content-Type": "application/json"}
         })
         .then((response) => {
@@ -51,33 +47,8 @@ function HistoricoApostas() {
             else return response.json();
         }).then((data) => {
             console.log(data);
-            setSimples(data);
-            {data.length === 0 ? setEmpty({control : true, msg : 'Ainda não fez apostas simples.'}) : setEmpty({control : false})}
-            {data.length > 0 ? setBtnSimples(true) : setBtnSimples(false)}
-        })
-        .catch(error => {
-            console.log("error: ", error);
-        });
-    };
-
-    const getMultiplas = (e) => {
-        //e.preventDefault();
-        fetch('http://localhost:5002/apostas/multipla', {  // Enter your IP address here
-            method: 'POST',
-            mode: 'cors',
-            body: JSON.stringify(toJson(id)),
-            headers: {"Content-Type": "application/json"}
-        })
-        .then((response) => {
-            if(!response.ok) {
-                throw Error(response.status);
-            }
-            else return response.json();
-        }).then((data) => {
-            console.log(data);
-            setMultipla(data);
-            {data.length === 0 ? setEmpty({control : true, msg : 'Ainda não fez apostas múltiplas.'}) : setEmpty({control : false})}
-            {data.length ? setBtnMultipla(true) : setBtnMultipla(false)}
+            setSimples(data.simples[0]);
+            setMultipla(data.multipla[0]);
         })
         .catch(error => {
             console.log("error: ", error);
@@ -85,14 +56,21 @@ function HistoricoApostas() {
     };
 
     const handleSimples = (e) => {
-        getSimples();
+        {simples.length === 0 ? setEmpty({control : true, msg : 'Ainda não fez apostas simples.'}) : setEmpty({control : false})}
+        {simples.length > 0 ? setBtnSimples(true) : setBtnSimples(false)}
         setBtnMultipla(false);
     };
 
     const handleMultipla = (e) => {
-        getMultiplas();
+        {multipla.length === 0 ? setEmpty({control : true, msg : 'Ainda não fez apostas múltiplas.'}) : setEmpty({control : false})}
+        {multipla.length > 0 ? setBtnMultipla(true) : setBtnMultipla(false)}
         setBtnSimples(false);
     };
+
+    // TODO corrigir isto
+    useEffect(() => {
+        getBets();
+    }, []);
 
     return (
         <div className='container'>
@@ -102,7 +80,7 @@ function HistoricoApostas() {
                         {button && <Button dest='/home/edit' className={'btn--circle--green--small'}><i className="fa-solid fa-arrow-left" ></i></Button>}
                         {!button && <Button dest='/home/edit' className={'btn--circle--green--tiny'}><i className="fa-solid fa-arrow-left" ></i></Button>}
                     </div>
-                    <h1 className='title-text'>{localStorage.getItem("name")}</h1>
+                    <h1 className='title-text'>{localStorage.getItem('name')}</h1>
                 </div>
                 <br/>
                 <h2>Histórico de Apostas</h2>

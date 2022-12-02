@@ -19,6 +19,12 @@ function Navbar() {
         }
     };
   
+    const logOut = () => {
+        closeMobileMenu();
+        localStorage.clear();
+        localStorage.setItem('isLogged', false);
+    }
+
     useEffect(() => {
         showButton();
     }, []);
@@ -26,43 +32,41 @@ function Navbar() {
     window.addEventListener('resize', showButton);
   
     return (
-        <>
-          <nav className="navbar">
-                <div className="navbar-container">
-                    <Link to="/home" className="navbar-logo" onClick={closeMobileMenu}>
-                        RASBET
-                    </Link>
-                    <div className='menu-icon' onClick={handleClick}>
-                        <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
-                    </div>
-                    <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-                        <li className='nav-item'>
-                            <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
-                                Home
-                            </Link>
-                        </li>
-                        <li className='nav-item'>
-                            <Link to='/desportos' className='nav-links' onClick={closeMobileMenu}>
-                                Desportos
-                            </Link>
-                        </li>
-                        <li className='nav-item'>
-                            <Link to='/home/edit' className='nav-links' onClick={closeMobileMenu}>
-                                Conta
-                            </Link>
-                        </li>
-                        {!button &&
-                        <li className='nav-item'> {/*TODO - dar logout direito*/}
-                            <Link to='/' className='nav-links-mobile' onClick={closeMobileMenu}> 
-                                Sair
-                            </Link>
-                        </li>
-                        }
-                    </ul>
-                    {button && <Button className='btn--outline--green--large' dest='/'>Sair</Button>} {/*TODO - dar logout direito*/}
+        <nav className="navbar">
+            <div className="navbar-container">
+                <Link to="/home" className="navbar-logo" onClick={closeMobileMenu}>
+                    RASBET
+                </Link>
+                <div className='menu-icon' onClick={handleClick}>
+                    <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
                 </div>
-            </nav>
-        </>
+                <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+                    <li className='nav-item'>
+                        <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
+                            Home
+                        </Link>
+                    </li>
+                    <li className='nav-item'>
+                        <Link to='/desportos' className='nav-links' onClick={closeMobileMenu}>
+                            Desportos
+                        </Link>
+                    </li>
+                    <li className='nav-item'>
+                        <Link to='/home/edit' className='nav-links' onClick={closeMobileMenu}>
+                            Conta
+                        </Link>
+                    </li>
+                    {!button &&
+                    <li className='nav-item'>
+                        <Link to='/' className='nav-links-mobile' onClick={logOut}> 
+                            Sair
+                        </Link>
+                    </li>
+                    }
+                </ul>
+                {button && <Button className='btn--outline--green--large' dest='/' onClick={logOut}>Sair</Button>}
+            </div>
+        </nav>
     )
 }
 

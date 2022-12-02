@@ -5,8 +5,6 @@ import './HistTransac.css'
 import Table from "./Table";
 
 function HistoricoTransacao() {
-    const [saldo, setSaldo] = useState(0);
-    const [id, setId] = useState(1); //TODO - ir buscar o id do utilizador
     const [tableData, setTableData] = useState([]);
     const [button,setButton] = useState(true);
 
@@ -28,17 +26,12 @@ function HistoricoTransacao() {
 		return { "id": id}
 	}
 
-    const handleSaldo = (e) => {
-        setSaldo(100.00);
-        //setSaldo(e.target.value);
-    };
-
     const getHistorico = (e) => {
         //e.preventDefault();
         fetch('http://localhost:5002/transactions', {  // Enter your IP address here
             method: 'POST',
             mode: 'cors',
-            body: JSON.stringify(toJson(id)),
+            body: JSON.stringify(toJson(localStorage.getItem('id'))),
             headers: {"Content-Type": "application/json"}
         })
         .then((response) => {
@@ -57,7 +50,6 @@ function HistoricoTransacao() {
 
     useEffect(() => {
         getHistorico();
-        handleSaldo();
     }, []);
 
     return (
@@ -71,7 +63,7 @@ function HistoricoTransacao() {
                     <h1 className='title-text'>Histórico de Transações</h1>
                 </div>
                 <br/>
-                <h2>Saldo : {saldo}€</h2>
+                <h2>Saldo : {localStorage.getItem('wallet')}€</h2>
                 <br/>
                 <div className='table-container'>
                     <Table tableData={tableData}/>
