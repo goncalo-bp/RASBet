@@ -14,11 +14,10 @@ export default function ListaJogos() {
     
     const [admin, setAdmin] = useState(false);
 
-    const handleMissingOdd = (e) => {
-        if(e === null){
-            setCountMissingOdd(countMissingOdd+1);
-        }
-    }
+    const [date, setDate] = useState('');
+    const [containsDate, setContainsDate] = useState(false);
+
+    const [search, setSearch] = useState('');
 
     function changeColor(missing){
         if (missing === 0)
@@ -32,6 +31,45 @@ export default function ListaJogos() {
     }
 
     const [inputText, setInputText] = useState("");
+
+    function checkDate(d1, d2) {
+        if (d1 === '') {
+            setContainsDate(true);
+        }
+        if (d1.length === 4) {
+            d1 === d2.substring(0, 4) ? 
+            setContainsDate(true) : 
+            setContainsDate(false);
+        }
+        if (d1.length === 7) {
+            d1.substring(0, 4) === d2.substring(0, 4) && 
+            d1.substring(5, 7) === d2.substring(5, 7) ? 
+            setContainsDate(true) : 
+            setContainsDate(false);
+        }
+        if (d1.length === 10) {
+            d1.substring(0, 4) === d2.substring(0, 4) && 
+            d1.substring(5, 7) === d2.substring(5, 7) &&
+            d1.substring(8, 10) === d2.substring(8, 10) ? 
+            setContainsDate(true) : 
+            setContainsDate(false);
+        }
+    }
+
+    let handleDate = (e) => {
+        setDate(e.target.value);
+        
+        for(var i = 0; i < jogos.length; i++){
+            var jogo = document.getElementById("Date_"+i).textContent;
+            checkDate(date, jogo.substring(0,10));
+            if (containsDate === true) {
+                document.getElementById("M_"+i).style.display="flex";
+            }
+            else {
+                document.getElementById("M_"+i).style.display="none";
+            }
+        }
+    };
 
     let inputHandler = (e) => {
         console.log(e.target);
@@ -51,6 +89,11 @@ export default function ListaJogos() {
         }
     };
 
+    const handleMissingOdd = (e) => {
+        if(e === null){
+            setCountMissingOdd(countMissingOdd+1);
+        }
+    }
 
     const getJogos = (e) => {
         //e.preventDefault(); // TODO - mudar para qualquer nome do desporto
@@ -88,10 +131,6 @@ export default function ListaJogos() {
             document.getElementById("progresso").style.display="none";
         }
 
-        
-
-
-
         var data = localStorage.getItem('jogos');
         var timestamp =  localStorage.getItem('timestamp');
     
@@ -101,7 +140,7 @@ export default function ListaJogos() {
         if(data === "" || Math.abs(now - timestamp) > 600000) { // atualiza quando esta a 0 ou quando passam 10 min
             localStorage.setItem('timestamp', new Date());
             getJogos();
-        }else{
+        } else {
             setJogos(JSON.parse(localStorage.getItem('jogos')));
         }
     }, []);
@@ -148,55 +187,67 @@ export default function ListaJogos() {
        return e1 + "" + e2;
     }
 
-
-return (
-<div className="edit-fundo">
-    <form className='edit-content-boletim'>
-        <div className='edit-lista-jogos'>
-        <input
-        id="search"
-        type="text"
-        value={inputText}
-        onChange={inputHandler}
-        placeholder="Pesquisar"
-        />
-            <ul id="edit-lista-jogo">
-                {jogos.map((jogo,index1) => {
-                    return (
-                        <li id={"M_"+index1} className='edit-tipo-jogo'>
-                            <div className='jogo-container'>
-                                <div id='nome-jogo'>
-                                    <div id={index1}>{jogo.nome}</div> 
-                                    <div className='edit-tipo-data'>
-                                        {jogo.date}
-                                        {jogo.hour}
-                                    </div> 
-                                </div>
-                                <div className='resultados-container'>
-                                {jogo.equipas.map((equipa,index2) => {
-                                    {handleMissingOdd(equipa.odd)}
-                                    return (
-                                        <span>
-                                            <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
-                                                {equipa.name} <br/>{equipa.odd}
-                                            </Button>
-                                        </span>
-                                    )})}
-                                </div>
-                            </div>
-                            <Button className='btn--x--gray--medium'>x</Button>
-                            <div id='missingOdds' className='edit-tipo-missing-odds'>
-                                
-                            </div>
-                        {admin && <Button className='btn--x--gray--medium'>x</Button>}
-                        </li>
-                    )
-                })}
-            </ul>
+    return (
+        <div className="edit-fundo">
+            <form className='edit-content-boletim'>
+                <div className='edit-lista-jogos'>
+                <span className='filters'>
+                    <span>
+                        <a>Nome: </a>
+                        <input
+                        id="search"
+                        type="text"
+                        value={inputText}
+                        onChange={inputHandler}
+                        placeholder="Pesquisar"
+                        />
+                    </span>
+                    <span>
+                        <a>Data: </a>
+                        <input
+                        onChange={handleDate}
+                        id="search"
+                        type="text"
+                        value={date}
+                        placeholder="yyyy/mm/dd"
+                        />
+                    </span>
+                </span>
+                    <ul id="edit-lista-jogo">
+                        {jogos.map((jogo,index1) => {
+                            return (
+                                <li id={"M_"+index1} className='edit-tipo-jogo'>
+                                    <div className='jogo-container'>
+                                        <div id='nome-jogo'>
+                                            <div id={index1}>{jogo.nome}</div> 
+                                            <div id={`Date_${index1}`} className='edit-tipo-data'>
+                                                {jogo.date} {jogo.hour}
+                                            </div> 
+                                        </div>
+                                        <div className='resultados-container'>
+                                        {jogo.equipas.map((equipa,index2) => {
+                                            {handleMissingOdd(equipa.odd)}
+                                            return (
+                                                <span>
+                                                    <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
+                                                        {equipa.name} <br/>{equipa.odd}
+                                                    </Button>
+                                                </span>
+                                            )})}
+                                        </div>
+                                    </div>
+                                    <div id='missingOdds' className='edit-tipo-missing-odds'>
+                                    
+                                    </div>
+                                    {admin && <Button className='btn--x--gray--medium'>x</Button>}
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
+            </form> 
+            <Boletim id="boletim" apostas={apostas} func={handleClickCard}/>
+            <Progresso id="progresso" apostas={apostas} func={handleClickCard}/>
         </div>
-    </form> 
-    <Boletim id="boletim" apostas={apostas} func={handleClickCard}/>
-    <Progresso id="progresso" apostas={apostas} func={handleClickCard}/>
-</div>
-);
+    );
 }

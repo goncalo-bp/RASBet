@@ -23,6 +23,10 @@
     justify-content: center;
 }
 
+.filters {
+    gap: 20px;
+}
+
 .edit-header {
     height: 10%;
     width: 100%;
