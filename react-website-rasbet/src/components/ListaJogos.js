@@ -20,30 +20,36 @@ export default function ListaJogos() {
     const [inputText, setInputText] = useState("");
 
     let inputHandler = (e) => {
-    //convert input text to lower case
-    var valor = e.target.value;
-    var lowerCase = String(valor).toLowerCase();
-    setInputText(lowerCase);
+        console.log(e.target);
+        //convert input text to lower case
+        var valor = e.target.value;
+        var lowerCase = String(valor).toLowerCase();
+        setInputText(lowerCase);
+
+        for(var i = 0; i < jogos.length; i++){
+            var game_name = document.getElementById(i).textContent.toLowerCase()
+            if(!game_name.includes(lowerCase)){
+                document.getElementById("M_"+i).style.display="none";
+            }
+            else {
+                document.getElementById("M_"+i).style.display="flex";
+            }
+        }
   };
 
+    //const filteredData = jogos.map((jogo,index1) => {
+    //    //if no input the return the original
+    //    if (inputText === '') {
+    //        return jogo;
+    //    }
+    //    //return the item which contains the user input
+    //    else {
+    //        var aux = jogo.name
+    //        console.log(aux)
+    //        return String(aux).toLowerCase().includes(inputText)
+    //    }
+    //});
     
-    const filteredData = jogos.map((jogo,index1) => {
-        //if no input the return the original
-        if (inputText === '') {
-            return jogo;
-        }
-        //return the item which contains the user input
-        else {
-            var aux = jogo.name
-            console.log(aux)
-            return String(aux).toLowerCase().includes(inputText)
-        }
-    });
-    
-    function toJson(id) {
-		return { "id": id}
-	}
-
     const handleData = (e) => {
         setData(e.target.value);
     };
@@ -144,14 +150,15 @@ return (
     <form className='edit-content-boletim'>
         <div className='edit-lista-jogos'>
         <input
+        id="search"
         type="text"
         value={inputText}
         onChange={inputHandler}
         />
             <ul id="edit-lista-jogo">
-                {filteredData.map((jogo,index1) => {
+                {jogos.map((jogo,index1) => {
                     return (
-                        <li id='edit-tipo-jogo' className='edit-tipo-jogo'>
+                        <li id={"M_"+index1} className='edit-tipo-jogo'>
                             <span id='nome-jogo'><div id={index1}>{jogo.nome}</div> 
                             <div className='edit-tipo-data'><span>{jogo.date} {jogo.hour}</span>
                             </div> 
