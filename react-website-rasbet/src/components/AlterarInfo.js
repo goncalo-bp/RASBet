@@ -113,7 +113,10 @@ function alertValidIBAN(iban) {
 		var carteira = localStorage.getItem("wallet");
 		console.log(val);
 		console.log(carteira)
-		if(Number(val) > Number(carteira))
+		if(val === ""){
+			alert("Insira um valor");
+		}		
+		else if(Number(val) > Number(carteira))
 			alert("Não tem saldo suficiente");	
 			
 		else {
@@ -164,27 +167,6 @@ const depositar = () => {
 
 }
 
-const getSaldo = () => {
-	var valor = 0;
-	fetch('http://localhost:5002/saldoCarteira', {  // Enter your IP address here
-
-	method: 'POST',
-	body: JSON.stringify(toJson2(localStorage.getItem('id'))), // body data type must match "Content-Type" header 
-	headers: {"Content-Type": "application/json"}	
-	})
-	.then( (response) => {
-		if(!response.ok) {
-			throw Error(response.status);
-		}
-		else return response.json();
-	}).then( (data) => {
-		valor = data.saldo;
-		setSaldo(valor);
-	})
-	.catch( (error,status) => {
-		console.log("error: ",status);
-	});
-}
 
 return (
 	<div className="edit-fundo">
