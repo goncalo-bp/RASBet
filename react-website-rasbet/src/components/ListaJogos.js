@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './ListaJogos.css';
 import { Button } from './Button';
 import Boletim from './Boletim';
+import Progresso from './Progresso';
 
 
 
@@ -9,6 +10,13 @@ export default function ListaJogos() {
 
     const [jogos,setJogos] = useState([]);
     const [apostas, setApostas] = useState([]);
+    const [countMissingOdd, setCountMissingOdd] = useState(0);
+
+    const handleMissingOdd = (e) => {
+        if(e === null){
+            setCountMissingOdd(countMissingOdd+1);
+        }
+    }
 
     const [inputText, setInputText] = useState("");
 
@@ -52,13 +60,29 @@ export default function ListaJogos() {
 
 
     useEffect(() => {
+
+        if(localStorage.getItem('isAdmin') === 'true') {
+            document.getElementById("boletim").style.display="none";
+            document.getElementById("progresso").style.display="none";
+        }
+
+        else if (localStorage.getItem("isEspecialista") === 'true') {
+            document.getElementById("boletim").style.display="none";
+            document.getElementById("progresso").style.display="flex";
+        }
+        else {
+            document.getElementById("boletim").style.display="flex";
+            document.getElementById("progresso").style.display="none";
+        }
+        
+
+
+
         var data = localStorage.getItem('jogos');
         var timestamp =  localStorage.getItem('timestamp');
     
         timestamp = new Date(timestamp);
         var now = new Date();
-
-
 
         if(data === "" || Math.abs(now - timestamp) > 600000) { // atualiza quando esta a 0 ou quando passam 10 min
             localStorage.setItem('timestamp', new Date());
@@ -129,7 +153,9 @@ return (
                             <div className='edit-tipo-data'><span>{jogo.date} {jogo.hour}</span>
                             </div> 
                             </span>
-                            {jogo.equipas.map((equipa,index2) => {return (
+                            {jogo.equipas.map((equipa,index2) => {
+                            {handleMissingOdd(equipa.odd)}
+                            return (
                             <span><Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>{equipa.name} {equipa.odd}</Button></span>)})}
                         </li>
                     )
@@ -137,7 +163,8 @@ return (
             </ul>
         </div>
     </form> 
-    <Boletim apostas={apostas} func={handleClickCard}/>
+    <Boletim id="boletim" apostas={apostas} func={handleClickCard}/>
+    <Progresso id="progresso" apostas={apostas} func={handleClickCard}/>
 </div>
 );
 }
