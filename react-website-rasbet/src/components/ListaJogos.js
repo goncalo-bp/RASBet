@@ -18,6 +18,17 @@ export default function ListaJogos() {
         }
     }
 
+    function changeColor(missing){
+        if (missing === 0)
+            document.getElementById('missingOdds').style.backgroundColor = "green";
+        if (missing === 1)
+            document.getElementById('missingOdds').style.backgroundColor = "yellow";
+        if (missing === 2)
+            document.getElementById('missingOdds').style.backgroundColor = "yellow";
+        if (missing === 3)
+            document.getElementById('missingOdds').style.backgroundColor = "red";
+    }
+
     const [inputText, setInputText] = useState("");
 
     let inputHandler = (e) => {
@@ -74,6 +85,7 @@ export default function ListaJogos() {
             document.getElementById("boletim").style.display="flex";
             document.getElementById("progresso").style.display="none";
         }
+
         
 
 
@@ -170,6 +182,9 @@ return (
                                 </div>
                             </div>
                             <Button className='btn--x--gray--medium'>x</Button>
+                            <div id='missingOdds' className='edit-tipo-missing-odds'>
+                                
+                            </div>
                         </li>
                     )
                 })}

@@ -179,15 +179,12 @@
 }
 
 .edit-tipo-missing-odds {
-    height: 20%;
-    width: 100%;
-    border: 2px gray solid;
+    height: 60px;
+    width: 80px;
     background-color: green;
-    border-style: dashed;
+    position: relative;
+    padding-top: 20px;
+    margin-top: 35px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 40px;
-    padding: 20px;
-    font-size: 25px;
+    justify-content: center;
 }
