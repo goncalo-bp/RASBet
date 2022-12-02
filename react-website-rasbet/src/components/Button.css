@@ -219,6 +219,43 @@
     color: #FF7300;
     transition: all 0.3s ease-out;
 }
+
+/* ============================================= */
+/*                PRIMARY ORANGE                 */
+/* ============================================= */
+.btn--active--orange--medium {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: #FF7300;
+    color: #fff;
+    border: 1px solid #FF7300;
+    transition: all 0.3s ease-out;
+
+    padding: 8px 20px;
+    font-size: 18px;
+}
+
+
+.btn--active--orange--large {
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+
+    background-color: #FF7300;
+    color: #fff;
+    border: 1px solid #FF7300;
+    transition: all 0.3s ease-out;
+
+    padding: 12px 26px;
+    font-size: 20px;
+}
+
 /* ============================================= */
 /*                OUTLINE GREEN                  */
 /* ============================================= */

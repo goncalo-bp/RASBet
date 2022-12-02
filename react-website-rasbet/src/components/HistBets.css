@@ -178,11 +178,11 @@
     .bet-type {
         display: grid;
         grid-template-columns: repeat(2, auto);
-        grid-gap: 30px;
+        grid-gap: 20px;
     }
     
     .bets-container {
-        padding-top: 30px;
+        padding-top: 20px;
         border-top: 1px dotted #242424;
         display: flex;
         justify-content: center;
@@ -193,13 +193,13 @@
     .entry {
         display: grid;
         grid-template-columns: repeat(2, auto);
-        grid-gap: 30px;
+        grid-gap: 20px;
         justify-content: center;
         text-align: left;
         align-items: center;
-        padding: 15px 20px;
+        padding: 10px 15px;
         border: 2px solid #116530;
-        border-radius: 30px;
+        border-radius: 20px;
     }
     
     .jogo {
@@ -209,15 +209,18 @@
     
     .nome-jogo {
         color: #116530;
+        font-size: 14px;
         font-weight: bold;
     }
     
     .resultado {
-        margin-left: 20px;
+        font-size: 14px;
+        margin-left: 15px;
     }
     
     .valores-txt {
-        padding: 10px 5px;
+        font-size: 14px;
+        padding: 8px 4px;
     }
     
     .montante {
