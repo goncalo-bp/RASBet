@@ -8,6 +8,7 @@ import Levantar from './components/pages/Levantar';
 import Depositar from './components/pages/Depositar';
 import Historico from './components/pages/Historico';
 import Apostas from './components/pages/Apostas';
+import HomeAdmin from './components/pages/HomeAdmin';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route exact path="/home/depositar"  element={<Depositar/>} />
         <Route exact path="/home/historico"  element={<Historico/>} />
         <Route exact path="/home/apostas"  element={<Apostas/>} />
+        <Route exact path="/home-admin"  element={<HomeAdmin/>} />
       </Routes> 
       </Router>
     </>

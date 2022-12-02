@@ -47,11 +47,21 @@ export default function Form_L() {
 				}
 				else return response.json();
 			}).then( (data) => {
+				console.log(data);
 				localStorage.setItem('id', data.id);
 				localStorage.setItem('name', data.name);
 				localStorage.setItem('wallet', data.wallet);
 				localStorage.setItem('isLogged', true);
 				window.location.replace('http://localhost:3000/home');
+				if(data.isAdmin) {
+					window.location.replace('http://localhost:3000/home-admin');  
+				}
+				if(data.isEspecialista) {
+					window.location.replace('http://localhost:3000/home/apostas');
+				}
+				if(!data.isAdmin && !data.isEspecialista) {
+					window.location.replace('http://localhost:3000/home');
+				}
 			})
 			.catch( (error,status) => {
 				console.log("error: ",status);

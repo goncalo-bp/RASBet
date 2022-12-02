@@ -27,9 +27,11 @@ def login():
     
     elif r == 2:
         vIsAdmin = True
-
+        saldo = 0
+        
     elif r == 3:
         vIsEspecialista = True
+        saldo = 0
   
     else:
         saldo = dbQueries.getBalance(usrId)
