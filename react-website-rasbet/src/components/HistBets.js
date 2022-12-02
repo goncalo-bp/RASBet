@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Button } from './Button'
 import '../App.css'
 import './HistBets.css'
-import Table from "./Table";
 
 function HistoricoApostas() {
     const [id, setId] = useState(1); //TODO - ir buscar o id do utilizador
