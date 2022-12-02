@@ -110,15 +110,77 @@ function HistoricoApostas() {
                 <br/>
                 <span>
                     <div className='bet-type'>
-                        <Button className='btn--outline--full--orange--large' onClick={handleSimples}>
-                            Simples
-                        </Button>
-                        <Button className='btn--outline--full--orange--large' onClick={handleMultipla}>
-                            Múltiplas
-                        </Button>
+                        {button &&
+                        <>
+                            {btnSimples &&
+                            <>
+                                <Button className='btn--active--orange--large' onClick={handleSimples}>
+                                    Simples
+                                </Button>
+                                <Button className='btn--outline--full--orange--large' onClick={handleMultipla}>
+                                    Múltiplas
+                                </Button>
+                            </>
+                            }
+                            {btnMultipla &&
+                            <>
+                                <Button className='btn--outline--full--orange--large' onClick={handleSimples}>
+                                    Simples
+                                </Button>
+                                <Button className='btn--active--orange--large' onClick={handleMultipla}>
+                                    Múltiplas
+                                </Button>
+                            </>
+                            }
+                            {!btnSimples && !btnMultipla &&
+                            <>
+                                <Button className='btn--outline--full--orange--large' onClick={handleSimples}>
+                                    Simples
+                                </Button>
+                                <Button className='btn--outline--full--orange--large' onClick={handleMultipla}>
+                                    Múltiplas
+                                </Button>
+                            </>
+                            }
+                        </>
+                        }
+                        {!button &&
+                        <>
+                            {btnSimples &&
+                            <>
+                                <Button className='btn--active--orange--medium' onClick={handleSimples}>
+                                    Simples
+                                </Button>
+                                <Button className='btn--outline--full--orange--medium' onClick={handleMultipla}>
+                                    Múltiplas
+                                </Button>
+                            </>
+                            }
+                            {btnMultipla &&
+                            <>
+                                <Button className='btn--outline--full--orange--medium' onClick={handleSimples}>
+                                    Simples
+                                </Button>
+                                <Button className='btn--active--orange--medium' onClick={handleMultipla}>
+                                    Múltiplas
+                                </Button>
+                            </>
+                            }
+                            {!btnSimples && !btnMultipla &&
+                            <>
+                                <Button className='btn--outline--full--orange--medium' onClick={handleSimples}>
+                                    Simples
+                                </Button>
+                                <Button className='btn--outline--full--orange--medium' onClick={handleMultipla}>
+                                    Múltiplas
+                                </Button>
+                            </>
+                            }
+                        </>
+                        }
                     </div>
                 </span>
-                <br/><br/>
+                <br/>{button && <br/>}
                 <div className='bets-container'>
                     {btnSimples && 
                         <div className='entry'>
