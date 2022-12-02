@@ -7,12 +7,18 @@ import './Home.css';
 function Home() {
   return (
     <>
+    {localStorage.getItem('isLogged') === 'true' ?
+      <>
       <Navbar />
-      <div className="edit-pagina-inicial">
-        <div className="edit-jogos">
-          <ListaJogos />
+        <div className="edit-pagina-inicial">
+          <div className="edit-jogos">
+            <ListaJogos />
+          </div>
         </div>
-      </div>
+      </>
+      :
+      window.location.replace('http://localhost:3000/')
+    }
     </>
   );
 }
