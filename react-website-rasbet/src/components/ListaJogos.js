@@ -11,6 +11,8 @@ export default function ListaJogos() {
     const [jogos,setJogos] = useState([]);
     const [apostas, setApostas] = useState([]);
     const [countMissingOdd, setCountMissingOdd] = useState(0);
+    
+    const [admin, setAdmin] = useState(false);
 
     const handleMissingOdd = (e) => {
         if(e === null){
@@ -146,6 +148,7 @@ export default function ListaJogos() {
        return e1 + "" + e2;
     }
 
+
 return (
 <div className="edit-fundo">
     <form className='edit-content-boletim'>
@@ -185,6 +188,7 @@ return (
                             <div id='missingOdds' className='edit-tipo-missing-odds'>
                                 
                             </div>
+                        {admin && <Button className='btn--x--gray--medium'>x</Button>}
                         </li>
                     )
                 })}

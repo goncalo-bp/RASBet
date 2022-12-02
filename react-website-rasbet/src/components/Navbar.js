@@ -2,12 +2,15 @@ import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { Button } from './Button';
 import './Navbar.css';
+import './Popup';
 
 
 function Navbar() {
     const [click, setClick] = useState(false);
     const [button,setButton] = useState(true);
   
+    const [admin, setAdmin] = useState(false);
+
     const handleClick = () => setClick(!click);
     const closeMobileMenu = (e) => {
         var desp = e.target.firstChild.data;
@@ -46,6 +49,9 @@ function Navbar() {
     }
 
     useEffect(() => {
+        setAdmin(JSON.parse(localStorage.getItem("isAdmin")))
+
+
         showButton();
     }, []);
   
@@ -86,11 +92,18 @@ function Navbar() {
                             MotoGP
                         </Link>
                     </li>
-                    <li className='nav-item'>
+                    {!admin && <li className='nav-item'>
                         <Link to='/home/edit' className='nav-links' onClick={closeMobileMenu}>
                             Conta
                         </Link>
-                    </li>
+                    </li>}
+                    {admin &&
+                        <li className='nav-item'>
+                        <Link to='/home/edit' className='nav-links' onClick={closeMobileMenu}>
+                            Adicionar jogo
+                        </Link>
+                        </li>
+                    }
                     {!button &&
                     <li className='nav-item'>
                         <Link to='/' className='nav-links-mobile' onClick={logOut}> 
