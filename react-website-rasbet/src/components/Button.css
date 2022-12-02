@@ -482,11 +482,11 @@
     background-color: transparent;
     transition: all 0.4s ease-out;
 
-    padding: 7px 14px;
-    font-size: 20px;
+    padding: 5px;
+    font-size: 16px;
 }
 .btn--x--gray--medium:hover {
-    background: gray;
+    background: lightgray;
     border: none;
 }
 

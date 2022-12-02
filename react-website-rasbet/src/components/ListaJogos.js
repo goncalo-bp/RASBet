@@ -149,14 +149,27 @@ return (
                 {jogos.map((jogo,index1) => {
                     return (
                         <li id={"M_"+index1} className='edit-tipo-jogo'>
-                            <span id='nome-jogo'><div id={index1}>{jogo.nome}</div> 
-                            <div className='edit-tipo-data'><span>{jogo.date} {jogo.hour}</span>
-                            </div> 
-                            </span>
-                            {jogo.equipas.map((equipa,index2) => {
-                            {handleMissingOdd(equipa.odd)}
-                            return (
-                            <span><Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>{equipa.name} {equipa.odd}</Button></span>)})}
+                            <div className='jogo-container'>
+                                <div id='nome-jogo'>
+                                    <div id={index1}>{jogo.nome}</div> 
+                                    <div className='edit-tipo-data'>
+                                        {jogo.date}
+                                        {jogo.hour}
+                                    </div> 
+                                </div>
+                                <div className='resultados-container'>
+                                {jogo.equipas.map((equipa,index2) => {
+                                    {handleMissingOdd(equipa.odd)}
+                                    return (
+                                        <span>
+                                            <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
+                                                {equipa.name} <br/>{equipa.odd}
+                                            </Button>
+                                        </span>
+                                    )})}
+                                </div>
+                            </div>
+                            <Button className='btn--x--gray--medium'>x</Button>
                         </li>
                     )
                 })}

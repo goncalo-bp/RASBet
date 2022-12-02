@@ -63,26 +63,32 @@
 
 .edit-lista-jogo:hover:not(.header) {
     background-color: #eee;
-  }
+}
 
 .edit-tipo-jogo {
-    height: 20%;
-    width: 100%;
     border: 2px gray solid;
     border-style: dashed;
-    display: flex;
-    justify-content: space-between;
+}
+
+.jogo-container {
+    height: 20%;
+    width: 100%;
     align-items: center;
     padding-left: 40px;
     padding: 20px;
     font-size: 25px;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 30px;
+}
+
+.resultados-container {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-gap: 30px;
 }
 
 .edit-tipo-data {
-    height: 20%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
     padding-left: 40px;
     padding: 10px;
     font-size: 15px;
