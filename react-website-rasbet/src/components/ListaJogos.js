@@ -282,7 +282,7 @@ export default function ListaJogos() {
                                         </div>
                                     </div>
                                     {especialista && <div id='missingOdds' className='edit-tipo-missing-odds'></div>}
-                                    {admin && <Button onClick={handlefech} className='btn--x--gray--small'>x</Button>}
+                                    {admin && <Button onClick={handlefech} className='btn--x--gray--medium'>x</Button>}
                                 </li>
                             )
                         })}
