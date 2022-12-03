@@ -1,6 +1,6 @@
 import React from 'react';
+import GerirContas from '../GerirContas';
 import Navbar from '../Navbar';
-import Popup from '../Popup';
 
 function Contas() {
     return (
@@ -8,6 +8,7 @@ function Contas() {
       {localStorage.getItem('isLogged') === 'true'?
         <>
           <Navbar />
+          <GerirContas />
         </>
         :
         window.location.replace('http://localhost:3000/')

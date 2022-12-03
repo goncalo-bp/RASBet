@@ -10,7 +10,7 @@ const NAMES = ['btn--primary--medium', 'btn--primary--large',
                'btn--primary--green--medium', 'btn--primary--green--large',
                'btn--outline--green--medium', 'btn--outline--green--large',
                'btn--primary--gray--medium', 'btn--primary--gray--large',
-               'btn--circle--green--small', 'btn--circle--green--tiny',
+               'btn--circle--green--small', 'btn--circle--green--tiny', 'btn--circle--green--medium',
                'btn--x--gray--medium','btn--primary--white--large',
                'btn--onclick--white--large', 'btn--inserir--odd'
             ]
