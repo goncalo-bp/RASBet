@@ -12,7 +12,7 @@ const NAMES = ['btn--primary--medium', 'btn--primary--large',
                'btn--primary--gray--medium', 'btn--primary--gray--large',
                'btn--circle--green--small', 'btn--circle--green--tiny',
                'btn--x--gray--medium','btn--primary--white--large',
-               'btn--onclick--white--large'
+               'btn--onclick--white--large', 'btn--inserir--odd'
             ]
 
 export const Button = ({ children, onClick, className, dest, id }) => {
