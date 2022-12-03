@@ -10,8 +10,7 @@ export default function ListaJogos() {
 
     const [jogos,setJogos] = useState([]);
     const [apostas, setApostas] = useState([]);
-    const [countMissingOdd, setCountMissingOdd] = useState(0);
-    
+
     const [admin, setAdmin] = useState(false);
     const [especialista, setEspecialista] = useState(false);
 
@@ -99,11 +98,6 @@ export default function ListaJogos() {
         }
     };
 
-    const handleMissingOdd = (e) => {
-        if(e === null){
-            setCountMissingOdd(countMissingOdd+1);
-        }
-    }
 
     const getJogos = (e) => {
         var desporto = localStorage.getItem('desporto');
@@ -223,9 +217,29 @@ export default function ListaJogos() {
             case "futebol":
                 localStorage.setItem('desporto', 'Futebol');
                 break;
-                
+            /// ATEANCAOOOOOOOOOOOOOOOO
+            ///////////////////////////////////////7
+            /////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
         }
     });
+
+
+    function testValidGame(info_equipas){
+        var res = true;
+        equipas.map((equipa,index2) => {
+            if(equipa.odd === "0.00")
+                res = false;
+        });
+        return res;
+    }
+
     return (
         <div className="edit-fundo">
             <form className='edit-content-boletim'>
@@ -255,31 +269,32 @@ export default function ListaJogos() {
                 </span>
                     <ul id="edit-lista-jogo">
                         {jogos.map((jogo,index1) => {
-                            return (
-                                <li id={"M_"+index1} className='edit-tipo-jogo'>
-                                    <div className='jogo-container'>
-                                        <div id='nome-jogo'>
-                                            <div id={index1}>{jogo.nome}</div> 
-                                            <div id={'Date_'+index1} className='edit-tipo-data'>
-                                                {jogo.date} {jogo.hour}
-                                            </div> 
+                            if(testValidGame(jogo.equipas)){
+                                return (
+                                    <li id={"M_"+index1} className='edit-tipo-jogo'>
+                                        <div className='jogo-container'>
+                                            <div id='nome-jogo'>
+                                                <div id={index1}>{jogo.nome}</div> 
+                                                <div id={'Date_'+index1} className='edit-tipo-data'>
+                                                    {jogo.date} {jogo.hour}
+                                                </div> 
+                                            </div>
+                                            <div className='resultados-container'>
+                                            {jogo.equipas.map((equipa,index2) => {
+                                                return (
+                                                    <span>
+                                                        <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
+                                                            {equipa.name} <br/>{equipa.odd}
+                                                        </Button>
+                                                    </span>
+                                                )})}
+                                            </div>
                                         </div>
-                                        <div className='resultados-container'>
-                                        {jogo.equipas.map((equipa,index2) => {
-                                            {handleMissingOdd(equipa.odd)}
-                                            return (
-                                                <span>
-                                                    <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
-                                                        {equipa.name} <br/>{equipa.odd}
-                                                    </Button>
-                                                </span>
-                                            )})}
-                                        </div>
-                                    </div>
-                                    {especialista && <div id='missingOdds' className='edit-tipo-missing-odds'></div>}
-                                    {admin && <Button className='btn--x--gray--medium'>x</Button>}
-                                </li>
-                            )
+                                        {especialista && <div id='missingOdds' className='edit-tipo-missing-odds'></div>}
+                                        {admin && <Button className='btn--x--gray--medium'>x</Button>}
+                                    </li>
+                                )
+                            }
                         })}
                     </ul>
                 </div>
