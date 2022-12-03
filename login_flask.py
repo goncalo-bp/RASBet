@@ -225,13 +225,16 @@ def mudar_campo():
     changePassword = True
     changeName = True
     id = request.json.get("id", None)
+    print("ola1")
     try:
         password = request.json.get("password", None)
+        print("ola2")
     except:
         changePassword = False
 
     try:
         name = request.json.get("name", None)
+        print("ola3")
     except:
         changeName = False
 

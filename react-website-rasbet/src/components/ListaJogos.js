@@ -90,7 +90,7 @@ export default function ListaJogos() {
         setInputText(lowerCase);
 
         for(var i = 0; i < jogos.length; i++){
-            var game_name = document.getElementById("Date_"+i).textContent.toLowerCase()
+            var game_name = document.getElementById(i).textContent.toLowerCase()
             if(!game_name.includes(lowerCase)){
                 document.getElementById("M_"+i).style.display="none";
             }
@@ -224,8 +224,8 @@ export default function ListaJogos() {
                 localStorage.setItem('desporto', 'Futebol');
                 break;
             /// ATEANCAOOOOOOOOOOOOOOOO
-            ///////////////////////////////////////7
-            /////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
             ///////////////////////////////////////
             ///////////////////////////////////////
             ///////////////////////////////////////
@@ -239,7 +239,7 @@ export default function ListaJogos() {
 
     function testValidGame(info_equipas){
         var res = true;
-        equipas.map((equipa,index2) => {
+        info_equipas.map((equipa,index2) => {
             if(equipa.odd === "0.00")
                 res = false;
         });
