@@ -557,3 +557,20 @@
     font-size: 20px;
 }
 
+/* ============================================= */
+/*                 INSERIR ODD BUTTON            */
+/* ============================================= */
+
+.btn--inserir--odd {
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+
+    background-color: transparent;
+    font-size: 14px;
+}
+.btn--inserir--odd:hover {
+    background: lightgray;
+    border: none;
+    text-decoration: underline;
+}

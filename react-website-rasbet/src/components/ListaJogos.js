@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './ListaJogos.css';
 import { Button } from './Button';
 import Boletim from './Boletim';
+import Popup from './Popup';
 import Progresso from './Progresso';
 
 
@@ -19,6 +20,28 @@ export default function ListaJogos() {
     const [containsDate, setContainsDate] = useState(false);
 
     const [search, setSearch] = useState('');
+
+    const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/pass incorretos
+	const [btnPopup, setBtnPopup] = useState(false);
+
+	const [alt_Popup, setAlt_Popup] = useState(false);
+
+    const [infoAltera, setInfoAltera] = useState({});
+    const [newOdd, setNewOdd] = useState(0);
+
+    const handleAlt = (e) => {
+        console.log(e.target);
+        var info = e.target.id;
+        console.log(info);
+        setInfoAltera(info);
+		setAlt_Popup(true);
+	}
+
+    const handleNewOdd = (e) => {
+        console.log(e.target);
+        setNewOdd(e.target.value);
+    }
+
 
     function changeColor(missing){
         if (missing === 0)
@@ -93,12 +116,6 @@ export default function ListaJogos() {
         }
     };
 
-    const handleMissingOdd = (e) => {
-        if(e === null){
-            setCountMissingOdd(countMissingOdd+1);
-        }
-    }
-
     const getJogos = (e) => {
         //e.preventDefault(); // TODO - mudar para qualquer nome do desporto
         fetch('http://localhost:5002/sports/Futebol', {  // Enter your IP address here
@@ -121,20 +138,21 @@ export default function ListaJogos() {
 
     useEffect(() => {
 
+
         if(localStorage.getItem('isAdmin') === 'true') {
             setAdmin(true);
             document.getElementById("boletim").style.display="none";
-            document.getElementById("progresso").style.display="none";
+            //document.getElementById("progresso").style.display="none";
         }
 
         else if (localStorage.getItem("isEspecialista") === 'true') {
             setEspecialista(true);
             document.getElementById("boletim").style.display="none";
-            document.getElementById("progresso").style.display="flex";
+            //document.getElementById("progresso").style.display="flex";
         }
         else {
             document.getElementById("boletim").style.display="flex";
-            document.getElementById("progresso").style.display="none";
+            //document.getElementById("progresso").style.display="none";
         }
 
         var data = localStorage.getItem('jogos');
@@ -164,9 +182,7 @@ export default function ListaJogos() {
     }
 
     const handleClickCard = (e) => {
-        console.log(e);
         var id = e.target.id;
-        console.log(id);
         if (id === undefined){
             id = e.id;
         }
@@ -177,7 +193,6 @@ export default function ListaJogos() {
             addAposta(id);
         }
         else {
-            console.log("ola");
             document.getElementById(id).classList.add('btn--onclick--white--large');
             document.getElementById(id).classList.remove('btn--onclick');
 
@@ -189,9 +204,30 @@ export default function ListaJogos() {
        return e1 + "" + e2;
     }
 
+    const concat2 = (e1,e2) =>{
+        return e1 + "_" + e2;
+     }
+
     const setToDate = (e) => {
         e.target.type="date";
     }
+
+    function alertValid_Odd() {
+        var id = infoAltera.split("_")[0];
+        var equipa = infoAltera.split("_")[1];
+		var valor = newOdd;
+		if (valor === ""){
+			alert("Insira um valor");
+		}
+		else{
+            // ! Adicionar cenas ao Flask
+            console.log(id);
+            console.log(equipa);
+            console.log(valor);
+			
+			setAlt_Popup(false);
+		}
+	}
 
     document.addEventListener("click", (evt) => {
         const date = document.getElementById("searchDate");
@@ -210,9 +246,24 @@ export default function ListaJogos() {
             document.getElementById("searchDate").type = "text";
       });
 
+      const alterarOdd = (e) => {
+		return (
+		<div className='popup-center'>
+			<div>
+                <input id="novaOdd" type="number" onChange={handleNewOdd} placeholder="Odd " />
+			</div>
+			<br/>
+			<Button className='btn--outline--full--orange--large' onClick={alertValid_Odd} >Confirmar</Button>
+		</div>
+		);
+	}
+
     return (
         <div className="edit-fundo">
             <form className='edit-content-boletim'>
+            <Popup trigger={alt_Popup} setTrigger={setAlt_Popup}>
+				{alterarOdd()}
+			</Popup>
                 <div className='edit-lista-jogos'>
                 <span className='filters'>
                     <span>
@@ -249,18 +300,31 @@ export default function ListaJogos() {
                                             </div> 
                                         </div>
                                         <div className='resultados-container'>
+                                        <div id= {index1 + "id"} style={{display: "none"}}>
+                                            {jogo.id}
+                                        </div>
                                         {jogo.equipas.map((equipa,index2) => {
-                                            {handleMissingOdd(equipa.odd)}
                                             return (
                                                 <span>
+                                                {especialista ? 
+                                                    <div id={concat(index1,index2)} className='btn--onclick--white--large'>
+                                                        {equipa.name} <br/> 
+                                                        {equipa.odd === "0.00" ?
+                                                                <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >Inserir Odd</Button>
+                                                            :
+                                                            <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >{equipa.odd}</Button>
+                                                    }
+                                                    </div>
+                                                        :  
                                                     <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
                                                         {equipa.name} <br/>{equipa.odd}
                                                     </Button>
+                                                }
                                                 </span>
                                             )})}
                                         </div>
                                     </div>
-                                    {especialista && <div id='missingOdds' className='edit-tipo-missing-odds'></div>}
+                                    {/*especialista && <div id='missingOdds' className='edit-tipo-missing-odds'></div>*/}
                                     {admin && <Button className='btn--x--gray--medium'>x</Button>}
                                 </li>
                             )
@@ -269,7 +333,7 @@ export default function ListaJogos() {
                 </div>
             </form> 
             <Boletim id="boletim" apostas={apostas} func={handleClickCard}/>
-            <Progresso id="progresso" apostas={apostas} func={handleClickCard}/>
+            {/*<Progresso id="progresso" apostas={apostas} func={handleClickCard}/>*/}
         </div>
     );
 }
