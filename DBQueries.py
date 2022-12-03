@@ -298,7 +298,7 @@ class DBQueries:
             Permite editar o perfil
         '''
         if index == 0:
-            self.mydb.execute(DBConstants.update_email_field, (value, usrId))
+            self.mydb.execute(DBConstants.update_pass_field, (value, usrId))
         elif index == 1:
             self.mydb.execute(DBConstants.update_nome_field, (value, usrId))
         self.mydb.commit()

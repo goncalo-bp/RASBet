@@ -8,6 +8,8 @@ import Levantar from './components/pages/Levantar';
 import Depositar from './components/pages/Depositar';
 import Historico from './components/pages/Historico';
 import Apostas from './components/pages/Apostas';
+import Promocoes from './components/pages/Promocoes';
+import Contas from './components/pages/Contas';
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
         <Route exact path="/home/depositar"  element={<Depositar/>} />
         <Route exact path="/home/historico"  element={<Historico/>} />
         <Route exact path="/home/apostas"  element={<Apostas/>} />
+        <Route exact path="/home/promocoes"  element={<Promocoes/>} />
+        <Route exact path="/home/contas"  element={<Contas/>} />
       </Routes> 
       </Router>
     </>

@@ -3,6 +3,7 @@ import './ListaJogos.css';
 import { Button } from './Button';
 import Boletim from './Boletim';
 import Progresso from './Progresso';
+import Popup from './Popup';
 
 
 
@@ -18,6 +19,7 @@ export default function ListaJogos() {
     const [containsDate, setContainsDate] = useState(false);
 
     const [search, setSearch] = useState('');
+    const [fech_Popup, setfech_Popup] = useState(false);
 
     function changeColor(missing){
         if (missing === 0)
@@ -195,6 +197,10 @@ export default function ListaJogos() {
         e.target.type="date";
     }
 
+    const handlefech = (e) => {
+		setfech_Popup(true);
+	}
+
     document.addEventListener("click", (evt) => {
         const date = document.getElementById("searchDate");
         let targetEl = evt.target; // clicked element      
@@ -239,11 +245,25 @@ export default function ListaJogos() {
         });
         return res;
     }
+      const fechar = () => {
+		return (
+		<div className='popup-center'>
+            Deseja fechar o jogo?
+            <div>
+			<Button className='btn--outline--full--orange--large'  >Sim</Button>
+            <Button className='btn--outline--full--orange--large'  >Não</Button>
+            </div>
+		</div>
+		);
+	}
 
     return (
         <div className="edit-fundo">
             <form className='edit-content-boletim'>
                 <div className='edit-lista-jogos'>
+                <Popup trigger={fech_Popup} setTrigger={setfech_Popup}>
+					{fechar()}
+                    </Popup>
                 <span className='filters'>
                     <span>
                         <a>Nome: </a>
