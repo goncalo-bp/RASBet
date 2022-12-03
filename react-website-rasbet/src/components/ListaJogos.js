@@ -19,7 +19,7 @@ export default function ListaJogos() {
     const [containsDate, setContainsDate] = useState(false);
 
     const [search, setSearch] = useState('');
-    const [fech_Popup, setfech_Popup] = useState(false);
+    const [fech_Popup, setFech_Popup] = useState(false);
 
     const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/pass incorretos
 	const [btnPopup, setBtnPopup] = useState(false);
@@ -29,16 +29,21 @@ export default function ListaJogos() {
     const [infoAltera, setInfoAltera] = useState({});
     const [newOdd, setNewOdd] = useState(0);
 
-    const handleAlt = (e) => {
-        console.log(e.target);
+    const [infoRemove, setInfoRemove] = useState({});
+
+    const handleInfoRemove = (e) => {
         var info = e.target.id;
-        console.log(info);
+        setInfoRemove(info);
+        setFech_Popup(true);
+    }
+    
+    const handleAlt = (e) => {
+        var info = e.target.id;
         setInfoAltera(info);
 		setAlt_Popup(true);
 	}
 
     const handleNewOdd = (e) => {
-        console.log(e.target);
         setNewOdd(e.target.value);
     }
 
@@ -86,7 +91,6 @@ export default function ListaJogos() {
     let handleDate = (e) => {
         var data_act = e.target.value;
         setDate(data_act);
-        console.log(data_act);
         if (data_act.length === 0)
             for(var i = 0; i < jogos.length; i++){
                 document.getElementById("M_"+i).style.display="flex";
@@ -163,17 +167,18 @@ export default function ListaJogos() {
             //document.getElementById("progresso").style.display="none";
         }
 
-        var data = localStorage.getItem('jogos');
+        var desportoAtual = localStorage.getItem('desporto');
+        var data = localStorage.getItem(desportoAtual);
         var timestamp =  localStorage.getItem('timestamp');
     
         timestamp = new Date(timestamp);
         var now = new Date();
+        console.log(data);
 
-        if(data === "" || Math.abs(now - timestamp) > 6) { // atualiza quando esta a 0 ou quando passam 10 min
+        if(data === null || data === "" || Math.abs(now - timestamp) > 30000) { // atualiza quando esta a 0 ou quando passam 10 min
             localStorage.setItem('timestamp', new Date());
             getJogos();
         } else {
-            var desportoAtual = localStorage.getItem('desporto');
             setJogos(JSON.parse(localStorage.getItem(desportoAtual)));
         }
     }, []);
@@ -225,22 +230,16 @@ export default function ListaJogos() {
         var id = infoAltera.split("_")[0];
         var equipa = infoAltera.split("_")[1];
 		var valor = newOdd;
-		if (valor === ""){
+		if (valor === 0){
 			alert("Insira um valor");
 		}
 		else{
             // ! Adicionar cenas ao Flask
-            console.log(id);
-            console.log(equipa);
-            console.log(valor);
+            
 			
 			setAlt_Popup(false);
 		}
     }
-
-    const handlefech = (e) => {
-		setfech_Popup(true);
-	}
 
     document.addEventListener("click", (evt) => {
         const date = document.getElementById("searchDate");
@@ -262,6 +261,11 @@ export default function ListaJogos() {
       const alterarOdd = (e) => {
 		return (
 		<div className='popup-center'>
+            <div>
+                <h1>Jogo Supenso</h1>
+                <br/>
+                Por favor, insira a nova odd:
+            </div>
 			<div>
                 <input id="novaOdd" type="number" onChange={handleNewOdd} placeholder="Odd " />
 			</div>
@@ -300,13 +304,30 @@ export default function ListaJogos() {
         });
         return res;
     }
-      const fechar = () => {
+
+    function removeJogo(){
+        console.log(infoRemove);
+        // ! Adicionar cenas ao Flask
+        var desporto = localStorage.getItem('desporto');
+        localStorage.setItem(desporto, "");
+        setFech_Popup(false);
+        window.location.reload();
+    }
+
+    function closeFecharJogo() {
+        setFech_Popup(false);
+    }
+
+
+    const fechar = () => {
 		return (
 		<div className='popup-center'>
             Deseja fechar o jogo?
+            <br/>
+            <br/>
             <div>
-			<Button className='btn--outline--full--orange--large'  >Sim</Button>
-            <Button className='btn--outline--full--orange--large'  >Não</Button>
+			<Button onClick={removeJogo} className='btn--outline--full--orange--large'  >Sim</Button>
+            <Button onClick={closeFecharJogo} className='btn--outline--full--orange--large'  >Não</Button>
             </div>
         </div>
         );
@@ -319,7 +340,7 @@ export default function ListaJogos() {
 				{alterarOdd()}
 			</Popup>
                 <div className='edit-lista-jogos'>
-                <Popup trigger={fech_Popup} setTrigger={setfech_Popup}>
+                <Popup trigger={fech_Popup} setTrigger={setFech_Popup}>
 					{fechar()}
                 </Popup>
                 <span className='filters'>
@@ -344,7 +365,11 @@ export default function ListaJogos() {
                         onClick={setToDate}
                         />
                     </span>
+                    {admin && <span>
+                        <Button className='btn--outline--full--orange--large' >Adicionar Jogo</Button>
+                    </span>}
                 </span>
+                <br/>
                     <ul id="edit-lista-jogo">
                         {jogos.map((jogo,index1) => {
                             if(testValidGame(jogo.equipas)){
@@ -379,7 +404,7 @@ export default function ListaJogos() {
                                                 )})}
                                             </div>
                                         </div>
-                                        {admin && <Button className='btn--x--gray--medium'>x</Button>}
+                                        {admin && <Button id={jogo.id} onClick={handleInfoRemove} className='btn--x--gray--remove--jogo'>x</Button>}
                                     </li>
                                 )
                             }

@@ -591,3 +591,27 @@
     border: none;
     text-decoration: underline;
 }
+
+/* ============================================= */
+/*          SIMPLE X BUTTON REMOVE JOGO          */
+/* ============================================= */
+
+.btn--x--gray--remove--jogo {
+    border-radius: 100px;
+    width: 25px;
+    height: 25px;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    background-color: transparent;
+    transition: all 0.4s ease-out;
+    font-size: 16px;
+}
+
+.btn--x--gray--remove--jogo:hover {
+    background: lightgray;
+    border: none;
+    font-size: 16px;
+}
