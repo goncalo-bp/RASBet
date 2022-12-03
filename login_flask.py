@@ -182,7 +182,6 @@ def get_gamess(sport):
         perGame['equipas'] = []
 
         perGame['nome'] = ""
-        print(id)
         ordenado = {}
         if sport == "Futebol":
             for team in game:
@@ -225,17 +224,13 @@ def mudar_campo():
     changePassword = True
     changeName = True
     id = request.json.get("id", None)
-    print("ola1")
-    try:
-        password = request.json.get("password", None)
-        print("ola2")
-    except:
-        changePassword = False
 
-    try:
-        name = request.json.get("name", None)
-        print("ola3")
-    except:
+    password = request.json.get("password", None)
+    if password == None:
+        changePassword = False
+    
+    name = request.json.get("name", None)
+    if name == None:
         changeName = False
 
     if changePassword:
@@ -244,7 +239,7 @@ def mudar_campo():
     if changeName:
         dbQueries.updateUserField(1, name, id)
 
-    return 200
+    return [200]
 
 @app.route('/transacao', methods = ['POST'])
 @cross_origin()
@@ -255,7 +250,7 @@ def get_desportos():
 
     dbQueries.registerTransaction(id,value,type)
 
-    return 200
+    return [200]
 
 @app.route('/apostas/registo/<tipo>', methods = ['POST'])
 @cross_origin()
@@ -263,14 +258,14 @@ def get_betList(tipo):
     id = request.json.get("id", None)
     listaBets = request.json.get("boletim", None)
     montante = request.json.get("montante",None)
-
+    print(listaBets)
     if tipo == 'simples':
         for bet in listaBets:
             dbQueries.criarAposta(id,montante,list(bet))
     else:
         dbQueries.criarAposta(id,montante,listaBets)
 
-    return 200
+    return [200]
 
 
 if __name__ == '__main__':

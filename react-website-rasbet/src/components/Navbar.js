@@ -29,6 +29,7 @@ function Navbar() {
                 localStorage.setItem('desporto',"MotoGP");
                 break;
         }
+        window.location.reload();
         setClick(false);
     }
     
@@ -106,7 +107,7 @@ function Navbar() {
                     </li>
                     {!admin && <li className='nav-item'>
                         <Link to='/home/edit' className='nav-links' onClick={closeMobileMenu}>
-                            Conta
+                            Bem vindo {localStorage.getItem("name")}
                         </Link>
                     </li>}
                     {admin && <li className='nav-item'>

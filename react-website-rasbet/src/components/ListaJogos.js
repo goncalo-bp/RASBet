@@ -169,7 +169,7 @@ export default function ListaJogos() {
         timestamp = new Date(timestamp);
         var now = new Date();
 
-        if(data === "" || Math.abs(now - timestamp) > 6) { // atualiza quando esta a 0 ou quando passam 10 min
+        if(data === "" || Math.abs(now - timestamp) > 300000) { // atualiza quando esta a 0 ou quando passam 5 min
             localStorage.setItem('timestamp', new Date());
             getJogos();
         } else {
@@ -255,7 +255,7 @@ export default function ListaJogos() {
           targetEl = targetEl.parentNode;
         } while (targetEl);
         // This is a click outside.      
-        if(date.value==='') 
+        if(date !== null && date.value==='') 
             document.getElementById("searchDate").type = "text";
       });
 
@@ -270,27 +270,6 @@ export default function ListaJogos() {
 		</div>
 		);
 	}
-
-
-
-    document.addEventListener("click", (evt) => {
-        switch (evt.target.id) {
-            case "futebol":
-                localStorage.setItem('desporto', 'Futebol');
-                break;
-            /// ATEANCAOOOOOOOOOOOOOOOO
-            ///////////////////////////////////////
-            ///////////////////////////////////////
-            ///////////////////////////////////////
-            ///////////////////////////////////////
-            ///////////////////////////////////////
-            ///////////////////////////////////////
-            ///////////////////////////////////////
-            ///////////////////////////////////////
-            ///////////////////////////////////////
-        }
-    });
-
 
     function testValidGame(info_equipas){
         var res = true;
@@ -352,7 +331,8 @@ export default function ListaJogos() {
                                     <li id={"M_"+index1} className='edit-tipo-jogo'>
                                         <div className='jogo-container'>
                                             <div id='nome-jogo'>
-                                                <div id={index1}>{jogo.nome}</div> 
+                                                <div id={index1}>{jogo.nome}</div>
+                                                <div id={index1+"_id"} style={{display: 'none'}}>{jogo.id}</div>
                                                 <div id={'Date_'+index1} className='edit-tipo-data'>
                                                     {jogo.date} {jogo.hour}
                                                 </div> 
@@ -388,7 +368,6 @@ export default function ListaJogos() {
                 </div>
             </form> 
             <Boletim id="boletim" apostas={apostas} func={handleClickCard}/>
-            {/*<Progresso id="progresso" apostas={apostas} func={handleClickCard}/>*/}
         </div>
     );
 }

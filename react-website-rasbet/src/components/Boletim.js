@@ -114,42 +114,51 @@ export default function Boletim(aposta) {
 
 	const handleAposta = (e) => {
 		var aApostar = document.getElementById("montante").value;
-
 		if (aApostar=== ""){
 			setError(3);
 		}
-
-		var saldo = Number(localStorage.getItem('wallet'));
-		console.log(saldo);
-		console.log(aApostar);
-		if(aApostar > saldo){
-			setError(1);
-		}else if(tipoAposta === ''){
-			setError(2);
-		}else if(apostas.length === 0){
-			setError(4);
-		}
 		else{
+			var saldo = Number(localStorage.getItem('wallet'));
+			if(aApostar > saldo){
+				setError(1);
+			}else if(tipoAposta === ''){
+				setError(2);
+			}else if(apostas.length === 0){
+				setError(4);
+			}
+			else{
+				var type = tipoAposta;
+				tipoAposta === 's' ? type = 'simples' :	type = 'multipla';
+				var res = new Object();
+				
+				for(var i = 0; i < apostas.length; i++){
+					var game_id =  document.getElementById(apostas[i][0]+"_id").textContent;
+					console.log(game_id);
+					var team_name = document.getElementById(apostas[i]).textContent.split(" ")[0];
+					console.log(team_name);
+					res[game_id] = team_name;
+				}
+				console.log(res);
 
-
-			//fetch('http://localhost:5002/registoaposta', {
-			//	method: 'POST',
-			//	headers: {
-			//		'Content-Type': 'application/json',
-			//		},
-			//		body: JSON.stringify({
-			//			"id": localStorage.getItem('id'),
-			//			"apostas": apostas,
-			//			"tipoAposta": tipoAposta,
-			//			"montante": aApostar,
-			//		})
-			//})
-
-
-
-
-			setError(0);
+				fetch('http://localhost:5002//apostas/registo/'+type, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							"id": localStorage.getItem('id'),
+							"boletim": res,
+							"montante": aApostar,
+						})
+				})
+	
+	
+	
+	
+				setError(0);
+			}
 		}
+
 
 		setBtnPopup(true);
 	}

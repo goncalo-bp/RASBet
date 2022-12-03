@@ -30,9 +30,32 @@ export default function Form_L() {
 	};
 
 	function toJson(nome,newPassword) {
+		console.log(nome);
+		console.log(newPassword);
+		if (nome === ""){
+			return {
+				"id" : localStorage.getItem("id"),
+				"password": newPassword
+			}
+		}else if (newPassword === ""){
+			return {
+				"id" : localStorage.getItem("id"),
+				"name": nome
+			}
+		}
+		else
+			return {
+				"id" : localStorage.getItem("id"),
+				"name": nome,
+				"password": newPassword,
+			}
+	}
+
+	function toJsonT(value,type){
 		return {
-			"name": nome,
-			"password": newPassword,
+			"id" : localStorage.getItem("id"),
+			"value": value,
+			"type": type
 		}
 	}
 
@@ -43,9 +66,7 @@ export default function Form_L() {
 			setBtnPopup(true);
 		}
 		else {
-
-			setError(false);
-			fetch('http://localhost:5002/login', {  // Enter your IP address here
+			fetch('http://localhost:5002/mudarcampo', {  // Enter your IP address here
 
 			method: 'POST', 
 			mode: 'cors', 
@@ -58,6 +79,9 @@ export default function Form_L() {
 				}
 				else return response.json();
 			}).then( (data) => {
+				if (nome !== "")
+					localStorage.setItem("name", nome);
+			
 				window.location.replace('http://localhost:3000/home');
 			})
 			.catch( (error,status) => {
@@ -114,8 +138,28 @@ export default function Form_L() {
 
 			else {
 				// LEVANTAR
+				fetch('http://localhost:5002/transacao', {  // Enter your IP address here
 
-				//localStorage.setItem("wallet", Number(localStorage.getItem("wallet")) - Number(valor));
+				method: 'POST', 
+				mode: 'cors', 
+				body: JSON.stringify(toJsonT(Number(val)*(-1), "L")), // body data type must match "Content-Type" header
+				headers: {"Content-Type": "application/json"}
+				})
+				.then( (response) => {
+					if(!response.ok) {
+						throw Error(response.status);
+					}
+					else return response.json();
+				}).then( (data) => {
+					localStorage.setItem("wallet", Number(carteira) - Number(val));
+					window.location.reload();
+				})
+				.catch( (error,status) => {
+					console.log("error: ",status);
+					setError(1);
+					setBtnPopup(true);
+				});
+
 				setlev_Popup(false);
 			}
 		}
@@ -136,7 +180,7 @@ export default function Form_L() {
 	            code = iban.match(/^([A-Z]{2})(\d{2})([A-Z\d]+)$/), // match and capture (1) the country code, (2) the check digits, and (3) the rest
 	            digits;
 	    // check syntax and length
-	    if (!code || iban.length !== CODE_LENGTHS[code[1]]) {
+	    if (!code || iban.length - 2 !== CODE_LENGTHS[code[1]]) {
 			console.log(code)
 	        return -1;
 	    }
@@ -203,7 +247,27 @@ export default function Form_L() {
 
 		if(ok){
 			// DEPOSITAR
+			fetch('http://localhost:5002/transacao', {  // Enter your IP address here
 
+				method: 'POST', 
+				mode: 'cors', 
+				body: JSON.stringify(toJsonT(Number(valor), "D")), // body data type must match "Content-Type" header
+				headers: {"Content-Type": "application/json"}
+				})
+				.then( (response) => {
+					if(!response.ok) {
+						throw Error(response.status);
+					}
+					else return response.json();
+				}).then( (data) => {
+					localStorage.setItem("wallet", Number(localStorage.getItem("wallet")) + Number(valor));
+					window.location.reload();
+				})
+				.catch( (error,status) => {
+					console.log("error: ",status);
+					setError(1);
+					setBtnPopup(true);
+				});
 
 			//localStorage.setItem("wallet", Number(localStorage.getItem("wallet")) + Number(valor));
 			setdep_Popup(false);
@@ -268,9 +332,9 @@ export default function Form_L() {
 				value={nome} type="email" placeholder='Novo Nome'/>
 				<input onChange={handleNewPassword} className="input--conta"
 				value={newPassword} type="newPassword" placeholder='Nova Palavra-passe' />
-				<button onClick={handleSubmit} className="btn--primary--orange--large" type="submit">
+				<Button onClick={handleSubmit} className="btn--primary--orange--large" type="submit">
 				Mudar Dados
-				</button>
+				</Button>
 			</form>
 		</div>
 	);

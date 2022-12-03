@@ -207,6 +207,10 @@ class DBQueries:
             Cria uma aposta simples ou múltipla associada a um utilizador
         '''
         wallet = self.mydb.query(DBConstants.get_wallet, (idUser,))
+        valor = float(valor)
+        print("------------------")
+        print(idUser, valor*(-1), jogosApostados)
+        print("-----------------")
         if len(wallet) == 0 or self.registerTransaction(idUser,(-1)*valor,'A') == -1:
             return -1 #Não tem carteira, ou não tem dinheiro suficiente
 
