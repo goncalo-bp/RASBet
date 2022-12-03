@@ -133,12 +133,9 @@ export default function Boletim(aposta) {
 				
 				for(var i = 0; i < apostas.length; i++){
 					var game_id =  document.getElementById(apostas[i][0]+"_id").textContent;
-					console.log(game_id);
 					var team_name = document.getElementById(apostas[i]).textContent.split(" ")[0];
-					console.log(team_name);
 					res[game_id] = team_name;
 				}
-				console.log(res);
 
 				fetch('http://localhost:5002//apostas/registo/'+type, {
 					method: 'POST',

@@ -258,10 +258,10 @@ def get_betList(tipo):
     id = request.json.get("id", None)
     listaBets = request.json.get("boletim", None)
     montante = request.json.get("montante",None)
-    print(listaBets)
+
     if tipo == 'simples':
         for bet in listaBets:
-            dbQueries.criarAposta(id,montante,list(bet))
+            dbQueries.criarAposta(id,montante,[(bet,listaBets[bet])])
     else:
         dbQueries.criarAposta(id,montante,listaBets)
 

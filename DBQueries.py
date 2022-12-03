@@ -208,21 +208,19 @@ class DBQueries:
         '''
         wallet = self.mydb.query(DBConstants.get_wallet, (idUser,))
         valor = float(valor)
-        print("------------------")
-        print(idUser, valor*(-1), jogosApostados)
-        print("-----------------")
+
         if len(wallet) == 0 or self.registerTransaction(idUser,(-1)*valor,'A') == -1:
             return -1 #Não tem carteira, ou não tem dinheiro suficiente
 
         #Verifica se um jogo ainda não começou
         datas = []
+        print(jogosApostados)
         for id in jogosApostados:
             datas.append(self.mydb.query(DBConstants.get_game_date, (id[0],))[0][0])
 
         if datetime.now() > min(datas):
             return -2
 
-        print("teste1")
         self.mydb.execute(DBConstants.reg_aposta, (idUser,valor, len(jogosApostados)))
         numAposta = self.mydb.lastrowid()
         oddsTotal = 1
