@@ -2,7 +2,7 @@ from DBQueries import DBQueries
 from flask import Flask, request, redirect, jsonify
 from datetime import datetime
 from flask_cors import CORS,cross_origin
-
+from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -182,7 +182,7 @@ def get_gamess(sport):
         perGame['equipas'] = []
 
         perGame['nome'] = ""
-
+        print(id)
         ordenado = {}
         if sport == "Futebol":
             for team in game:
@@ -202,13 +202,13 @@ def get_gamess(sport):
                 else:
                     perGame['equipas'].append(equipa)
                     i = i+1
+                
 
             if len(game) == 3:
                 for i in range(3):
                     perGame['equipas'].append(ordenado[f'team{i}'])
 
         datetimeX = dbQueries.getGameDate(id)[0]
-        print(datetimeX)
 
         perGame['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
         perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
@@ -218,6 +218,57 @@ def get_gamess(sport):
         jogo += 1
 
     return toJson,200
+
+@app.route('/mudarcampo', methods = ['POST'])
+@cross_origin()
+def mudar_campo():
+    changePassword = True
+    changeName = True
+    id = request.json.get("id", None)
+    try:
+        password = request.json.get("password", None)
+    except:
+        changePassword = False
+
+    try:
+        name = request.json.get("name", None)
+    except:
+        changeName = False
+
+    if changePassword:
+        dbQueries.updateUserField(0, sha256_crypt.hash(password,salt="RAS2022"), id)
+
+    if changeName:
+        dbQueries.updateUserField(1, name, id)
+
+    return 200
+
+@app.route('/transacao', methods = ['POST'])
+@cross_origin()
+def get_desportos():    
+    id = request.json.get("id", None)
+    value = request.json.get("value", None)
+    type = request.json.get("type",None)
+
+    dbQueries.registerTransaction(id,value,type)
+
+    return 200
+
+@app.route('/apostas/registo/<tipo>', methods = ['POST'])
+@cross_origin()
+def get_betList(tipo):
+    id = request.json.get("id", None)
+    listaBets = request.json.get("boletim", None)
+    montante = request.json.get("montante",None)
+
+    if tipo == 'simples':
+        for bet in listaBets:
+            dbQueries.criarAposta(id,montante,list(bet))
+    else:
+        dbQueries.criarAposta(id,montante,listaBets)
+
+    return 200
+
 
 if __name__ == '__main__':
    app.run(host='127.0.0.1', port=5002)

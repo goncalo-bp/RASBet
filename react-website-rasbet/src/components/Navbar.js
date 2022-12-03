@@ -64,22 +64,22 @@ function Navbar() {
                     <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
                 </div>
                 <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-                    <li className='nav-item'>
+                    <li id="futebol" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             Futebol
                         </Link>
                     </li>
-                    <li className='nav-item'>
+                    <li id="tenis" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             Ténis
                         </Link>
                     </li>
-                    <li className='nav-item'>
+                    <li id="basquetebol" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             Basquetebol
                         </Link>
                     </li>
-                    <li className='nav-item'>
+                    <li id="motogp" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             MotoGP
                         </Link>
