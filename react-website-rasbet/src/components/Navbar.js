@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { Button } from './Button';
 import './Navbar.css';
-import './Popup';
+import Popup from './Popup';
 
 
 function Navbar() {
@@ -10,6 +10,7 @@ function Navbar() {
     const [button,setButton] = useState(true);
   
     const [admin, setAdmin] = useState(false);
+    const [add_Popup, setAdd_Popup] = useState(false);
 
     const handleClick = () => setClick(!click);
     const closeMobileMenu = (e) => {
@@ -29,10 +30,26 @@ function Navbar() {
                 break;
         }
         setClick(false);
-    }    
+    }
+    
+    const handleadd = (e) => {
+		setAdd_Popup(true);
+	}
+
+    const add = () => {
+		return (
+		<div className='popup-center'>
+            Adicionar novo jogo:
+            <input type="text" placeholder="Desporto" style={{display: 'none'}}/>
+            <input type="text" placeholder="Equipa 1" style={{display: 'none'}}/>
+            <input type="text" placeholder="Equipa 2" style={{display: 'none'}}/>
+            <Button className='btn--outline--full--orange--large'  >Adicionar Jogo</Button>
+		</div>
+		);
+	}
     
     const showButton = () => {
-        if(window.innerWidth <= 1000) {
+        if(window.innerWidth <= 1350) {
             setButton(false);
         } else {
             setButton(true);
@@ -57,6 +74,9 @@ function Navbar() {
     return (
         <nav className="navbar">
             <div className="navbar-container">
+            <Popup trigger={add_Popup} setTrigger={setAdd_Popup}>
+                {add()}
+                </Popup>
                 <div className="navbar-logo">
                     RASBET
                 </div>
@@ -64,22 +84,22 @@ function Navbar() {
                     <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
                 </div>
                 <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-                    <li className='nav-item'>
+                    <li id="futebol" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             Futebol
                         </Link>
                     </li>
-                    <li className='nav-item'>
+                    <li id="tenis" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             Ténis
                         </Link>
                     </li>
-                    <li className='nav-item'>
+                    <li id="basquetebol" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             Basquetebol
                         </Link>
                     </li>
-                    <li className='nav-item'>
+                    <li id="motogp" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
                             MotoGP
                         </Link>
@@ -89,11 +109,19 @@ function Navbar() {
                             Conta
                         </Link>
                     </li>}
+                    {admin && <li className='nav-item'>
+                        <Link to='/home/promocoes' className='nav-links' onClick={closeMobileMenu}>
+                            Promoções
+                        </Link>
+                    </li>}
+                    {admin && <li className='nav-item'>
+                        <Link to='/home/contas' className='nav-links' onClick={closeMobileMenu}>
+                            Contas
+                        </Link>
+                    </li>}
                     {admin &&
                         <li className='nav-item'>
-                        <Link to='/home/edit' className='nav-links' onClick={closeMobileMenu}>
-                            Adicionar jogo
-                        </Link>
+                            <Link onClick={handleadd} className='nav-links' > Adicionar jogo </Link>
                         </li>
                     }
                     {!button &&

@@ -11,8 +11,7 @@ export default function ListaJogos() {
 
     const [jogos,setJogos] = useState([]);
     const [apostas, setApostas] = useState([]);
-    const [countMissingOdd, setCountMissingOdd] = useState(0);
-    
+
     const [admin, setAdmin] = useState(false);
     const [especialista, setEspecialista] = useState(false);
 
@@ -20,6 +19,7 @@ export default function ListaJogos() {
     const [containsDate, setContainsDate] = useState(false);
 
     const [search, setSearch] = useState('');
+    const [fech_Popup, setfech_Popup] = useState(false);
 
     const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/pass incorretos
 	const [btnPopup, setBtnPopup] = useState(false);
@@ -86,17 +86,23 @@ export default function ListaJogos() {
     let handleDate = (e) => {
         var data_act = e.target.value;
         setDate(data_act);
-
-        for(var i = 0; i < jogos.length; i++){
-            var jogo = document.getElementById("Date_"+i).textContent;
-            var containsDate = checkDate(data_act, jogo.substring(0,10));
-            if (containsDate === true) {
+        console.log(data_act);
+        if (data_act.length === 0)
+            for(var i = 0; i < jogos.length; i++){
                 document.getElementById("M_"+i).style.display="flex";
             }
-            else {
-                document.getElementById("M_"+i).style.display="none";
+        
+        else
+            for(var i = 0; i < jogos.length; i++){
+                var jogo = document.getElementById("Date_"+i).textContent;
+                var containsDate = checkDate(data_act, jogo.substring(0,10));
+                if (containsDate === true) {
+                    document.getElementById("M_"+i).style.display="flex";
+                }
+                else {
+                    document.getElementById("M_"+i).style.display="none";
+                }
             }
-        }
     };
 
     let inputHandler = (e) => {
@@ -116,9 +122,11 @@ export default function ListaJogos() {
         }
     };
 
+
     const getJogos = (e) => {
-        //e.preventDefault(); // TODO - mudar para qualquer nome do desporto
-        fetch('http://localhost:5002/sports/Futebol', {  // Enter your IP address here
+        var desporto = localStorage.getItem('desporto');
+
+        fetch('http://localhost:5002/sports/'+desporto, {  // Enter your IP address here
             method: 'GET',
         })
         .then((response) => {
@@ -128,7 +136,7 @@ export default function ListaJogos() {
             else return response.json();
         }).then((data) => {
             setJogos(data);
-            localStorage.setItem('jogos', JSON.stringify(data));
+            localStorage.setItem(desporto, JSON.stringify(data));
         })
         .catch(error => {
             console.log("error: ", error);
@@ -161,11 +169,12 @@ export default function ListaJogos() {
         timestamp = new Date(timestamp);
         var now = new Date();
 
-        if(data === "" || Math.abs(now - timestamp) > 600000) { // atualiza quando esta a 0 ou quando passam 10 min
+        if(data === "" || Math.abs(now - timestamp) > 6) { // atualiza quando esta a 0 ou quando passam 10 min
             localStorage.setItem('timestamp', new Date());
             getJogos();
         } else {
-            setJogos(JSON.parse(localStorage.getItem('jogos')));
+            var desportoAtual = localStorage.getItem('desporto');
+            setJogos(JSON.parse(localStorage.getItem(desportoAtual)));
         }
     }, []);
 
@@ -227,6 +236,10 @@ export default function ListaJogos() {
 			
 			setAlt_Popup(false);
 		}
+    }
+
+    const handlefech = (e) => {
+		setfech_Popup(true);
 	}
 
     document.addEventListener("click", (evt) => {
@@ -258,6 +271,47 @@ export default function ListaJogos() {
 		);
 	}
 
+
+
+    document.addEventListener("click", (evt) => {
+        switch (evt.target.id) {
+            case "futebol":
+                localStorage.setItem('desporto', 'Futebol');
+                break;
+            /// ATEANCAOOOOOOOOOOOOOOOO
+            ///////////////////////////////////////7
+            /////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+            ///////////////////////////////////////
+        }
+    });
+
+
+    function testValidGame(info_equipas){
+        var res = true;
+        info_equipas.map((equipa,index2) => {
+            if(equipa.odd === "0.00")
+                res = false;
+        });
+        return res;
+    }
+      const fechar = () => {
+		return (
+		<div className='popup-center'>
+            Deseja fechar o jogo?
+            <div>
+			<Button className='btn--outline--full--orange--large'  >Sim</Button>
+            <Button className='btn--outline--full--orange--large'  >Não</Button>
+            </div>
+        </div>
+        );
+    }
+
     return (
         <div className="edit-fundo">
             <form className='edit-content-boletim'>
@@ -265,6 +319,9 @@ export default function ListaJogos() {
 				{alterarOdd()}
 			</Popup>
                 <div className='edit-lista-jogos'>
+                <Popup trigger={fech_Popup} setTrigger={setfech_Popup}>
+					{fechar()}
+                </Popup>
                 <span className='filters'>
                     <span>
                         <a>Nome: </a>
@@ -290,22 +347,20 @@ export default function ListaJogos() {
                 </span>
                     <ul id="edit-lista-jogo">
                         {jogos.map((jogo,index1) => {
-                            return (
-                                <li id={"M_"+index1} className='edit-tipo-jogo'>
-                                    <div className='jogo-container'>
-                                        <div id='nome-jogo'>
-                                            <div id={index1}>{jogo.nome}</div> 
-                                            <div id={'Date_'+index1} className='edit-tipo-data'>
-                                                {jogo.date} {jogo.hour}
-                                            </div> 
-                                        </div>
-                                        <div className='resultados-container'>
-                                        <div id= {index1 + "id"} style={{display: "none"}}>
-                                            {jogo.id}
-                                        </div>
-                                        {jogo.equipas.map((equipa,index2) => {
-                                            return (
-                                                <span>
+                            if(testValidGame(jogo.equipas)){
+                                return (
+                                    <li id={"M_"+index1} className='edit-tipo-jogo'>
+                                        <div className='jogo-container'>
+                                            <div id='nome-jogo'>
+                                                <div id={index1}>{jogo.nome}</div> 
+                                                <div id={'Date_'+index1} className='edit-tipo-data'>
+                                                    {jogo.date} {jogo.hour}
+                                                </div> 
+                                            </div>
+                                            <div className='resultados-container'>
+                                            {jogo.equipas.map((equipa,index2) => {
+                                                return (
+                                                    <span>
                                                 {especialista ? 
                                                     <div id={concat(index1,index2)} className='btn--onclick--white--large'>
                                                         {equipa.name} <br/> 
@@ -321,13 +376,13 @@ export default function ListaJogos() {
                                                     </Button>
                                                 }
                                                 </span>
-                                            )})}
+                                                )})}
+                                            </div>
                                         </div>
-                                    </div>
-                                    {/*especialista && <div id='missingOdds' className='edit-tipo-missing-odds'></div>*/}
-                                    {admin && <Button className='btn--x--gray--medium'>x</Button>}
-                                </li>
-                            )
+                                        {admin && <Button className='btn--x--gray--medium'>x</Button>}
+                                    </li>
+                                )
+                            }
                         })}
                     </ul>
                 </div>

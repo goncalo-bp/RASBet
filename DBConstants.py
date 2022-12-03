@@ -35,7 +35,7 @@ class DBConstants:
     set_aposta         = 'UPDATE Aposta SET ApostaGanha=%s WHERE idAposta=%s;'
     get_userid_by_bet  = 'SELECT idUser, valorApostado FROM Aposta WHERE idAposta=%s;'
     update_odds        = 'UPDATE EquipasPorJogo SET Odd=%s WHERE idJogo=%s AND nomeEquipa=%s;'
-    update_email_field = 'UPDATE Utilizador SET email=%s WHERE idUser=%s;'
+    update_pass_field  = 'UPDATE Utilizador SET password=%s WHERE idUser=%s;'
     update_nome_field  = 'UPDATE Utilizador SET nome=%s WHERE idUser=%s;'
     get_teams_by_game  = 'SELECT idJogo, nomeEquipa, Odd, jogaEmCasa from EquipasPorJogo WHERE idJogo=%s;'
     get_game_date      = 'SELECT dataJogo FROM Jogo WHERE idJogo=%s;'
