@@ -138,6 +138,33 @@ document.addEventListener("click", (evt) => {
 		document.getElementById("date").type = "text";
   });
 
+  const translate = {
+	"pt": {
+		"nome": "Nome",
+		"pass" : "Palavra-passe",
+		"data" : "Data de nascimento",
+		"concluir" : "Concluir",
+		"reg" : "REGISTAR"
+	},
+	"en": {
+		"nome": "Name",
+		"pass" : "Password",
+		"data" : "Date of birth",
+		"concluir" : "Complete",
+		"reg" : "REGISTER"
+	},
+	"es": {
+		"nome": "Nombre",
+		"pass" : "Contraseña",
+		"data" : "Fecha de nacimiento",
+		"concluir" : "Completar",
+		"reg" : "REGISTRAR"
+	}
+
+}
+var lang = localStorage.getItem('lang');
+
+
 return (
 	
 <div className="form">
@@ -148,7 +175,7 @@ return (
 	<form className='list-item'>
 		<div className='rasbet-image'/>
 		<div className='title'>
-			<h1>REGISTO</h1>
+			<h1>{translate[lang]["reg"]}</h1>
 		</div>
 		<br/>
 		{/* Labels and inputs for form data */}

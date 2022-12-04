@@ -80,6 +80,25 @@ export default function Form_L() {
 		localStorage.setItem('lang', 'pt');
 	}, []);
 
+	const translate = {
+        "pt": {
+            "bv" : "BEM VINDO",
+            "aceder" : "Aceder",
+			"reg" : ["Não tem conta?","Registe-se já!"]
+        },
+        "en": {
+            "bv" : "WELCOME",
+            "aceder" : "Log In",
+			"reg" : ["Don't have an account?","Register now!"]
+        },
+        "es": {
+            "bv" : "BIENVENIDO",
+			"aceder" : "Acceder",
+			"reg" : ["¿No tienes cuenta?","¡Regístrate ahora!"]
+		}
+
+    }
+	var lang = localStorage.getItem('lang');
 	return (		
 		<div className="form">
 			<form className='list-item'>
@@ -87,7 +106,7 @@ export default function Form_L() {
 					{errorMessage()}
 				</Popup>
 				<div className='title'>
-					<h1>BEM VINDO</h1>
+					<h1>{translate[lang]["bv"]}</h1>
 				</div>
 				<br/>
 				{/* Labels and inputs for form data */}
@@ -95,12 +114,12 @@ export default function Form_L() {
 				value={email} type="email" placeholder='E-mail'/>
 				<br/>
 				<input onChange={handlePassword} className="input"
-				value={password} type="password" placeholder='Palavra-passe' />
+				value={password} type="password" placeholder='Password' />
 				<br/>
 				<button onClick={handleSubmit} className="btn" type="submit">
-				Aceder
+				{translate[lang]["aceder"]}
 				</button>
-		        Não tem conta? <a href="/sign-up">Registe-se já!</a>
+		        {translate[lang]["reg"][0]} <a href="/sign-up">{translate[lang]["reg"][1]}</a>
 			</form>
 		</div>
 	);
