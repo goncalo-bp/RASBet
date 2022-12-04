@@ -77,9 +77,10 @@ export default function Form_L() {
 
 	useEffect(() => {
 		localStorage.setItem('isLogged', false);
+		localStorage.setItem('lang', 'pt');
 	}, []);
 
-	return (
+	return (		
 		<div className="form">
 			<form className='list-item'>
 				<Popup trigger={btnPopup} setTrigger={setBtnPopup}>

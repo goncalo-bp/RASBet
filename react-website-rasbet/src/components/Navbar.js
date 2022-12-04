@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from './Button';
 import './Navbar.css';
 import Popup from './Popup';
-
+import Dropdown from '../Lang_Toogle';
 
 function Navbar() {
     const [click, setClick] = useState(false);
@@ -74,9 +74,40 @@ function Navbar() {
     }, []);
   
     window.addEventListener('resize', showButton);
+
+    const translate = {
+        "pt": {
+            "desp" : ["Futebol", "Basquetebol", "Ténis", "MotoGP"],
+            "sair" : "Sair",
+            "bv" : "Bem vindo",
+            "conta" : "Contas",
+            "prom" : "Promoções"
+        },
+        "en": {
+            "desp" : ["Football", "Basketball", "Tennis", "MotoGP"],
+            "sair" : "Log Out",
+            "bv" : "Welcome",
+            "conta" : "Accounts",
+            "prom" : "Promotions"
+        },
+        "es": {
+            "desp" : ["Fútbol", "Baloncesto", "Tenis", "MotoGP"],
+            "sair" : "Cerrar sesión",
+            "bv" : "Bienvenido",
+            "conta" : "Cuentas",
+            "prom" : "Promociones"
+        }
+    }
+
+    var lang = localStorage.getItem('lang');
   
     return (
+        <>
+        <Dropdown
+        trigger={<button>{localStorage.getItem("lang")}</button>}
+        />
         <nav className="navbar">
+            
             <div className="navbar-container">
             <Popup trigger={add_Popup} setTrigger={setAdd_Popup}>
                 {add()}
@@ -90,37 +121,37 @@ function Navbar() {
                 <ul className={click ? 'nav-menu active' : 'nav-menu'}>
                     <li id="futebol" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu} >
-                            Futebol
+                            {translate[lang]["desp"][0]}
                         </Link>
                     </li>
                     <li id="tenis" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
-                            Ténis
+                        {translate[lang]["desp"][1]}
                         </Link>
                     </li>
                     <li id="basquetebol" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
-                            Basquetebol
+                        {translate[lang]["desp"][2]}
                         </Link>
                     </li>
                     <li id="motogp" className='nav-item'>
                         <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
-                            MotoGP
+                        {translate[lang]["desp"][3]}
                         </Link>
                     </li>
                     {!admin && <li className='nav-item'>
                         <Link to='/home/edit' className='nav-links' onClick={closeMobileMenu}>
-                            Bem vindo {localStorage.getItem("name")}
+                            {translate[lang]["bv"]} {localStorage.getItem("name")}
                         </Link>
                     </li>}
                     {admin && <li className='nav-item'>
                         <Link to='/home/promocoes' className='nav-links' onClick={closeMobileMenu}>
-                            Promoções
+                            {translate[lang]["prom"]}
                         </Link>
                     </li>}
                     {admin && <li className='nav-item'>
                         <Link to='/home/contas' className='nav-links' onClick={closeMobileMenu}>
-                            Contas
+                            {translate[lang]["conta"]}
                         </Link>
                     </li>}
                     {admin &&
@@ -131,7 +162,7 @@ function Navbar() {
                     {!button &&
                     <li className='nav-item'>
                         <Link to='/' className='nav-links-mobile' onClick={logOut}> 
-                            Sair
+                        {translate[lang]["sair"]}
                         </Link>
                     </li>
                     }
@@ -139,6 +170,7 @@ function Navbar() {
                 {button && <Button className='btn--outline--green--large' dest='/' onClick={logOut}>Sair</Button>}
             </div>
         </nav>
+        </>
     )
 }
 

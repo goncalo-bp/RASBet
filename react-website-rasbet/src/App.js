@@ -11,7 +11,6 @@ import Apostas from './components/pages/Apostas';
 import Promocoes from './components/pages/Promocoes';
 import Contas from './components/pages/Contas';
 
-
 function App() {
   return (
     <>
