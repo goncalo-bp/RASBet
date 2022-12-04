@@ -25,11 +25,18 @@ export default function ListaJogos() {
 	const [btnPopup, setBtnPopup] = useState(false);
 
 	const [alt_Popup, setAlt_Popup] = useState(false);
+    const [abrir_Popup, setAbrir_Popup] = useState(false);
 
     const [infoAltera, setInfoAltera] = useState({});
     const [newOdd, setNewOdd] = useState(0);
 
     const [infoRemove, setInfoRemove] = useState({});
+
+    const [nomeNovoJogo, setNomeNovoJogo] = useState({});
+
+    const handleNomeNovoJogo = (e) => {
+        setNomeNovoJogo(e.target.value);
+    };
 
     const handleInfoRemove = (e) => {
         var info = e.target.id;
@@ -46,6 +53,10 @@ export default function ListaJogos() {
     const handleNewOdd = (e) => {
         setNewOdd(e.target.value);
     }
+
+    const handleAbrir = () => {
+		setAbrir_Popup(true);
+	}
 
 
     function changeColor(missing){
@@ -282,6 +293,14 @@ export default function ListaJogos() {
         setFech_Popup(false);
     }
 
+    function removeJogo(){
+        // ! Adicionar cenas ao Flask
+        var desporto = localStorage.getItem('desporto');
+        localStorage.setItem(desporto, "");
+        setFech_Popup(false);
+        window.location.reload();
+    }
+
 
     const fechar = () => {
 		return (
@@ -297,6 +316,20 @@ export default function ListaJogos() {
         );
     }
 
+    const abrir = () => {
+		return (
+		<div className='popup-center'>
+            Adicionar Jogo
+            <br/>
+            <br/>
+            <input id="nomeJogo" type="text" onChange={handleNomeNovoJogo} placeholder="Nome: " />
+            <div>
+			<Button onClick={removeJogo} className='btn--outline--full--orange--large'  >Confirmar</Button>
+            </div>
+        </div>
+        );
+    }
+
     return (
         <div className="edit-fundo">
             <form className='edit-content-boletim'>
@@ -306,6 +339,9 @@ export default function ListaJogos() {
                 <div className='edit-lista-jogos'>
                 <Popup trigger={fech_Popup} setTrigger={setFech_Popup}>
 					{fechar()}
+                </Popup>
+                <Popup trigger={abrir_Popup} setTrigger={setAbrir_Popup}>
+					{abrir()}
                 </Popup>
                 <span className='filters'>
                     <span>
@@ -330,7 +366,7 @@ export default function ListaJogos() {
                         />
                     </span>
                     {admin && <span>
-                        <Button className='btn--outline--full--orange--large' >Adicionar Jogo</Button>
+                        <Button onClick={handleAbrir} className='btn--outline--full--orange--large' >Adicionar Jogo</Button>
                     </span>}
                 </span>
                 <br/>
