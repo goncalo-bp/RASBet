@@ -33,9 +33,29 @@ export default function ListaJogos() {
     const [infoRemove, setInfoRemove] = useState({});
 
     const [nomeNovoJogo, setNomeNovoJogo] = useState({});
+    const [nomeNovaEquipa1, setNomeNovaEquipa1] = useState({});
+    const [nomeNovaEquipa2, setNomeNovaEquipa2] = useState({});
+    const [novaDataJogo, setNovaDataJogo] = useState({});
+    const [novaHoraJogo, setNovaHoraJogo] = useState({});
+
+    const handleNovaHoraJogo = (e) => {
+        setNovaDataJogo(e.target.value);
+    }
+
+    const handleNovaDataJogo = (e) => {
+        setNovaDataJogo(e.target.value);
+    }
 
     const handleNomeNovoJogo = (e) => {
         setNomeNovoJogo(e.target.value);
+    };
+
+    const handleNomeNovaEquipa1 = (e) => {
+        setNomeNovaEquipa1(e.target.value);
+    };
+
+    const handleNomeNovaEquipa2 = (e) => {
+        setNomeNovaEquipa2(e.target.value);
     };
 
     const handleInfoRemove = (e) => {
@@ -301,6 +321,14 @@ export default function ListaJogos() {
         window.location.reload();
     }
 
+    function adicionaJogo(){
+        // ! Adicionar cenas ao Flask
+        var desporto = localStorage.getItem('desporto');
+        localStorage.setItem(desporto, "");
+        setAbrir_Popup(false);
+        window.location.reload();
+    }
+
 
     const fechar = () => {
 		return (
@@ -322,9 +350,22 @@ export default function ListaJogos() {
             Adicionar Jogo
             <br/>
             <br/>
-            <input id="nomeJogo" type="text" onChange={handleNomeNovoJogo} placeholder="Nome: " />
+            <input id="nomeJogo" type="text" onChange={handleNomeNovoJogo} placeholder="Nome do Jogo: " />
+            <input id="nomeJogo" type="text" onChange={handleNomeNovaEquipa1} placeholder="Equipa 1: " />
+            <input id="nomeJogo" type="text" onChange={handleNomeNovaEquipa2} placeholder="Equipa 2: " />
+            <input
+                        onChange={handleNovaDataJogo}
+                        id="searchDate"
+                        type="text"
+                        value={date}
+                        placeholder="Escolha uma data"
+                        onClick={setToDate}
+            />
+            <input type="time" id="appt" name="appt" onChange={handleNovaHoraJogo} required></input>
             <div>
-			<Button onClick={removeJogo} className='btn--outline--full--orange--large'  >Confirmar</Button>
+            <br/>
+            <br/>
+			<Button onClick={adicionaJogo} className='btn--outline--full--orange--large'  >Confirmar</Button>
             </div>
         </div>
         );
