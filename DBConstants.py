@@ -1,6 +1,5 @@
 class DBConstants:
     register_user      = 'INSERT INTO Utilizador (nome, email,password,idCarteira,dataNascimento,nif,isAdmin,isEspecialista) VALUES ((%s),(%s),(%s),(%s),(%s),(%s),(%s),(%s));'
-    get_special_user   = 'SELECT email, isAdmin, isEspecialista FROM Utilizador WHERE isAdmin=1 OR isEspecialista=1;'
     add_wallet         = 'INSERT INTO Carteira (saldoCarteira) VALUES(0.00);'
     get_wallet         = 'SELECT idCarteira FROM Utilizador WHERE idUser=%s;'
     update_wallet      = 'UPDATE Carteira SET saldoCarteira=%s WHERE idCarteira=%s;'
@@ -51,7 +50,7 @@ class DBConstants:
     get_bets_winner    = 'SELECT idAposta FROM JogoPorAposta WHERE idJogo=%s AND resultadoApostado=%s;'
     set_bet_loser      = 'UPDATE JogoPorAposta SET ganho=0 WHERE idJogo=%s AND resultadoApostado!=%s;'
     get_bets_loser     = 'SELECT idAposta FROM JogoPorAposta WHERE idJogo=%s AND resultadoApostado!=%s;'
-    get_special_users  = 'SELECT idUser,email FROM Utilizador WHERE (isEspecialista=1 or isAdmin=1);'
+    get_special_users  = 'SELECT email, isAdmin, isEspecialista FROM Utilizador WHERE isAdmin=1 OR isEspecialista=1;'
     get_user           = 'SELECT idUser FROM Utilizador WHERE idUser=%s;'
     remove_special_user= 'DELETE FROM Utilizador WHERE idUser=%s;'
     ganho_por_aposta   = 'SELECT jogoporaposta.ganho FROM jogoporaposta JOIN Aposta ON aposta.idAposta = jogoporaposta.idAposta WHERE aposta.idAposta=%s;'
