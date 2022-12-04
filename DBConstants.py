@@ -9,6 +9,7 @@ class DBConstants:
     get_by_sport       = 'SELECT idJogo FROM Jogo WHERE nomeDesporto = (%s) AND suspenso=0 AND finalizado=0 AND NOW() < dataJogo;'
     get_by_sport_wSusp = 'SELECT idJogo FROM Jogo WHERE nomeDesporto = (%s) AND finalizado=0;'
     suspende_game      = 'UPDATE Jogo SET suspenso=%s WHERE idJogo=%s;'
+    elimina_game       = 'DELETE FROM Jogo WHERE idJogo=%s;'
     get_game_info      = 'SELECT nomeEquipa, Odd, jogaEmCasa FROM EquipasPorJogo WHERE idJogo = (%s);'
     get_balance        = 'SELECT saldoCarteira FROM Carteira WHERE idCarteira = (SELECT idCarteira FROM Utilizador WHERE idUser=%s);'
     create_promotion   = 'INSERT INTO Promoção(idJogo, percentagemAumento) Values(%s,%s);'
