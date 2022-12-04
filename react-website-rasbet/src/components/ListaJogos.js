@@ -38,6 +38,8 @@ export default function ListaJogos() {
     const [novaDataJogo, setNovaDataJogo] = useState({});
     const [novaHoraJogo, setNovaHoraJogo] = useState({});
 
+    const [res, setRes] = useState("");
+
     const handleNovaHoraJogo = (e) => {
         setNovaDataJogo(e.target.value);
     }
@@ -58,11 +60,7 @@ export default function ListaJogos() {
         setNomeNovaEquipa2(e.target.value);
     };
 
-    const handleInfoRemove = (e) => {
-        var info = e.target.id;
-        setInfoRemove(info);
-        setFech_Popup(true);
-    }
+    
     
     const handleAlt = (e) => {
         var info = e.target.id;
@@ -301,34 +299,86 @@ export default function ListaJogos() {
         return res;
     }
 
-    function removeJogo(){
-        // ! Adicionar cenas ao Flask
-        var desporto = localStorage.getItem('desporto');
-        localStorage.setItem(desporto, "");
-        setFech_Popup(false);
-        window.location.reload();
-    }
-
     function closeFecharJogo() {
         setFech_Popup(false);
     }
 
+    const handleInfoRemove = (e) => {
+        var info = e.target.id;
+        console.log(info);
+        setInfoRemove(info);
+        setFech_Popup(true);
+    }
+
+    function test_Vencedor(){
+        for (var i = 0; i < jogos.length; i++){
+            var jogo = jogos[i];
+            if(jogo.id === infoRemove){
+                for(var j = 0; j < jogo.equipas.length; j++){
+                    console.log(jogo.equipas[j]);
+                    if(jogos[i].equipas[j].name === res){
+                        return true;
+                    }
+                }
+            }
+        return false;
+        }
+    }
+
     function removeJogo(){
-        // ! Adicionar cenas ao Flask
-        var desporto = localStorage.getItem('desporto');
-        localStorage.setItem(desporto, "");
-        setFech_Popup(false);
-        window.location.reload();
+
+        if(test_Vencedor() === false){
+            alert("Vencedor Inválido")
+        }
+        else{
+            fetch('http://localhost:5002/jogo/fechar', {  // Enter your IP address here
+                    method: 'POST', 
+                    mode: 'cors', 
+                    body: JSON.stringify({"idJogo" : infoRemove , "vencedor" : res}), // body data type must match "Content-Type" header
+                    headers: {"Content-Type": "application/json"}
+            
+                }).then( (response) => {
+                    if(!response.ok) {
+                        throw Error(response.status);
+                    }
+                    else return response.json();
+                }).then( (data) => {
+                    var desporto = localStorage.getItem('desporto');
+                    localStorage.setItem(desporto, "");
+                    window.location.reload();
+                })
+                .catch( (error,status) => {
+                    console.log("error: ",status);
+                    alert(status);
+                });
+        }
     }
 
     function adicionaJogo(){
         // ! Adicionar cenas ao Flask
+        var nome = document.getElementById("nomeJogo").value;
+        var equipas = document.getElementById("nomeEquipas").value;
+        var data = document.getElementById("dataJogo").value;
+        var hora = document.getElementById("horaJogo").value;
+
+        if(nome === "" || equipas === "" || data === "" || hora === ""){
+            alert("Preencha todos os campos");
+        }else{
+            equipas = equipas.split(",");
+
+            // ! Adicionar cenas ao Flask
+            //////////////////////////////////
+        }
+
         var desporto = localStorage.getItem('desporto');
         localStorage.setItem(desporto, "");
         setAbrir_Popup(false);
         window.location.reload();
     }
 
+    const handleRes = (e) =>{
+        setRes(e.target.value);
+    }
 
     const fechar = () => {
 		return (
@@ -336,6 +386,13 @@ export default function ListaJogos() {
             Deseja fechar o jogo?
             <br/>
             <br/>
+            <input
+                        onChange={handleRes}
+                        id="result"
+                        type="text"
+                        value={res}
+                        placeholder="Resultado"
+                        />
             <div>
 			<Button onClick={removeJogo} className='btn--outline--full--orange--large'  >Sim</Button>
             <Button onClick={closeFecharJogo} className='btn--outline--full--orange--large'  >Não</Button>
@@ -351,17 +408,16 @@ export default function ListaJogos() {
             <br/>
             <br/>
             <input id="nomeJogo" type="text" onChange={handleNomeNovoJogo} placeholder="Nome do Jogo: " />
-            <input id="nomeJogo" type="text" onChange={handleNomeNovaEquipa1} placeholder="Equipa 1: " />
-            <input id="nomeJogo" type="text" onChange={handleNomeNovaEquipa2} placeholder="Equipa 2: " />
+            <input id="nomeEquipas" type="text" onChange={handleNomeNovaEquipa1} placeholder="Equipas: " />
             <input
                         onChange={handleNovaDataJogo}
-                        id="searchDate"
+                        id="dataJogo"
                         type="text"
                         value={date}
                         placeholder="Escolha uma data"
                         onClick={setToDate}
             />
-            <input type="time" id="appt" name="appt" onChange={handleNovaHoraJogo} required></input>
+            <input type="time" id="horaJogo" name="appt" onChange={handleNovaHoraJogo} required></input>
             <div>
             <br/>
             <br/>
@@ -421,7 +477,6 @@ export default function ListaJogos() {
                                                 <div id={index1}>{jogo.nome}</div>
                                                 <div id={index1+"_id"} style={{display: 'none'}}>{jogo.id}</div>
                                                 <div id={'Date_'+index1} className='edit-tipo-data'>
-                                                    {console.log(jogo.hour)}
                                                     {jogo.date} {jogo.hour}
                                                 </div> 
                                             </div>
@@ -431,7 +486,7 @@ export default function ListaJogos() {
                                                     <span>
                                                 {especialista ? 
                                                     <div id={concat(index1,index2)} className='btn--onclick--white--large'>
-                                                        {equipa.name} <br/> 
+                                                        <div id={index1+index2+"_N"}>{equipa.name}</div> <br/> 
                                                         {equipa.odd === "0.00" ?
                                                                 <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >Inserir Odd</Button>
                                                             :

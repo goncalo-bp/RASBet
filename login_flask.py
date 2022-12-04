@@ -287,6 +287,70 @@ def get_betList(tipo):
 
     return [200]
 
+@app.route('/jogo/suspender/<valor>', methods = ['POST'])
+@cross_origin()
+def suspende_jogo(valor):
+    idJogo = request.json.get("idJogo", None)
+    dbQueries.suspensaoJogo(valor,idJogo)
+    return [200]
+
+@app.route('/jogo/eliminar', methods = ['POST'])
+@cross_origin()
+def elimina_jogo():
+    idJogo = request.json.get("idJogo", None)
+    print(idJogo)
+    dbQueries.eliminaJogo(idJogo)
+    return [200]
+
+@app.route('/jogo/fechar', methods = ['POST'])
+@cross_origin()
+def fecha_jogo():
+    idJogo = request.json.get("idJogo", None)
+    vencedor = request.json.get("vencedor", None)
+    dbQueries.setResultado(idJogo,vencedor)
+    return [200]
+
+@app.route('/conta/registaEspecial', methods = ['POST'])
+@cross_origin()
+def registaContaEspecial(valor):
+    nome = request.json.get("nome", None)
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    isAdmin = request.json.get("isAdmin", None)
+    isEspecialista = request.json.get("isEspecialista", None)
+    dbQueries.registerSpecialUser(nome,email,sha256_crypt.hash(password,salt="RAS2022"),isAdmin,isEspecialista)
+    return [200]
+
+
+@app.route('/jogo/mudaOdd', methods = ['POST'])
+@cross_origin()
+def muda_odd():
+    idJogo = request.json.get("idJogo", None)
+    nomeEquipa = request.json.get("nomeEquipa", None)
+    newOdd = request.json.get("newOdd", None)
+    dbQueries.updateOdds(idJogo, nomeEquipa, newOdd)
+    return [200] 
+
+
+@app.route('/conta/getEspeciais', methods = ['GET'])
+@cross_origin()
+def get_contas_especial():
+    contas = []
+    contasRow = dbQueries.getSpecialUser()
+
+    for row in contasRow:
+        line = {}
+        line['nome'] = contasRow[0][0]
+        
+        if contasRow[0][1] == '1':
+            line['position'] = 'Administrador'
+        else:
+            line['position'] = 'Especialista'
+
+        contas.append(line)
+
+    return jsonify(contas), 200
+
 
 if __name__ == '__main__':
    app.run(host='127.0.0.1', port=5002)
