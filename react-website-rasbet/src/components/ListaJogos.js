@@ -9,7 +9,7 @@ import Progresso from './Progresso';
 
 export default function ListaJogos() {
 
-    const [jogos,setJogos] = useState([]);
+    const [jogos, setJogos] = useState([]);
     const [apostas, setApostas] = useState([]);
 
     const [admin, setAdmin] = useState(false);
@@ -22,9 +22,9 @@ export default function ListaJogos() {
     const [fech_Popup, setFech_Popup] = useState(false);
 
     const [error, setError] = useState(0); // 0 - incompleto | 1 - mail/pass incorretos
-	const [btnPopup, setBtnPopup] = useState(false);
+    const [btnPopup, setBtnPopup] = useState(false);
 
-	const [alt_Popup, setAlt_Popup] = useState(false);
+    const [alt_Popup, setAlt_Popup] = useState(false);
     const [abrir_Popup, setAbrir_Popup] = useState(false);
 
     const [infoAltera, setInfoAltera] = useState({});
@@ -32,11 +32,11 @@ export default function ListaJogos() {
 
     const [infoRemove, setInfoRemove] = useState({});
 
-    const [nomeNovoJogo, setNomeNovoJogo] = useState({});
-    const [nomeNovaEquipa1, setNomeNovaEquipa1] = useState({});
-    const [nomeNovaEquipa2, setNomeNovaEquipa2] = useState({});
-    const [novaDataJogo, setNovaDataJogo] = useState({});
-    const [novaHoraJogo, setNovaHoraJogo] = useState({});
+    const [nomeNovoJogo, setNomeNovoJogo] = useState('');
+    const [nomeNovaEquipa1, setNomeNovaEquipa1] = useState('');
+    const [nomeNovaEquipa2, setNomeNovaEquipa2] = useState('');
+    const [novaDataJogo, setNovaDataJogo] = useState('');
+    const [novaHoraJogo, setNovaHoraJogo] = useState('');
 
     const [res, setRes] = useState("");
 
@@ -45,6 +45,7 @@ export default function ListaJogos() {
     }
 
     const handleNovaDataJogo = (e) => {
+        console.log(e.target.value);
         setNovaDataJogo(e.target.value);
     }
 
@@ -59,25 +60,22 @@ export default function ListaJogos() {
     const handleNomeNovaEquipa2 = (e) => {
         setNomeNovaEquipa2(e.target.value);
     };
-
-    
-    
     const handleAlt = (e) => {
         var info = e.target.id;
         setInfoAltera(info);
-		setAlt_Popup(true);
-	}
+        setAlt_Popup(true);
+    }
 
     const handleNewOdd = (e) => {
         setNewOdd(e.target.value);
     }
 
     const handleAbrir = () => {
-		setAbrir_Popup(true);
-	}
+        setAbrir_Popup(true);
+    }
 
 
-    function changeColor(missing){
+    function changeColor(missing) {
         if (missing === 0)
             document.getElementById('missingOdds').style.backgroundColor = "green";
         if (missing === 1)
@@ -94,11 +92,11 @@ export default function ListaJogos() {
         var bool;
 
         if (d1.length === 10) {
-            d1.substring(0, 4) === d2.substring(0, 4) && 
-            d1.substring(5, 7) === d2.substring(5, 7) &&
-            d1.substring(8, 10) === d2.substring(8, 10) ? 
-            bool = true : 
-            bool = false;
+            d1.substring(0, 4) === d2.substring(0, 4) &&
+                d1.substring(5, 7) === d2.substring(5, 7) &&
+                d1.substring(8, 10) === d2.substring(8, 10) ?
+                bool = true :
+                bool = false;
         }
 
         return bool;
@@ -108,19 +106,19 @@ export default function ListaJogos() {
         var data_act = e.target.value;
         setDate(data_act);
         if (data_act.length === 0)
-            for(var i = 0; i < jogos.length; i++){
-                document.getElementById("M_"+i).style.display="flex";
+            for (var i = 0; i < jogos.length; i++) {
+                document.getElementById("M_" + i).style.display = "flex";
             }
-        
+
         else
-            for(var i = 0; i < jogos.length; i++){
-                var jogo = document.getElementById("Date_"+i).textContent;
-                var containsDate = checkDate(data_act, jogo.substring(0,10));
+            for (var i = 0; i < jogos.length; i++) {
+                var jogo = document.getElementById("Date_" + i).textContent;
+                var containsDate = checkDate(data_act, jogo.substring(0, 10));
                 if (containsDate === true) {
-                    document.getElementById("M_"+i).style.display="flex";
+                    document.getElementById("M_" + i).style.display = "flex";
                 }
                 else {
-                    document.getElementById("M_"+i).style.display="none";
+                    document.getElementById("M_" + i).style.display = "none";
                 }
             }
     };
@@ -131,13 +129,13 @@ export default function ListaJogos() {
         var lowerCase = String(valor).toLowerCase();
         setInputText(lowerCase);
 
-        for(var i = 0; i < jogos.length; i++){
+        for (var i = 0; i < jogos.length; i++) {
             var game_name = document.getElementById(i).textContent.toLowerCase()
-            if(!game_name.includes(lowerCase)){
-                document.getElementById("M_"+i).style.display="none";
+            if (!game_name.includes(lowerCase)) {
+                document.getElementById("M_" + i).style.display = "none";
             }
             else {
-                document.getElementById("M_"+i).style.display="flex";
+                document.getElementById("M_" + i).style.display = "flex";
             }
         }
     };
@@ -146,51 +144,51 @@ export default function ListaJogos() {
     const getJogos = (e) => {
         var desporto = localStorage.getItem('desporto');
 
-        fetch('http://localhost:5002/sports/'+desporto, {  // Enter your IP address here
+        fetch('http://localhost:5002/sports/' + desporto, {  // Enter your IP address here
             method: 'GET',
         })
-        .then((response) => {
-            if(!response.ok) {
-                throw Error(response.status);
-            }
-            else return response.json();
-        }).then((data) => {
-            setJogos(data);
-            localStorage.setItem(desporto, JSON.stringify(data));
-        })
-        .catch(error => {
-            console.log("error: ", error);
-        });
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.status);
+                }
+                else return response.json();
+            }).then((data) => {
+                setJogos(data);
+                localStorage.setItem(desporto, JSON.stringify(data));
+            })
+            .catch(error => {
+                console.log("error: ", error);
+            });
     };
 
 
     useEffect(() => {
 
 
-        if(localStorage.getItem('isAdmin') === 'true') {
+        if (localStorage.getItem('isAdmin') === 'true') {
             setAdmin(true);
-            document.getElementById("boletim").style.display="none";
+            document.getElementById("boletim").style.display = "none";
             //document.getElementById("progresso").style.display="none";
         }
 
         else if (localStorage.getItem("isEspecialista") === 'true') {
             setEspecialista(true);
-            document.getElementById("boletim").style.display="none";
+            document.getElementById("boletim").style.display = "none";
             //document.getElementById("progresso").style.display="flex";
         }
         else {
-            document.getElementById("boletim").style.display="flex";
+            document.getElementById("boletim").style.display = "flex";
             //document.getElementById("progresso").style.display="none";
         }
 
         var desportoAtual = localStorage.getItem('desporto');
         var data = localStorage.getItem(desportoAtual);
-        var timestamp =  localStorage.getItem('timestamp');
-    
+        var timestamp = localStorage.getItem('timestamp');
+
         timestamp = new Date(timestamp);
         var now = new Date();
 
-        if(data === null || data === "" || Math.abs(now - timestamp) > 30000) { // atualiza quando esta a 0 ou quando passam 10 min
+        if (data === null || data === "" || Math.abs(now - timestamp) > 30000) { // atualiza quando esta a 0 ou quando passam 10 min
             localStorage.setItem('timestamp', new Date());
             getJogos();
         } else {
@@ -198,13 +196,13 @@ export default function ListaJogos() {
         }
     }, []);
 
-    function addAposta(id){
+    function addAposta(id) {
         var new_aposta = apostas.concat(id);
         setApostas(new_aposta);
         return new_aposta;
     }
 
-    function remAposta(id){
+    function remAposta(id) {
         var new_aposta = apostas.filter(item => item !== id);
         setApostas(new_aposta);
         return new_aposta;
@@ -212,13 +210,13 @@ export default function ListaJogos() {
 
     const handleClickCard = (e) => {
         var id = e.target.id;
-        if (id === undefined){
+        if (id === undefined) {
             id = e.id;
         }
-        if(e.target.className === "btn--onclick--white--large"){
+        if (e.target.className === "btn--onclick--white--large") {
             document.getElementById(id).classList.add('btn--onclick');
             document.getElementById(id).classList.remove('btn--onclick--white--large');
-            
+
             addAposta(id);
         }
         else {
@@ -229,71 +227,71 @@ export default function ListaJogos() {
         }
     };
 
-    const concat = (e1,e2) =>{
-       return e1 + "" + e2;
+    const concat = (e1, e2) => {
+        return e1 + "" + e2;
     }
 
-    const concat2 = (e1,e2) =>{
+    const concat2 = (e1, e2) => {
         return e1 + "_" + e2;
-     }
+    }
 
     const setToDate = (e) => {
-        e.target.type="date";
+        e.target.type = "date";
     }
 
     function alertValid_Odd() {
         var id = infoAltera.split("_")[0];
         var equipa = infoAltera.split("_")[1];
-		var valor = newOdd;
-		if (valor === 0){
-			alert("Insira um valor");
-		}
-		else{
+        var valor = Number(newOdd);
+        if (valor === 0 || valor === "") {
+            alert("Insira um valor");
+        }
+        else {
             // ! Adicionar cenas ao Flask
-            
-			
-			setAlt_Popup(false);
-		}
+
+
+            setAlt_Popup(false);
+        }
     }
 
     document.addEventListener("click", (evt) => {
         const date = document.getElementById("searchDate");
         let targetEl = evt.target; // clicked element      
         do {
-          if(targetEl === date) {
-            // This is a click inside, does nothing, just return.
-            document.getElementById("searchDate").type = "date";
-            return;
-          }
-          // Go up the DOM
-          targetEl = targetEl.parentNode;
+            if (targetEl === date) {
+                // This is a click inside, does nothing, just return.
+                document.getElementById("searchDate").type = "date";
+                return;
+            }
+            // Go up the DOM
+            targetEl = targetEl.parentNode;
         } while (targetEl);
         // This is a click outside.      
-        if(date !== null && date.value==='') 
+        if (date !== null && date.value === '')
             document.getElementById("searchDate").type = "text";
-      });
+    });
 
-      const alterarOdd = (e) => {
-		return (
-		<div className='popup-center'>
-            <div>
-                <h1>Jogo Supenso</h1>
-                <br/>
-                Por favor, insira a nova odd:
+    const alterarOdd = (e) => {
+        return (
+            <div className='popup-center'>
+                <div>
+                    <h1>Jogo Supenso</h1>
+                    <br />
+                    Por favor, insira a nova odd:
+                </div>
+                <div>
+                    <input id="novaOdd" type="number" onChange={handleNewOdd} placeholder="Odd " />
+                </div>
+                <br />
+                <Button className='btn--outline--full--orange--large' onClick={alertValid_Odd} >Confirmar</Button>
             </div>
-			<div>
-                <input id="novaOdd" type="number" onChange={handleNewOdd} placeholder="Odd " />
-			</div>
-			<br/>
-			<Button className='btn--outline--full--orange--large' onClick={alertValid_Odd} >Confirmar</Button>
-		</div>
-		);
-	}
+        );
+    }
 
-    function testValidGame(info_equipas){
+    function testValidGame(info_equipas) {
         var res = true;
-        info_equipas.map((equipa,index2) => {
-            if(equipa.odd === "0.00")
+        info_equipas.map((equipa, index2) => {
+            if (equipa.odd === "0.00")
                 res = false;
         });
         return res;
@@ -354,7 +352,7 @@ export default function ListaJogos() {
         }
     }
 
-    function adicionaJogo(){
+    function adicionaJogo() {
         // ! Adicionar cenas ao Flask
         var nome = document.getElementById("nomeJogo").value;
         var equipas = document.getElementById("nomeEquipas").value;
@@ -381,12 +379,12 @@ export default function ListaJogos() {
     }
 
     const fechar = () => {
-		return (
-		<div className='popup-center'>
-            Deseja fechar o jogo?
-            <br/>
-            <br/>
-            <input
+        return (
+            <div className='popup-center'>
+                Deseja fechar o jogo?
+                <br />
+                <br />
+                <input
                         onChange={handleRes}
                         id="result"
                         type="text"
@@ -394,10 +392,10 @@ export default function ListaJogos() {
                         placeholder="Resultado"
                         />
             <div>
-			<Button onClick={removeJogo} className='btn--outline--full--orange--large'  >Sim</Button>
-            <Button onClick={closeFecharJogo} className='btn--outline--full--orange--large'  >Não</Button>
+                    <Button onClick={removeJogo} className='btn--outline--full--orange--large'  >Sim</Button>
+                    <Button onClick={closeFecharJogo} className='btn--outline--full--orange--large'  >Não</Button>
+                </div>
             </div>
-        </div>
         );
     }
 
@@ -418,11 +416,9 @@ export default function ListaJogos() {
                         onClick={setToDate}
             />
             <input type="time" id="horaJogo" name="appt" onChange={handleNovaHoraJogo} required></input>
-            <div>
             <br/>
             <br/>
 			<Button onClick={adicionaJogo} className='btn--outline--full--orange--large'  >Confirmar</Button>
-            </div>
         </div>
         );
     }
@@ -430,55 +426,55 @@ export default function ListaJogos() {
     return (
         <div className="edit-fundo">
             <form className='edit-content-boletim'>
-            <Popup trigger={alt_Popup} setTrigger={setAlt_Popup}>
-				{alterarOdd()}
-			</Popup>
+                <Popup trigger={alt_Popup} setTrigger={setAlt_Popup}>
+                    {alterarOdd()}
+                </Popup>
                 <div className='edit-lista-jogos'>
-                <Popup trigger={fech_Popup} setTrigger={setFech_Popup}>
-					{fechar()}
-                </Popup>
-                <Popup trigger={abrir_Popup} setTrigger={setAbrir_Popup}>
-					{abrir()}
-                </Popup>
-                <span className='filters'>
-                    <span>
-                        <a>Nome: </a>
-                        <input
-                        id="search"
-                        type="text"
-                        value={inputText}
-                        onChange={inputHandler}
-                        placeholder="Pesquisar"
-                        />
+                    <Popup trigger={fech_Popup} setTrigger={setFech_Popup}>
+                        {fechar()}
+                    </Popup>
+                    <Popup trigger={abrir_Popup} setTrigger={setAbrir_Popup}>
+                        {abrir()}
+                    </Popup>
+                    <span className='filters'>
+                        <span>
+                            <a>Nome: </a>
+                            <input
+                                id="search"
+                                type="text"
+                                value={inputText}
+                                onChange={inputHandler}
+                                placeholder="Pesquisar"
+                            />
+                        </span>
+                        <span>
+                            Data:
+                            <input
+                                onChange={handleDate}
+                                id="searchDate"
+                                type="text"
+                                value={date}
+                                placeholder="Escolha uma data"
+                                onClick={setToDate}
+                            />
+                        </span>
+                        {admin && <span>
+                            <Button onClick={handleAbrir} className='btn--outline--full--orange--large' >Adicionar Jogo</Button>
+                        </span>}
                     </span>
-                    <span>
-                        Data:
-                        <input
-                        onChange={handleDate}
-                        id="searchDate"
-                        type="text"
-                        value={date}
-                        placeholder="Escolha uma data"
-                        onClick={setToDate}
-                        />
-                    </span>
-                    {admin && <span>
-                        <Button onClick={handleAbrir} className='btn--outline--full--orange--large' >Adicionar Jogo</Button>
-                    </span>}
-                </span>
-                <br/>
+                    <br />
                     <ul id="edit-lista-jogo">
-                        {jogos.map((jogo,index1) => {
-                            if(testValidGame(jogo.equipas)){
+                        {jogos.map((jogo, index1) => {
+                            if (testValidGame(jogo.equipas)) {
                                 return (
-                                    <li id={"M_"+index1} className='edit-tipo-jogo'>
+                                    <li id={"M_" + index1} className='edit-tipo-jogo'>
                                         <div className='jogo-container'>
                                             <div id='nome-jogo'>
                                                 <div id={index1}>{jogo.nome}</div>
                                                 <div id={index1+"_id"} style={{display: 'none'}}>{jogo.id}</div>
                                                 <div id={'Date_'+index1} className='edit-tipo-data'>
                                                     {jogo.date} {jogo.hour}
-                                                </div> 
+                                                </div>
                                             </div>
                                             <div className='resultados-container'>
                                             {jogo.equipas.map((equipa,index2) => {
@@ -509,8 +505,8 @@ export default function ListaJogos() {
                         })}
                     </ul>
                 </div>
-            </form> 
-            <Boletim id="boletim" apostas={apostas} func={handleClickCard}/>
+            </form>
+            <Boletim id="boletim" apostas={apostas} func={handleClickCard} />
         </div>
     );
 }

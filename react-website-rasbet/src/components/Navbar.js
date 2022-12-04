@@ -154,11 +154,6 @@ function Navbar() {
                             {translate[lang]["conta"]}
                         </Link>
                     </li>}
-                    {admin &&
-                        <li className='nav-item'>
-                            <Link onClick={handleadd} className='nav-links' > Adicionar jogo </Link>
-                        </li>
-                    }
                     {!button &&
                     <li className='nav-item'>
                         <Link to='/' className='nav-links-mobile' onClick={logOut}> 
@@ -167,7 +162,7 @@ function Navbar() {
                     </li>
                     }
                 </ul>
-                {button && <Button className='btn--outline--green--large' dest='/' onClick={logOut}>Sair</Button>}
+                {button && <Button className='btn--outline--green--large' dest='/' onClick={logOut}>{translate[lang]["sair"]}</Button>}
             </div>
         </nav>
         </>
