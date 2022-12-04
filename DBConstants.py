@@ -1,5 +1,6 @@
 class DBConstants:
     register_user      = 'INSERT INTO Utilizador (nome, email,password,idCarteira,dataNascimento,nif,isAdmin,isEspecialista) VALUES ((%s),(%s),(%s),(%s),(%s),(%s),(%s),(%s));'
+    get_special_user   = 'SELECT email, isAdmin, isEspecialista FROM Utilizador WHERE isAdmin=1 OR isEspecialista=1;'
     add_wallet         = 'INSERT INTO Carteira (saldoCarteira) VALUES(0.00);'
     get_wallet         = 'SELECT idCarteira FROM Utilizador WHERE idUser=%s;'
     update_wallet      = 'UPDATE Carteira SET saldoCarteira=%s WHERE idCarteira=%s;'
