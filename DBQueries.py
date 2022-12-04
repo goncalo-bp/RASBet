@@ -360,6 +360,13 @@ class DBQueries:
         '''
         self.mydb.execute(DBConstants.suspende_game, (suspende, idJogo))
         self.mydb.commit()
+        
+    def eliminaJogo(self, idJogo):
+        '''
+            Serve para ativar ou desativar a suspensão de um jogo
+        '''
+        self.mydb.execute(DBConstants.elimina_game, (idJogo,))
+        self.mydb.commit()
 
     #RETURN -> (<MontanteApostado>,<total ganho>,[([(Estoril,jogaEmCasa)],<Quem ganhou>)])
     def listaJogosPorAposta(self, idAposta):
