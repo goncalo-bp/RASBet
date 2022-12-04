@@ -60,8 +60,8 @@ function Navbar() {
         }
     };
   
-    const logOut = () => {
-        closeMobileMenu();
+    const logOut = (e) => {
+        closeMobileMenu(e);
         localStorage.clear();
         localStorage.setItem('isLogged', false);
     }

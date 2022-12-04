@@ -344,6 +344,7 @@ export default function ListaJogos() {
                                                 <div id={index1}>{jogo.nome}</div>
                                                 <div id={index1+"_id"} style={{display: 'none'}}>{jogo.id}</div>
                                                 <div id={'Date_'+index1} className='edit-tipo-data'>
+                                                    {console.log(jogo.hour)}
                                                     {jogo.date} {jogo.hour}
                                                 </div> 
                                             </div>

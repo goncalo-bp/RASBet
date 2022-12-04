@@ -182,34 +182,51 @@ def get_gamess(sport):
 
         perGame['nome'] = ""
         ordenado = {}
-        if sport == "Futebol":
-            for team in game:
-                equipa = {}
-                equipa['name'] = team[0]
-                equipa['odd'] = team[1]
-                if len(game) == 3:
-                    if team[0] == 'Draw':
-                        ordenado['team1'] = equipa
-                    elif team[2] == 1:
-                        perGame['nome'] = team[0] + " x " + perGame['nome']
-                        ordenado['team0'] = equipa
-                    else:
-                        perGame['nome'] += team[0]
-                        ordenado['team2'] = equipa
 
-                else:
-                    perGame['equipas'].append(equipa)
-                    i = i+1
-                
-
+        for team in game:
+            equipa = {}
+            equipa['name'] = team[0]
+            equipa['odd'] = team[1]
             if len(game) == 3:
-                for i in range(3):
-                    perGame['equipas'].append(ordenado[f'team{i}'])
+                if team[0] == 'Draw':
+                    ordenado['team1'] = equipa
+                elif team[2] == 1:
+                    perGame['nome'] = team[0] + " x " + perGame['nome']
+                    ordenado['team0'] = equipa
+                else:
+                    perGame['nome'] += team[0]
+                    ordenado['team2'] = equipa
+            else:
+                perGame['equipas'].append(equipa)
+                i = i+1
+
+        if len(game) == 3:
+            for i in range(3):
+                perGame['equipas'].append(ordenado[f'team{i}'])
+
+        elif len(game) == 2: # BASQUETEBOL E TENIS
+            perGame['nome'] = game[0][0] + " x " + game[1][0]
+
+        else: # MOTOGP
+            perGame['nome'] = "Grand Prix"
+
 
         datetimeX = dbQueries.getGameDate(id)[0]
 
         perGame['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
-        perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
+
+        if int(datetimeX.hour) < 10 and int(datetimeX.minute) < 10:
+            perGame['hour'] = ("0" + str(datetimeX.hour) + ":0" + str(datetimeX.minute))
+        
+        elif int(datetimeX.hour) < 10:
+            perGame['hour'] = ("0" + str(datetimeX.hour) + ":" + str(datetimeX.minute))
+        
+        elif int(datetimeX.minute) < 10:
+            perGame['hour'] = (str(datetimeX.hour) + ":0" + str(datetimeX.minute))
+
+        else:
+            perGame['hour'] = (str(datetimeX.hour) + ":" + str(datetimeX.minute))
+        
         perGame['id'] = id
         
         toJson.append(perGame)
