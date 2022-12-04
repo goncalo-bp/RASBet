@@ -66,7 +66,6 @@ def get_historico_transacoes():
     id = request.json.get("id", None)
     transactionList = dbQueries.getHistoricoTransacoes(id)
     toJson = []
-
     i = 0
 
     for transaction in transactionList:
@@ -263,7 +262,11 @@ def get_betList(tipo):
         for bet in listaBets:
             dbQueries.criarAposta(id,montante,[(bet,listaBets[bet])])
     else:
-        dbQueries.criarAposta(id,montante,listaBets)
+        bets = []
+        for bet in listaBets:
+            bets += [(bet,listaBets[bet])]
+
+        dbQueries.criarAposta(id,montante,bets)
 
     return [200]
 

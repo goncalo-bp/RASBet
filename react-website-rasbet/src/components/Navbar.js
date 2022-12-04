@@ -18,18 +18,21 @@ function Navbar() {
         switch(desp){
             case "Futebol":
                 localStorage.setItem('desporto',"Futebol");
+                e.forceUpdate();
                 break;
             case "Basquetebol":
                 localStorage.setItem('desporto',"Basquetebol");
+                e.forceUpdate();
                 break;
             case "Ténis":
                 localStorage.setItem('desporto',"Tenis");
+                e.forceUpdate();
                 break;
             case "MotoGP":
                 localStorage.setItem('desporto',"MotoGP");
+                e.forceUpdate();
                 break;
         }
-        window.location.reload();
         setClick(false);
     }
     
@@ -86,7 +89,7 @@ function Navbar() {
                 </div>
                 <ul className={click ? 'nav-menu active' : 'nav-menu'}>
                     <li id="futebol" className='nav-item'>
-                        <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
+                        <Link to='/home' className='nav-links' onClick={closeMobileMenu} >
                             Futebol
                         </Link>
                     </li>

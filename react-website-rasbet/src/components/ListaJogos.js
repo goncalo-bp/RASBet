@@ -63,20 +63,7 @@ export default function ListaJogos() {
 
     function checkDate(d1, d2) {
         var bool;
-        //if (d1 === '') {
-        //    setContainsDate(true);
-        //}
-        //if (d1.length === 4) {
-        //    d1 === d2.substring(0, 4) ? 
-        //    setContainsDate(true) : 
-        //    setContainsDate(false);
-        //}
-        //if (d1.length === 7) {
-        //    d1.substring(0, 4) === d2.substring(0, 4) && 
-        //    d1.substring(5, 7) === d2.substring(5, 7) ? 
-        //    setContainsDate(true) : 
-        //    setContainsDate(false);
-        //}
+
         if (d1.length === 10) {
             d1.substring(0, 4) === d2.substring(0, 4) && 
             d1.substring(5, 7) === d2.substring(5, 7) &&
@@ -173,7 +160,6 @@ export default function ListaJogos() {
     
         timestamp = new Date(timestamp);
         var now = new Date();
-        console.log(data);
 
         if(data === null || data === "" || Math.abs(now - timestamp) > 30000) { // atualiza quando esta a 0 ou quando passam 10 min
             localStorage.setItem('timestamp', new Date());
@@ -285,7 +271,6 @@ export default function ListaJogos() {
     }
 
     function removeJogo(){
-        console.log(infoRemove);
         // ! Adicionar cenas ao Flask
         var desporto = localStorage.getItem('desporto');
         localStorage.setItem(desporto, "");

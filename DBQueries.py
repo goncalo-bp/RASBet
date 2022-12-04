@@ -214,7 +214,6 @@ class DBQueries:
 
         #Verifica se um jogo ainda não começou
         datas = []
-        print(jogosApostados)
         for id in jogosApostados:
             datas.append(self.mydb.query(DBConstants.get_game_date, (id[0],))[0][0])
 
@@ -229,7 +228,6 @@ class DBQueries:
             oddsTotal = oddsTotal * odd[0][0]
             self.mydb.execute(DBConstants.add_game_to_bet, (numAposta,idJogo,float(odd[0][0]),resultadoApostado))
         self.mydb.execute(DBConstants.update_odd_total,(float(oddsTotal),numAposta))
-        print("teste2")
         self.mydb.commit()
         
     

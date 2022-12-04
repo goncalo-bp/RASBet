@@ -133,7 +133,9 @@ export default function Boletim(aposta) {
 				
 				for(var i = 0; i < apostas.length; i++){
 					var game_id =  document.getElementById(apostas[i][0]+"_id").textContent;
-					var team_name = document.getElementById(apostas[i]).textContent.split(" ")[0];
+					var team_name = document.getElementById(apostas[i]).textContent.split(" ");
+					team_name = team_name.slice(0,-1).join(" ");
+					console.log(team_name);
 					res[game_id] = team_name;
 				}
 
@@ -147,12 +149,23 @@ export default function Boletim(aposta) {
 							"boletim": res,
 							"montante": aApostar,
 						})
+				}).then((response) => {
+					if(!response.ok) {
+						throw Error(response.status);
+					}
+					else return response.json();
+				}).then((data) => {
+					setError(0);
+					var atual = Number(localStorage.getItem('wallet'));
+					if (tipoAposta === 's')
+						aApostar = aApostar * apostas.length;
+						
+					localStorage.setItem("wallet",atual - aApostar);
 				})
-	
-	
-	
-	
-				setError(0);
+				.catch(error => {
+					console.log("error: ", error);
+					setError(5);
+				});				
 			}
 		}
 
@@ -172,6 +185,8 @@ export default function Boletim(aposta) {
 				return "Insira o montante a apostar";
 			case 4:
 				return "Insira pelo menos uma aposta";
+			case 5:
+				return "Erro a registar aposta!";
 		}
 	}
 
