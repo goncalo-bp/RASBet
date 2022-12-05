@@ -59,10 +59,6 @@ export default function GerirContas() {
         setIdProm(e.target.value);
     };
 
-    
-
-    
-
 
     
 
@@ -94,7 +90,7 @@ export default function GerirContas() {
                     return (
                         <div className='entry-container'>
                             <div className='account-info'>
-                                <a>{promocao.idJogo} ({promocao.aumento}) </a>
+                                <a>{promocao.nome} ({promocao.aumento}) </a>
                             </div>
                             <div className='delete-button'>
                                 <Button onClick={removePromocao} className={'btn--circle--green--small'}><i className="fa-solid fa-trash" ></i></Button>

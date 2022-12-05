@@ -61,18 +61,17 @@ export default function ListaJogos() {
     }
 
     const addProm = (e) => {
-        setPopupAdd(true);
-        // TODO confirmar padrao email se for preciso
-        if(idJogo === '' || percentagem === '') {
+        if(percentagem === '') {
             alert("Preencha todos os campos!");
             return;
         }
+        var perc = percentagem/100;
         setPopupAdd(false);
         // TODO adicionar conta com query do flask
     };
 
     const handleNovaHoraJogo = (e) => {
-        setNovaDataJogo(e.target.value);
+        setNovaHoraJogo(e.target.value);
     }
 
     const handleNovaDataJogo = (e) => {
@@ -357,12 +356,10 @@ export default function ListaJogos() {
 
     function adicionaJogo() {
         // ! Adicionar cenas ao Flask
-        debugger;
         if (nomeNovaEquipa1 === '' || nomeNovaEquipa2 === '' || nomeNovoJogo === '' || novaDataJogo === '' || novaHoraJogo === '') {
             alert("Preencha todos os campos");
         }
         else {
-            console.log(novaHoraJogo);
             var desporto = localStorage.getItem('desporto');
             localStorage.setItem(desporto, "");
             setAbrir_Popup(false);
@@ -466,10 +463,6 @@ export default function ListaJogos() {
                                                         </div>
                                                         <div className='popup-form'>
                                                             <form>
-                                                                <div className='form-group'>
-                                                                    <label>Id Jogo: </label>
-                                                                    <input onChange={handleIdJogo} type='text' className='form-control' placeholder='Id' />
-                                                                </div>
                                                                 <div className='form-group'>
                                                                     <label>Percentagem: </label>
                                                                     <input onChange={handlePercentagem} type='number' className='form-control' placeholder='Percentagem' />

@@ -318,6 +318,15 @@ def get_promotionstodas():
         dictP = {}
         dictP['idProm'] = row[0]
         dictP['idJogo'] = row[1]
+        teams = dbQueries.getTeamsGame(row[1])
+        nome = ""
+        for team in teams:
+            if team[3] == 1:
+                nome = team[1] + " vs " + nome
+            elif team[1] != 'Draw':
+                nome = nome + team[1]
+
+        dictP['nome'] = nome
         dictP['aumento'] = row[2]
         promotions.append(dictP)
     
