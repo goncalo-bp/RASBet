@@ -426,3 +426,8 @@ class DBQueries:
         self.mydb.execute(DBConstants.close_game_t,(idJogo,))
         self.atualizaResultadoApostas(idJogo, vencedor)
         self.mydb.commit() 
+
+    def addJogo(self, idJogo, nomeDesporto, dataJogo, suspenso):
+        self.mydb.execute(DBConstants.add_game, (idJogo,nomeDesporto, dataJogo, suspenso))
+        self.mydb.commit()
+        return

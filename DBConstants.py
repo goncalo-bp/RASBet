@@ -63,3 +63,4 @@ class DBConstants:
     get_notificacao    = 'SELECT Título, Texto FROM Notificação WHERE idUser = %s or idUser=-1'
     close_game         = 'UPDATE Jogo SET resultado=%s WHERE idJogo=%s'
     close_game_t       = 'UPDATE Jogo SET finalizado=1 WHERE idJogo=%s'
+    add_game           = 'INSERT INTO Jogo(idJogo, nomeDesporto, dataJogo, suspenso) VALUES(%s, %s, %s, %s);'

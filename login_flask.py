@@ -3,6 +3,8 @@ from flask import Flask, request, redirect, jsonify
 from datetime import datetime
 from flask_cors import CORS,cross_origin
 from passlib.hash import sha256_crypt
+import string 
+import random
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -351,6 +353,48 @@ def get_contas_especial():
         contas.append(line)
 
     return jsonify(contas), 200
+@app.route('/sports/<sport>/addJogo', methods = ['POST'])
+@cross_origin()
+def add_Jogo(sport):
+    
+    id = ''.join(random.choices(string.ascii_lowercase + string.digits, k = 35)) 
+    nomeEquipa1 = request.json.get("nomeEquipa1", None)
+    nomeEquipa2 = request.json.get("nomeEquipa2", None)
+    data = request.json.get("data", None)
+    hora = request.json.get("hora", None)
+    datetimeV = data + hora
+
+    print(datetimeV)
+
+    dbQueries.addJogo(id, sport, datetimeV, 0)
+    dbQueries.addTeam(nomeEquipa1, id, 0, 1)
+    dbQueries.addTeam("Draw", id, 0, 0)
+    dbQueries.addTeam(nomeEquipa2, id, 0, 0)
+    return [200]
+
+@app.route('/promocoes', methods = ['GET'])
+@cross_origin()
+def get_promotionstodas():
+    promotions = []
+    promotionsRow = dbQueries.getPromotions()
+
+    for row in promotionsRow:
+        dictP = {}
+        dictP['idProm'] = row[0]
+        dictP['idJogo'] = row[1]
+        teams = dbQueries.getTeamsGame(row[1])
+        nome = ""
+        for team in teams:
+            if team[3] == 1:
+                nome = team[1] + " vs " + nome
+            elif team[1] != 'Draw':
+                nome = nome + team[1]
+
+        dictP['nome'] = nome
+        dictP['aumento'] = row[2]
+        promotions.append(dictP)
+    
+    return promotions, 200
 
 
 if __name__ == '__main__':
