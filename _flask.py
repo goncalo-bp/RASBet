@@ -314,7 +314,7 @@ def fecha_jogo():
 
 @app.route('/conta/registaEspecial', methods = ['POST'])
 @cross_origin()
-def registaContaEspecial(valor):
+def registaContaEspecial():
     nome = request.json.get("nome", None)
     email = request.json.get("email", None)
     password = request.json.get("password", None)
@@ -342,13 +342,14 @@ def get_contas_especial():
 
     for row in contasRow:
         line = {}
-        line['nome'] = contasRow[0][0]
+        line['nome'] = row[0]
         
-        if contasRow[0][1] == '1':
+        if row[1] == 1:
             line['position'] = 'Administrador'
         else:
             line['position'] = 'Especialista'
 
+        line['id'] = row[3]
         contas.append(line)
 
     return jsonify(contas), 200
@@ -438,36 +439,8 @@ def get_notifs_todas():
         notifs.append(dictP)
     
     return notifs, 200
-@app.route('/conta/getEspeciais', methods = ['GET'])
-@cross_origin()
-def get_contas_especial():
-    contas = []
-    contasRow = dbQueries.getSpecialUser()
-    print(contasRow)
-    for row in contasRow:
-        line = {}
-        line['nome'] = row[0]
-        
-        if row[1] == 1:
-            line['position'] = 'Administrador'
-        else:
-            line['position'] = 'Especialista'
+    
 
-        line['id'] = row[3]
-        contas.append(line)
-
-    return jsonify(contas), 200
-
-@app.route('/conta/registaEspecial', methods = ['POST'])
-@cross_origin()
-def registaContaEspecial():
-    nome = request.json.get("nome", None)
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
-    isAdmin = request.json.get("isAdmin", None)
-    isEspecialista = request.json.get("isEspecialista", None)
-    dbQueries.registerSpecialUser(nome,email,sha256_crypt.hash(password,salt="RAS2022"),isAdmin,isEspecialista)
-    return 200
 
 @app.route('/conta/eliminaEspecial', methods = ['POST'])
 @cross_origin()

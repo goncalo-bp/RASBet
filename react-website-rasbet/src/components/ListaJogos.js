@@ -10,6 +10,7 @@ import Progresso from './Progresso';
 export default function ListaJogos() {
 
     const [jogos, setJogos] = useState([]);
+    const [numJogos, setNumJogos] = useState(0);
     const [apostas, setApostas] = useState([]);
 
     const [admin, setAdmin] = useState(false);
@@ -146,19 +147,23 @@ export default function ListaJogos() {
         var data_act = e.target.value;
         setDate(data_act);
         if (data_act.length === 0)
-            for (var i = 0; i < jogos.length; i++) {
-                document.getElementById("M_" + i).style.display = "flex";
+            for (var i = 0; i < numJogos; i++) {
+                if(document.getElementById("M_"+i) !== null)
+                    document.getElementById("M_" + i).style.display = "flex";
             }
 
         else
-            for (var i = 0; i < jogos.length; i++) {
-                var jogo = document.getElementById("Date_" + i).textContent;
-                var containsDate = checkDate(data_act, jogo.substring(0, 10));
-                if (containsDate === true) {
-                    document.getElementById("M_" + i).style.display = "flex";
-                }
-                else {
-                    document.getElementById("M_" + i).style.display = "none";
+            for (var i = 0; i < numJogos; i++) {
+                if(document.getElementById("Date_"+i) !== null){
+
+                    var jogo = document.getElementById("Date_" + i).textContent;
+                    var containsDate = checkDate(data_act, jogo.substring(0, 10));
+                    if (containsDate === true) {
+                        document.getElementById("M_" + i).style.display = "flex";
+                    }
+                    else {
+                        document.getElementById("M_" + i).style.display = "none";
+                    }
                 }
             }
     };
@@ -169,13 +174,15 @@ export default function ListaJogos() {
         var lowerCase = String(valor).toLowerCase();
         setInputText(lowerCase);
 
-        for (var i = 0; i < jogos.length; i++) {
-            var game_name = document.getElementById(i).textContent.toLowerCase()
-            if (!game_name.includes(lowerCase)) {
-                document.getElementById("M_" + i).style.display = "none";
-            }
-            else {
-                document.getElementById("M_" + i).style.display = "flex";
+        for (var i = 0; i < numJogos; i++) {
+            if(document.getElementById(i) !== null){
+                var game_name = document.getElementById(i).textContent.toLowerCase()
+                if (!game_name.includes(lowerCase)) {
+                    document.getElementById("M_" + i).style.display = "none";
+                }
+                else {
+                    document.getElementById("M_" + i).style.display = "flex";
+                }
             }
         }
     };
@@ -195,6 +202,7 @@ export default function ListaJogos() {
             }).then((data) => {
                 console.log(data);
                 setJogos(data);
+                setNumJogos(data.length);
                 localStorage.setItem(desporto, JSON.stringify(data));
             })
             .catch(error => {
@@ -233,6 +241,7 @@ export default function ListaJogos() {
             getJogos();
         } else {
             setJogos(JSON.parse(localStorage.getItem(desportoAtual)));
+            setNumJogos(JSON.parse(localStorage.getItem(desportoAtual)).length);
         }
 
     }, []);
@@ -401,18 +410,20 @@ export default function ListaJogos() {
     }
 
     function test_Vencedor(){
-        for (var i = 0; i < jogos.length; i++){
+        for (var i = 0; i < numJogos; i++){
             var jogo = jogos[i];
-            if(jogo.id === infoRemove){
-                for(var j = 0; j < jogo.equipas.length; j++){
-                    console.log(jogo.equipas[j]);
-                    if(jogos[i].equipas[j].name === res){
-                        return true;
+            if(jogo !== null){
+                if(jogo.id === infoRemove){
+                    for(var j = 0; j < jogo.equipas.length; j++){
+                        console.log(jogo.equipas[j]);
+                        if(jogos[i].equipas[j].name === res){
+                            return true;
+                        }
                     }
                 }
             }
-        return false;
         }
+        return false;
     }
 
     function removeJogo(){
@@ -619,7 +630,6 @@ export default function ListaJogos() {
                     <br />
                     <ul id="edit-lista-jogo">
                         {jogos.map((jogo, index1) => {
-                            {console.log(jogo)}
                             if (especialista || admin || testValidGame(jogo.equipas)) {
                                 return (
                                     <li id={"M_" + index1} className='edit-tipo-jogo' key={index1}>
