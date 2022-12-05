@@ -8,7 +8,7 @@ import Dropdown from '../../Lang_Toogle';
 function Login() {
   var lang = localStorage.getItem('lang');
   localStorage.clear();
-  if (lang === "null"){
+  if (lang === "null" || lang === null){
     localStorage.setItem("lang", "pt");
     lang = "pt";
   }

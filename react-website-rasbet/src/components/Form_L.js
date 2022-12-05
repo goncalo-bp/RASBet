@@ -47,7 +47,6 @@ export default function Form_L() {
 				}
 				else return response.json();
 			}).then( (data) => {
-				console.log(data);
 				localStorage.setItem('id', data.id);
 				localStorage.setItem('name', data.name);
 				localStorage.setItem('wallet', data.wallet);

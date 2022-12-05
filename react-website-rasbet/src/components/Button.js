@@ -13,7 +13,7 @@ const NAMES = ['btn--primary--medium', 'btn--primary--large',
                'btn--circle--green--small', 'btn--circle--green--tiny', 'btn--circle--green--medium',
                'btn--x--gray--medium','btn--primary--white--large',
                'btn--onclick--white--large', 'btn--inserir--odd',
-               'btn--x--gray--remove--jogo'
+               'btn--x--gray--remove--jogo', "btn--notif",
             ]
 
 export const Button = ({ children, onClick, className, dest, id }) => {

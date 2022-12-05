@@ -14,21 +14,22 @@ function Navbar() {
 
     const handleClick = () => setClick(!click);
     const closeMobileMenu = (e) => {
+        console.log(e.target);
         var desp = e.target.firstChild.data;
         switch(desp){
-            case "Futebol":
+            case translate[lang]["desp"][0]:
                 localStorage.setItem('desporto',"Futebol");
                 e.forceUpdate();
                 break;
-            case "Basquetebol":
+            case translate[lang]["desp"][1]:
                 localStorage.setItem('desporto',"Basquetebol");
                 e.forceUpdate();
                 break;
-            case "Ténis":
+            case translate[lang]["desp"][2]:
                 localStorage.setItem('desporto',"Tenis");
                 e.forceUpdate();
                 break;
-            case "MotoGP":
+            case translate[lang]["desp"][3]:
                 localStorage.setItem('desporto',"MotoGP");
                 e.forceUpdate();
                 break;

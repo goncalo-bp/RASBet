@@ -416,7 +416,7 @@ class DBQueries:
         '''
             Devolve as notificações privadas de um utilizador, juntamente com as públicas
         '''
-        return self.mydb.execute(DBConstants.add_notificacao,(idUser,))
+        return self.mydb.query(DBConstants.get_notificacao,(idUser,))
     
     def setResultado(self, idJogo, vencedor):
         '''

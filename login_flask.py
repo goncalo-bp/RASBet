@@ -396,6 +396,44 @@ def get_promotionstodas():
     
     return promotions, 200
 
+@app.route('/promocoes/adiciona', methods = ['POST'])
+@cross_origin()
+def adiciona_promocao():
+    idJogo = request.json.get("idJogo", None)
+    aumento = request.json.get("aumento", None)
+    dbQueries.addPromotion(idJogo, aumento)
+    return [200], 200
+
+@app.route('/promocoes/remove', methods = ['POST'])
+@cross_origin()
+def remove_promocao():
+    idPromo = request.json.get("idPromo", None)
+    dbQueries.removePromotion(idPromo)
+    return [200], 200
+
+@app.route('/notificacoes/adiciona', methods = ['POST'])
+@cross_origin()
+def adiciona_notificacao():
+    titulo = request.json.get("titulo", None)
+    texto = request.json.get("texto", None)
+    dbQueries.addNotificacao(titulo, texto, -1)
+    return [200], 200
+
+@app.route('/notificacoes', methods = ['POST'])
+@cross_origin()
+def get_notifs_todas():
+    idConta = request.json.get("idConta", None)
+    notifs = []
+    print(idConta)
+    notifsRow = dbQueries.getNotificacao(idConta)
+    
+    for row in notifsRow:
+        dictP = {}
+        dictP['titulo'] = row[0]
+        dictP['texto'] = row[1]
+        notifs.append(dictP)
+    
+    return notifs, 200
 
 if __name__ == '__main__':
    app.run(host='127.0.0.1', port=5002)

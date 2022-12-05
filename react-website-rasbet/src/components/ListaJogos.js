@@ -26,6 +26,7 @@ export default function ListaJogos() {
 
     const [alt_Popup, setAlt_Popup] = useState(false);
     const [abrir_Popup, setAbrir_Popup] = useState(false);
+    const [notif_Popup, setNotif_Popup] = useState(false);
 
     const [infoAltera, setInfoAltera] = useState({});
     const [newOdd, setNewOdd] = useState(0);
@@ -43,6 +44,8 @@ export default function ListaJogos() {
     const [popupAdd, setPopupAdd] = useState(false);
     const [idJogo, setIdJogo] = useState('');
     const [percentagem, setPercentagem] = useState(0);
+
+    const [notif, setNotificacoes] = useState([]);
 
     const handleIdJogo = (e) => {
         e.preventDefault();
@@ -176,7 +179,7 @@ export default function ListaJogos() {
     };
 
 
-    const getJogos = (e) => {
+    function getJogos(){
         var desporto = localStorage.getItem('desporto');
 
         fetch('http://localhost:5002/sports/' + desporto, {  // Enter your IP address here
@@ -229,6 +232,7 @@ export default function ListaJogos() {
         } else {
             setJogos(JSON.parse(localStorage.getItem(desportoAtual)));
         }
+
     }, []);
 
     function addAposta(id) {
@@ -290,7 +294,7 @@ export default function ListaJogos() {
                 setAlt_Popup(true);
             }
             else{
-                setAlt_Popup(false);
+                window.location.reload();
             }
         })
         .catch( (error,status) => {
@@ -301,10 +305,10 @@ export default function ListaJogos() {
 
     function desSuspender(){
         var id = infoAltera.split("_")[0];
-        suspenderJogo(0,id)
+        console.log(id);
         var desporto = localStorage.getItem('desporto');
         localStorage.setItem(desporto, "");
-        
+        suspenderJogo(0,id)
     }
 
     function alertValid_Odd() {
@@ -438,7 +442,6 @@ export default function ListaJogos() {
     }
 
     function adicionaJogo() {
-        // ! Adicionar cenas ao Flask
         var nome = document.getElementById("nomeJogo").value;
         var equipas = document.getElementById("nomeEquipas").value;
         var data = document.getElementById("dataJogo").value;
@@ -508,9 +511,55 @@ export default function ListaJogos() {
         );
     }
 
+    const handleNotif = () => {
+        fetch('http://localhost:5002/notificacoes', {  // Enter your IP address here
+                method: 'POST',
+                mode: 'cors', 
+                body: JSON.stringify({"idConta" : localStorage.getItem("id")}), // body data type must match "Content-Type" header
+                headers: {"Content-Type": "application/json"}
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.status);
+            }
+            else return response.json();
+            }).then((data) => {
+                setNotificacoes(data);
+                setNotif_Popup(true);
+            })
+            .catch(error => {
+                console.log("error: ", error);
+            });
+    }
+
+
+
+    const notificacoes = () => {
+        return (
+            <div className='popup-center'>
+                Notificações
+                {
+                notif.map((notificacao) => {
+                    return (
+                        <div className='popup-center'>
+                            <br/>
+                            <h1>{notificacao.titulo}</h1>
+                            {notificacao.texto}
+                            
+                        </div>
+                    );
+                })
+                }
+            </div>
+        )
+    }
     return (
         <div className="edit-fundo">
             <form className='edit-content-boletim'>
+                <Button className='btn--notif' onClick={handleNotif}>Notificações</Button>
+                <Popup trigger={notif_Popup} setTrigger={setNotif_Popup}>
+                    {notificacoes()}
+                </Popup>
                 <Popup trigger={alt_Popup} setTrigger={setAlt_Popup}>
                     {alterarOdd()}
                 </Popup>
