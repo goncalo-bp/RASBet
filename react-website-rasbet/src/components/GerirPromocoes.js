@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './GerirContas.css';
 import { Button } from './Button';
 import Popup from './Popup';
-
-
-
+//
+//
+//
 export default function GerirContas() {
     const [promocoes, setPromocoes] = useState([]);
     const [button, setButton] = useState(true);
@@ -59,10 +59,6 @@ export default function GerirContas() {
         setIdProm(e.target.value);
     };
 
-    
-
-    
-
 
     
 
@@ -94,7 +90,7 @@ export default function GerirContas() {
                     return (
                         <div key={index} className='entry-container'>
                             <div className='account-info'>
-                                <a>{promocao.idJogo} ({promocao.aumento}) </a>
+                                <a>{promocao.nome} ({promocao.aumento}) </a>
                             </div>
                             <div className='delete-button'>
                                 <Button onClick={removePromocao} className={'btn--circle--green--small'}><i className="fa-solid fa-trash" ></i></Button>

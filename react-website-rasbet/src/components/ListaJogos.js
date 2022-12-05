@@ -38,6 +38,7 @@ export default function ListaJogos() {
     const [novaDataJogo, setNovaDataJogo] = useState('');
     const [novaHoraJogo, setNovaHoraJogo] = useState('');
 
+    const [res, setRes] = useState("");
     const [infoPromocao, setInfoPromocao] = useState('');
     const [popupAdd, setPopupAdd] = useState(false);
     const [idJogo, setIdJogo] = useState('');
@@ -61,18 +62,17 @@ export default function ListaJogos() {
     }
 
     const addProm = (e) => {
-        setPopupAdd(true);
-        // TODO confirmar padrao email se for preciso
-        if(idJogo === '' || percentagem === '') {
+        if(percentagem === '') {
             alert("Preencha todos os campos!");
             return;
         }
+        var perc = percentagem/100;
         setPopupAdd(false);
         // TODO adicionar conta com query do flask
     };
 
     const handleNovaHoraJogo = (e) => {
-        setNovaDataJogo(e.target.value);
+        setNovaHoraJogo(e.target.value);
     }
 
     const handleNovaDataJogo = (e) => {
@@ -92,16 +92,13 @@ export default function ListaJogos() {
         setNomeNovaEquipa2(e.target.value);
     };
 
-    const handleInfoRemove = (e) => {
-        var info = e.target.id;
-        setInfoRemove(info);
-        setFech_Popup(true);
-    }
-
     const handleAlt = (e) => {
         var info = e.target.id;
+
+        var infoArray = info.split("_");
+
         setInfoAltera(info);
-        setAlt_Popup(true);
+        suspenderJogo(1,infoArray[0]);
     }
 
     const handleNewOdd = (e) => {
@@ -277,6 +274,39 @@ export default function ListaJogos() {
         e.target.type = "date";
     }
 
+    function suspenderJogo(valor,idJogo){
+        fetch('http://localhost:5002/jogo/suspender/'+valor, { 
+            method: 'POST', 
+            mode: 'cors', 
+            body: JSON.stringify({"idJogo" : idJogo}), // body data type must match "Content-Type" header
+            headers: {"Content-Type": "application/json"}
+        }).then( (response) => {
+            if(!response.ok) {
+                throw Error(response.status);
+            }
+            else return response.json();
+        }).then( (data) => {
+            if(valor === 1){
+                setAlt_Popup(true);
+            }
+            else{
+                setAlt_Popup(false);
+            }
+        })
+        .catch( (error,status) => {
+            console.log("error: ",status);
+            alert(status);
+        });
+    }
+
+    function desSuspender(){
+        var id = infoAltera.split("_")[0];
+        suspenderJogo(0,id)
+        var desporto = localStorage.getItem('desporto');
+        localStorage.setItem(desporto, "");
+        
+    }
+
     function alertValid_Odd() {
         var id = infoAltera.split("_")[0];
         var equipa = infoAltera.split("_")[1];
@@ -285,10 +315,26 @@ export default function ListaJogos() {
             alert("Insira um valor");
         }
         else {
-            // ! Adicionar cenas ao Flask
-
-
-            setAlt_Popup(false);
+            var ok = 0;
+            ok = fetch('http://localhost:5002/jogo/mudaOdd', {
+                method: 'POST', 
+                mode: 'cors', 
+                body: JSON.stringify({"idJogo" : id , "nomeEquipa" : equipa , "newOdd" : valor}), // body data type must match "Content-Type" header
+                headers: {"Content-Type": "application/json"}
+        
+            }).then( (response) => {
+                if(!response.ok) {
+                    throw Error(response.status);
+                }
+                else return response.json();
+            }).then( (data) => {
+                alert("Odd alterada com sucesso");
+            })
+            .catch( (error,status) => {
+                console.log("error: ",status);
+                alert(status);
+            });        
+            
         }
     }
 
@@ -322,6 +368,7 @@ export default function ListaJogos() {
                 </div>
                 <br />
                 <Button className='btn--outline--full--orange--large' onClick={alertValid_Odd} >Confirmar</Button>
+                <Button className='btn--outline--full--orange--large' onClick={desSuspender} >Fechar</Button>
             </div>
         );
     }
@@ -335,41 +382,86 @@ export default function ListaJogos() {
         return res;
     }
 
-    function removeJogo() {
-        // ! Adicionar cenas ao Flask
-        var desporto = localStorage.getItem('desporto');
-        localStorage.setItem(desporto, "");
-        setFech_Popup(false);
-        window.location.reload();
-    }
-
     function closeFecharJogo() {
         setFech_Popup(false);
     }
 
-    function removeJogo() {
-        // ! Adicionar cenas ao Flask
-        var desporto = localStorage.getItem('desporto');
-        localStorage.setItem(desporto, "");
-        setFech_Popup(false);
-        window.location.reload();
+    const handleInfoRemove = (e) => {
+        var info = e.target.id;
+        console.log(info);
+        setInfoRemove(info);
+        setFech_Popup(true);
+    }
+
+    function test_Vencedor(){
+        for (var i = 0; i < jogos.length; i++){
+            var jogo = jogos[i];
+            if(jogo.id === infoRemove){
+                for(var j = 0; j < jogo.equipas.length; j++){
+                    console.log(jogo.equipas[j]);
+                    if(jogos[i].equipas[j].name === res){
+                        return true;
+                    }
+                }
+            }
+        return false;
+        }
+    }
+
+    function removeJogo(){
+
+        if(test_Vencedor() === false){
+            alert("Vencedor Inválido")
+        }
+        else{
+            fetch('http://localhost:5002/jogo/fechar', {  // Enter your IP address here
+                    method: 'POST', 
+                    mode: 'cors', 
+                    body: JSON.stringify({"idJogo" : infoRemove , "vencedor" : res}), // body data type must match "Content-Type" header
+                    headers: {"Content-Type": "application/json"}
+            
+                }).then( (response) => {
+                    if(!response.ok) {
+                        throw Error(response.status);
+                    }
+                    else return response.json();
+                }).then( (data) => {
+                    var desporto = localStorage.getItem('desporto');
+                    localStorage.setItem(desporto, "");
+                    window.location.reload();
+                })
+                .catch( (error,status) => {
+                    console.log("error: ",status);
+                    alert(status);
+                });
+        }
     }
 
     function adicionaJogo() {
         // ! Adicionar cenas ao Flask
-        debugger;
-        if (nomeNovaEquipa1 === '' || nomeNovaEquipa2 === '' || nomeNovoJogo === '' || novaDataJogo === '' || novaHoraJogo === '') {
+        var nome = document.getElementById("nomeJogo").value;
+        var equipas = document.getElementById("nomeEquipas").value;
+        var data = document.getElementById("dataJogo").value;
+        var hora = document.getElementById("horaJogo").value;
+
+        if(nome === "" || equipas === "" || data === "" || hora === ""){
             alert("Preencha todos os campos");
-        }
-        else {
-            console.log(novaHoraJogo);
+        }else{
+            equipas = equipas.split(",");
+
+            // ! Adicionar cenas ao Flask
+            //////////////////////////////////
             var desporto = localStorage.getItem('desporto');
             localStorage.setItem(desporto, "");
             setAbrir_Popup(false);
             window.location.reload();
         }
+
     }
 
+    const handleRes = (e) =>{
+        setRes(e.target.value);
+    }
 
     const fechar = () => {
         return (
@@ -377,7 +469,14 @@ export default function ListaJogos() {
                 Deseja fechar o jogo?
                 <br />
                 <br />
-                <div>
+                <input
+                        onChange={handleRes}
+                        id="result"
+                        type="text"
+                        value={res}
+                        placeholder="Resultado"
+                        />
+            <div>
                     <Button onClick={removeJogo} className='btn--outline--full--orange--large'  >Sim</Button>
                     <Button onClick={closeFecharJogo} className='btn--outline--full--orange--large'  >Não</Button>
                 </div>
@@ -386,29 +485,26 @@ export default function ListaJogos() {
     }
 
     const abrir = () => {
-        return (
-            <div className='popup-center'>
-                Adicionar Jogo
-                <br />
-                <br />
-                <input id="nomeJogo" type="text" onChange={handleNomeNovoJogo} placeholder="Nome do Jogo: " />
-                <input id="nomeJogo" type="text" onChange={handleNomeNovaEquipa1} placeholder="Equipa 1: " />
-                <input id="nomeJogo" type="text" onChange={handleNomeNovaEquipa2} placeholder="Equipa 2: " />
-                <input
-                    onChange={handleNovaDataJogo}
-                    id="dataJogo"
-                    type="text"
-                    value={novaDataJogo}
-                    placeholder="Escolha uma data"
-                    onClick={setToDate}
-                />
-                <input type="time" id="appt" name="appt" onChange={handleNovaHoraJogo} required></input>
-                <div>
-                    <br />
-                    <br />
-                    <Button onClick={adicionaJogo} className='btn--outline--full--orange--large'  >Confirmar</Button>
-                </div>
-            </div>
+		return (
+		<div className='popup-center'>
+            Adicionar Jogo
+            <br/>
+            <br/>
+            <input id="nomeJogo" type="text" onChange={handleNomeNovoJogo} placeholder="Nome do Jogo: " />
+            <input id="nomeEquipas" type="text" onChange={handleNomeNovaEquipa1} placeholder="Equipas: " />
+            <input
+                        onChange={handleNovaDataJogo}
+                        id="dataJogo"
+                        type="text"
+                        value={date}
+                        placeholder="Escolha uma data"
+                        onClick={setToDate}
+            />
+            <input type="time" id="horaJogo" name="appt" onChange={handleNovaHoraJogo} required></input>
+            <br/>
+            <br/>
+			<Button onClick={adicionaJogo} className='btn--outline--full--orange--large'  >Confirmar</Button>
+        </div>
         );
     }
 
@@ -467,10 +563,6 @@ export default function ListaJogos() {
                                                         <div className='popup-form'>
                                                             <form>
                                                                 <div className='form-group'>
-                                                                    <label>Id Jogo: </label>
-                                                                    <input onChange={handleIdJogo} type='text' className='form-control' placeholder='Id' />
-                                                                </div>
-                                                                <div className='form-group'>
                                                                     <label>Percentagem: </label>
                                                                     <input onChange={handlePercentagem} type='number' className='form-control' placeholder='Percentagem' />
                                                                 </div>
@@ -483,32 +575,31 @@ export default function ListaJogos() {
                                                 </Popup>
                                                 {admin && <Button id={jogo.id} onClick={handleInfoPromocao} className='btn--x--gray--remove--jogo'>%</Button>}
                                                 <div id={index1}>{jogo.nome}</div>
-                                                <div id={index1 + "_id"} style={{ display: 'none' }}>{jogo.id}</div>
-                                                <div id={'Date_' + index1} className='edit-tipo-data'>
+                                                <div id={index1+"_id"} style={{display: 'none'}}>{jogo.id}</div>
+                                                <div id={'Date_'+index1} className='edit-tipo-data'>
                                                     {jogo.date} {jogo.hour}
                                                 </div>
                                             </div>
                                             <div className='resultados-container'>
-                                                {jogo.equipas.map((equipa, index2) => {
-                                                    return (
-                                                        <span key={index2}>
-                                                            {especialista ?
-                                                                <div id={concat(index1, index2)} className='btn--onclick--white--large'>
-                                                                    {equipa.name} <br />
-                                                                    {equipa.odd === "0.00" ?
-                                                                        <Button id={concat2(jogo.id, equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >Inserir Odd</Button>
-                                                                        :
-                                                                        <Button id={concat2(jogo.id, equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >{equipa.odd}</Button>
-                                                                    }
-                                                                </div>
-                                                                :
-                                                                <Button id={concat(index1, index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
-                                                                    {equipa.name} <br />{equipa.odd}
-                                                                </Button>
-                                                            }
-                                                        </span>
-                                                    )
-                                                })}
+                                            {jogo.equipas.map((equipa,index2) => {
+                                                return (
+                                                    <span key={index2}>
+                                                        {especialista ? 
+                                                            <div id={concat(index1,index2)} className='btn--onclick--white--large'>
+                                                                <div id={index1+index2+"_N"}>{equipa.name}</div> <br/> 
+                                                                {equipa.odd === "0.00" ?
+                                                                    <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >Inserir Odd</Button>
+                                                                    :
+                                                                    <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >{equipa.odd}</Button>
+                                                                }
+                                                            </div>
+                                                            :  
+                                                            <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
+                                                                {equipa.name} <br/>{equipa.odd}
+                                                            </Button>
+                                                        }
+                                                    </span>
+                                                )})}
                                             </div>
                                         </div>
                                         {admin && <Button id={jogo.id} onClick={handleInfoRemove} className='btn--x--gray--remove--jogo'>x</Button>}

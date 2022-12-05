@@ -334,7 +334,9 @@ class DBQueries:
 
         for idAposta in apostasOndeEstavaJogoPerdido:
             self.mydb.execute(DBConstants.set_aposta,("P",idAposta,))
-            idUser = self.mydb.execute(DBConstants.get_userid_by_bet,(idAposta,))
+            print(idAposta)
+            idUser = self.mydb.query(DBConstants.get_userid_by_bet,(idAposta,))
+            print(idUser)
             self.addNotificacao("Aposta perdida", f'Infelizmente perdeste a tua aposta :( Boa sorte para a próxima!',idUser)
 
         self.mydb.commit()
@@ -358,6 +360,11 @@ class DBQueries:
         '''
             Serve para ativar ou desativar a suspensão de um jogo
         '''
+        if(suspende == "1"):
+            suspende = 0x1
+        else:
+            suspende = 0x0
+
         self.mydb.execute(DBConstants.suspende_game, (suspende, idJogo))
         self.mydb.commit()
         
@@ -365,7 +372,7 @@ class DBQueries:
         '''
             Serve para ativar ou desativar a suspensão de um jogo
         '''
-        self.mydb.execute(DBConstants.elimina_game, (idJogo,))
+        self.mydb.execute(DBConstants.fecha_game, (idJogo,))
         self.mydb.commit()
 
     #RETURN -> (<MontanteApostado>,<total ganho>,[([(Estoril,jogaEmCasa)],<Quem ganhou>)])
@@ -411,7 +418,7 @@ class DBQueries:
         '''
         return self.mydb.execute(DBConstants.add_notificacao,(idUser,))
     
-    def setResultado(self, vencedor, idJogo):
+    def setResultado(self, idJogo, vencedor):
         '''
             Define o resultado de um jogo
         '''
