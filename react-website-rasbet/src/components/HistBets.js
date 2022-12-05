@@ -160,41 +160,47 @@ function HistoricoApostas() {
                 <br/>{button && <br/>}
                 <div className='bets-container'>
                     {btnSimples && 
-                        <div className='entry'>
-                            <div>
-                                {simples.jogo.map((value, index) => {
-                                    return(
-                                        <div className='jogo'>
-                                            <div className='nome-jogo'>
-                                                <h3>{value[0]}</h3>
+                        <div>
+                            {simples.map((entry, index) => {
+                                return(
+                                    <div key={index} className='entry'>
+                                        <div>
+                                            {entry.jogo.map((value, index) => {
+                                                return(
+                                                    <div key={index} className='jogo'>
+                                                        <div className='nome-jogo'>
+                                                            <h3>{value[0]}</h3>
+                                                        </div>
+                                                        <div className='resultado'>
+                                                            {value[1] === 'Draw' ? `Resultado: Empate` : `Vencedor: ${value[1]}`}
+                                                        </div>
+                                                    </div>
+                                                )})
+                                            }
+                                        </div>
+                                        <div className='valores'>
+                                            <div className='valores-text'>
+                                                Montante apostado: <div className='montante'>{entry.montante}€</div>
                                             </div>
-                                            <div className='resultado'>
-                                                {value[1] === 'Draw' ? `Resultado: Empate` : `Vencedor: ${value[1]}`}
+                                            <br/>
+                                            <div className='valores-text'>
+                                                Total de ganhos: <div className='ganho'>{entry.ganho}€</div>
                                             </div>
                                         </div>
-                                    )})
-                                }
-                            </div>
-                            <div className='valores'>
-                                <div className='valores-text'>
-                                    Montante Apostado: <div className='montante'>{simples.montante}€</div>
-                                </div>
-                                <br/>
-                                <div className='valores-text'>
-                                    Total de banhos: <div className='ganho'>{simples.ganho}€</div>
-                                </div>
-                            </div>
+                                    </div>
+                                )})
+                            }
                         </div>
                     }
                     {btnMultipla && 
                         <div>
                             {multipla.map((entry, index) => {
                                 return(
-                                    <div className='entry'>
+                                    <div key={index} className='entry'>
                                         <div>
                                             {entry.jogo.map((value, index) => {
                                                 return(
-                                                    <div className='jogo'>
+                                                    <div key={index} className='jogo'>
                                                         <div className='nome-jogo'>
                                                             <h3>{value[0]}</h3>
                                                         </div>

@@ -83,7 +83,7 @@ export default function GerirContas() {
                 <div className='accounts-container'>
                 {promocoes.map((promocao, index) => {
                     return (
-                        <div className='entry-container'>
+                        <div key={index} className='entry-container'>
                             <div className='account-info'>
                                 <a>{promocao.nome} ({promocao.aumento}) </a>
                             </div>

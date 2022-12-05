@@ -574,7 +574,7 @@ export default function ListaJogos() {
                             {console.log(jogo)}
                             if (especialista || admin || testValidGame(jogo.equipas)) {
                                 return (
-                                    <li id={"M_" + index1} className='edit-tipo-jogo'>
+                                    <li id={"M_" + index1} className='edit-tipo-jogo' key={index1}>
                                         <div className='jogo-container'>
                                             <div id='nome-jogo'>
                                             <Popup trigger={popupAdd} setTrigger={setPopupAdd}>
@@ -605,23 +605,22 @@ export default function ListaJogos() {
                                             <div className='resultados-container'>
                                             {jogo.equipas.map((equipa,index2) => {
                                                 return (
-                                                    <span>
-                                                {especialista ? 
-                                                    <div id={concat(index1,index2)} className='btn--onclick--white--large'>
-                                                        <div id={index1+index2+"_N"}>{equipa.name}</div> <br/> 
-                                                        {console.log(equipa)}
-                                                        {equipa.odd === "0.00" ?
-                                                                <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >Inserir Odd</Button>
-                                                            :
-                                                            <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >{equipa.odd}</Button>
-                                                    }
-                                                    </div>
-                                                        :  
-                                                    <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
-                                                        {equipa.name} <br/>{equipa.odd}
-                                                    </Button>
-                                                }
-                                                </span>
+                                                    <span key={index2}>
+                                                        {especialista ? 
+                                                            <div id={concat(index1,index2)} className='btn--onclick--white--large'>
+                                                                <div id={index1+index2+"_N"}>{equipa.name}</div> <br/> 
+                                                                {equipa.odd === "0.00" ?
+                                                                    <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >Inserir Odd</Button>
+                                                                    :
+                                                                    <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >{equipa.odd}</Button>
+                                                                }
+                                                            </div>
+                                                            :  
+                                                            <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
+                                                                {equipa.name} <br/>{equipa.odd}
+                                                            </Button>
+                                                        }
+                                                    </span>
                                                 )})}
                                             </div>
                                         </div>

@@ -30,10 +30,23 @@ export default function GerirContas() {
   
     window.addEventListener('resize', showButton);
 
+    function toJson(id) {
+		return {"id": id}
+	}
+
+    function toJson2(nome, email, password, isAdmin, isEspecialista) {
+		return {
+            'nome': nome,
+            'email': email,
+            'password': password,
+            'isAdmin': isAdmin,
+            'isEspecialista': isEspecialista
+        }
+	}
+
     const getContas = (e) => {
         //e.preventDefault();
-        /*
-        fetch('http://localhost:5002/contas', {get: 'POST',})
+        fetch('http://localhost:5002/conta/getEspeciais', {method: 'GET',})
         .then((response) => {
             if(!response.ok) {
                 throw Error(response.status);
@@ -46,85 +59,6 @@ export default function GerirContas() {
         .catch(error => {
             console.log("error: ", error);
         });
-        */
-        setContas([
-            {
-                'nome' : 'Conta 1',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 2',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 3',
-                'position' : 'Especialista',
-            },
-            {
-                'nome' : 'Conta 1',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 2',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 3',
-                'position' : 'Especialista',
-            },
-            {
-                'nome' : 'Conta 1',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 2',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 3',
-                'position' : 'Especialista',
-            },
-            {
-                'nome' : 'Conta 2',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 3',
-                'position' : 'Especialista',
-            },
-            {
-                'nome' : 'Conta 1',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 2',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 3',
-                'position' : 'Especialista',
-            },
-            {
-                'nome' : 'Conta 2',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 3',
-                'position' : 'Especialista',
-            },
-            {
-                'nome' : 'Conta 1',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 2',
-                'position' : 'Administrador',
-            },
-            {
-                'nome' : 'Conta 3',
-                'position' : 'Especialista',
-            },
-        ]);
     };
 
     const showForm = () => {
@@ -164,11 +98,51 @@ export default function GerirContas() {
             return;
         }
         setPopup(false);
-        // TODO adicionar conta com query do flask
+        var isAdmin = 0;
+        if (position === 'admin') {
+            isAdmin = 1;
+        }            
+        fetch('http://localhost:5002/conta/registaEspecial', {  // Enter your IP address here
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify(toJson2(nome, email, password, isAdmin, 1-isAdmin)),
+            headers: {"Content-Type": "application/json"}
+        })
+        .then((response) => {
+            getContas();
+            if(!response.ok) {
+                throw Error(response.status);
+            }
+            else return response.json();
+        }).then((data) => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.log("error: ", error);
+        });
     };
 
     const removeConta = (e) => {
-        // TODO remover conta com query do flask
+        e.preventDefault();
+        var id = e.target.id.split("_")[0];
+        fetch('http://localhost:5002/conta/eliminaEspecial', {  // Enter your IP address here
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify(toJson(id)),
+            headers: {"Content-Type": "application/json"}
+        })
+        .then((response) => {
+            getContas();
+            if(!response.ok) {
+                throw Error(response.status);
+            }
+            else return response.json();
+        }).then((data) => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.log("error: ", error);
+        });
     };
 
     useEffect(() => {
@@ -188,12 +162,12 @@ export default function GerirContas() {
                 <div className='accounts-container'>
                 {contas.map((conta, index) => {
                     return (
-                        <div className='entry-container'>
+                        <div key={index} className='entry-container'>
                             <div className='account-info'>
                                 <a>{conta.nome} ({conta.position})</a>
                             </div>
                             <div className='delete-button'>
-                                <Button onClick={removeConta} className={'btn--circle--green--small'}><i className="fa-solid fa-trash" ></i></Button>
+                                <Button id={conta.id + '_u'} onClick={removeConta} className={'btn--circle--green--small'}><i id={conta.id + '_sb'} className="fa-solid fa-trash" ></i></Button>
                             </div>
                         </div>
                     );
