@@ -60,10 +60,14 @@ export default function ListaJogos() {
     const handleNomeNovaEquipa2 = (e) => {
         setNomeNovaEquipa2(e.target.value);
     };
+
     const handleAlt = (e) => {
         var info = e.target.id;
+
+        var infoArray = info.split("_");
+
         setInfoAltera(info);
-        setAlt_Popup(true);
+        suspenderJogo(1,infoArray[0]);
     }
 
     const handleNewOdd = (e) => {
@@ -239,6 +243,39 @@ export default function ListaJogos() {
         e.target.type = "date";
     }
 
+    function suspenderJogo(valor,idJogo){
+        fetch('http://localhost:5002/jogo/suspender/'+valor, { 
+            method: 'POST', 
+            mode: 'cors', 
+            body: JSON.stringify({"idJogo" : idJogo}), // body data type must match "Content-Type" header
+            headers: {"Content-Type": "application/json"}
+        }).then( (response) => {
+            if(!response.ok) {
+                throw Error(response.status);
+            }
+            else return response.json();
+        }).then( (data) => {
+            if(valor === 1){
+                setAlt_Popup(true);
+            }
+            else{
+                setAlt_Popup(false);
+            }
+        })
+        .catch( (error,status) => {
+            console.log("error: ",status);
+            alert(status);
+        });
+    }
+
+    function desSuspender(){
+        var id = infoAltera.split("_")[0];
+        suspenderJogo(0,id)
+        var desporto = localStorage.getItem('desporto');
+        localStorage.setItem(desporto, "");
+        
+    }
+
     function alertValid_Odd() {
         var id = infoAltera.split("_")[0];
         var equipa = infoAltera.split("_")[1];
@@ -247,10 +284,26 @@ export default function ListaJogos() {
             alert("Insira um valor");
         }
         else {
-            // ! Adicionar cenas ao Flask
-
-
-            setAlt_Popup(false);
+            var ok = 0;
+            ok = fetch('http://localhost:5002/jogo/mudaOdd', {
+                method: 'POST', 
+                mode: 'cors', 
+                body: JSON.stringify({"idJogo" : id , "nomeEquipa" : equipa , "newOdd" : valor}), // body data type must match "Content-Type" header
+                headers: {"Content-Type": "application/json"}
+        
+            }).then( (response) => {
+                if(!response.ok) {
+                    throw Error(response.status);
+                }
+                else return response.json();
+            }).then( (data) => {
+                alert("Odd alterada com sucesso");
+            })
+            .catch( (error,status) => {
+                console.log("error: ",status);
+                alert(status);
+            });        
+            
         }
     }
 
@@ -284,6 +337,7 @@ export default function ListaJogos() {
                 </div>
                 <br />
                 <Button className='btn--outline--full--orange--large' onClick={alertValid_Odd} >Confirmar</Button>
+                <Button className='btn--outline--full--orange--large' onClick={desSuspender} >Fechar</Button>
             </div>
         );
     }

@@ -14,11 +14,7 @@ function Login() {
   }
   else
     localStorage.setItem("lang", lang); 
-<<<<<<< HEAD
 
-  localStorage.setItem('lang',lang);
-=======
->>>>>>> 2f1726aa0c63438199ab6d98bcb408bf510b2441
   return (
     <>
       <Dropdown

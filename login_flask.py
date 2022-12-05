@@ -290,6 +290,7 @@ def get_betList(tipo):
 @app.route('/jogo/suspender/<valor>', methods = ['POST'])
 @cross_origin()
 def suspende_jogo(valor):
+    print(valor)
     idJogo = request.json.get("idJogo", None)
     dbQueries.suspensaoJogo(valor,idJogo)
     return [200]

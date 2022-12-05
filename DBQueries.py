@@ -360,6 +360,11 @@ class DBQueries:
         '''
             Serve para ativar ou desativar a suspensão de um jogo
         '''
+        if(suspende == "1"):
+            suspende = 0x1
+        else:
+            suspende = 0x0
+
         self.mydb.execute(DBConstants.suspende_game, (suspende, idJogo))
         self.mydb.commit()
         
