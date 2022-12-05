@@ -38,6 +38,39 @@ export default function ListaJogos() {
     const [novaDataJogo, setNovaDataJogo] = useState('');
     const [novaHoraJogo, setNovaHoraJogo] = useState('');
 
+    const [infoPromocao, setInfoPromocao] = useState('');
+    const [popupAdd, setPopupAdd] = useState(false);
+    const [idJogo, setIdJogo] = useState('');
+    const [percentagem, setPercentagem] = useState(0);
+
+    const handleIdJogo = (e) => {
+        e.preventDefault();
+        setIdJogo(e.target.value);
+    };
+
+
+    const handlePercentagem = (e) => {
+        e.preventDefault();
+        setPercentagem(e.target.value);
+    };
+
+    const handleInfoPromocao = (e) => {
+        var info = e.target.id;
+        setInfoPromocao(info);
+        setPopupAdd(true);
+    }
+
+    const addProm = (e) => {
+        setPopupAdd(true);
+        // TODO confirmar padrao email se for preciso
+        if(idJogo === '' || percentagem === '') {
+            alert("Preencha todos os campos!");
+            return;
+        }
+        setPopupAdd(false);
+        // TODO adicionar conta com query do flask
+    };
+
     const handleNovaHoraJogo = (e) => {
         setNovaDataJogo(e.target.value);
     }
@@ -426,6 +459,29 @@ export default function ListaJogos() {
                                     <li id={"M_" + index1} className='edit-tipo-jogo'>
                                         <div className='jogo-container'>
                                             <div id='nome-jogo'>
+                                            <Popup trigger={popupAdd} setTrigger={setPopupAdd}>
+                                                    <div className='popup-container'>
+                                                        <div className='popup-title'>
+                                                            <h1>Adicionar Promoção</h1>
+                                                        </div>
+                                                        <div className='popup-form'>
+                                                            <form>
+                                                                <div className='form-group'>
+                                                                    <label>Id Jogo: </label>
+                                                                    <input onChange={handleIdJogo} type='text' className='form-control' placeholder='Id' />
+                                                                </div>
+                                                                <div className='form-group'>
+                                                                    <label>Percentagem: </label>
+                                                                    <input onChange={handlePercentagem} type='number' className='form-control' placeholder='Percentagem' />
+                                                                </div>
+                                                                <div className='add-group'>
+                                                                    <Button className={'btn--circle--green--small'} onClick={addProm}><i className="fa-solid fa-plus" ></i></Button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </Popup>
+                                                {admin && <Button id={jogo.id} onClick={handleInfoPromocao} className='btn--x--gray--remove--jogo'>%</Button>}
                                                 <div id={index1}>{jogo.nome}</div>
                                                 <div id={index1 + "_id"} style={{ display: 'none' }}>{jogo.id}</div>
                                                 <div id={'Date_' + index1} className='edit-tipo-data'>
