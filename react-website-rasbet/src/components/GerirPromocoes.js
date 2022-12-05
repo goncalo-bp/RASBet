@@ -8,13 +8,6 @@ import Popup from './Popup';
 export default function GerirContas() {
     const [promocoes, setPromocoes] = useState([]);
     const [button, setButton] = useState(true);
-    const [popupRem, setPopupRem] = useState(false);
-
-
-    const [idProm, setIdProm] = useState('');
-    const [idJogo, setIdJogo] = useState('');
-    const [percentagem, setPercentagem] = useState(0);
-
 
     const showButton = () => {
         if(window.innerWidth <= 740) {
@@ -40,7 +33,6 @@ export default function GerirContas() {
             }
             else return response.json();
         }).then((data) => {
-            console.log(data);
             setPromocoes(data);
         })
         .catch(error => {
@@ -49,26 +41,29 @@ export default function GerirContas() {
         
     };
 
-
-    const handlePopupRem = () => {
-        setPopupRem(true);
-    };
-
-    const handleIdPromocao = (e) => {
-        e.preventDefault();
-        setIdProm(e.target.value);
-    };
-
-
-    
-
     const removePromocao = (e) => {
-        // TODO remover conta com query do flask
-        setPopupRem(false);
-    };
-
-    const removePopupRem = (e) => {
-        setPopupRem(false);
+        var idPromo = e.target.id;
+        console.log(idPromo);
+        fetch('http://localhost:5002/promocoes/remove', {  // Enter your IP address here
+                    method: 'POST', 
+                    mode: 'cors', 
+                    body: JSON.stringify({"idPromo" : idPromo}), // body data type must match "Content-Type" header
+                    headers: {"Content-Type": "application/json"}
+            
+                }).then( (response) => {
+                    if(!response.ok) {
+                        throw Error(response.status);
+                    }
+                    else return response.json();
+                }).then( (data) => {
+                    var desporto = localStorage.getItem('desporto');
+                    localStorage.setItem(desporto, "");
+                    window.location.reload();
+                })
+                .catch( (error,status) => {
+                    console.log("error: ",status);
+                    alert(status);
+                });
     };
 
     useEffect(() => {
@@ -88,12 +83,12 @@ export default function GerirContas() {
                 <div className='accounts-container'>
                 {promocoes.map((promocao, index) => {
                     return (
-                        <div className='entry-container'>
+                        <div key={index} className='entry-container'>
                             <div className='account-info'>
                                 <a>{promocao.nome} ({promocao.aumento}) </a>
                             </div>
                             <div className='delete-button'>
-                                <Button onClick={removePromocao} className={'btn--circle--green--small'}><i className="fa-solid fa-trash" ></i></Button>
+                                <Button id={promocao.idPromo} onClick={removePromocao} className={'btn--circle--green--small'}><i id={promocao.idPromo} className="fa-solid fa-trash" ></i></Button>
                             </div>
                         </div>
                     );

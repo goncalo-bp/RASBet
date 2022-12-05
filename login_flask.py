@@ -212,7 +212,6 @@ def get_gamess(sport):
         else: # MOTOGP
             perGame['nome'] = "Grand Prix"
 
-
         datetimeX = dbQueries.getGameDate(id)[0]
 
         perGame['date'] = (str(datetimeX.year) + "/" + str(datetimeX.month) + "/" + str(datetimeX.day))
@@ -353,24 +352,7 @@ def get_contas_especial():
         contas.append(line)
 
     return jsonify(contas), 200
-@app.route('/sports/<sport>/addJogo', methods = ['POST'])
-@cross_origin()
-def add_Jogo(sport):
-    
-    id = ''.join(random.choices(string.ascii_lowercase + string.digits, k = 35)) 
-    nomeEquipa1 = request.json.get("nomeEquipa1", None)
-    nomeEquipa2 = request.json.get("nomeEquipa2", None)
-    data = request.json.get("data", None)
-    hora = request.json.get("hora", None)
-    datetimeV = data + hora
 
-    print(datetimeV)
-
-    dbQueries.addJogo(id, sport, datetimeV, 0)
-    dbQueries.addTeam(nomeEquipa1, id, 0, 1)
-    dbQueries.addTeam("Draw", id, 0, 0)
-    dbQueries.addTeam(nomeEquipa2, id, 0, 0)
-    return [200]
 
 @app.route('/promocoes', methods = ['GET'])
 @cross_origin()
@@ -380,7 +362,7 @@ def get_promotionstodas():
 
     for row in promotionsRow:
         dictP = {}
-        dictP['idProm'] = row[0]
+        dictP['idPromo'] = row[0]
         dictP['idJogo'] = row[1]
         teams = dbQueries.getTeamsGame(row[1])
         nome = ""
@@ -395,6 +377,28 @@ def get_promotionstodas():
         promotions.append(dictP)
     
     return promotions, 200
+
+@app.route('/sports/<sport>/addJogo', methods = ['POST'])
+@cross_origin()
+def add_Jogo(sport):
+
+    random.seed(datetime.now())
+    id = ''.join(random.choices(string.ascii_lowercase + string.digits, k = 35)) 
+    equipas = request.json.get("equipas", None)
+    data = request.json.get("data", None)
+    hora = request.json.get("hora", None)
+
+    #mm:dd:aaaa hh:mm
+    dtJogo = datetime.strptime(data + " " + hora,"%Y-%m-%d %H:%M")
+
+    dbQueries.addJogo(id, sport, dtJogo, 0)
+
+    r = 1
+    for equipa in equipas:
+        dbQueries.addTeam(equipa, id, 0, r)
+        r = 0
+
+    return [200]
 
 @app.route('/promocoes/adiciona', methods = ['POST'])
 @cross_origin()
@@ -434,6 +438,43 @@ def get_notifs_todas():
         notifs.append(dictP)
     
     return notifs, 200
+@app.route('/conta/getEspeciais', methods = ['GET'])
+@cross_origin()
+def get_contas_especial():
+    contas = []
+    contasRow = dbQueries.getSpecialUser()
+    print(contasRow)
+    for row in contasRow:
+        line = {}
+        line['nome'] = row[0]
+        
+        if row[1] == 1:
+            line['position'] = 'Administrador'
+        else:
+            line['position'] = 'Especialista'
+
+        line['id'] = row[3]
+        contas.append(line)
+
+    return jsonify(contas), 200
+
+@app.route('/conta/registaEspecial', methods = ['POST'])
+@cross_origin()
+def registaContaEspecial():
+    nome = request.json.get("nome", None)
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    isAdmin = request.json.get("isAdmin", None)
+    isEspecialista = request.json.get("isEspecialista", None)
+    dbQueries.registerSpecialUser(nome,email,sha256_crypt.hash(password,salt="RAS2022"),isAdmin,isEspecialista)
+    return 200
+
+@app.route('/conta/eliminaEspecial', methods = ['POST'])
+@cross_origin()
+def eliminaContaEspecial():
+    id = request.json.get("id", None)
+    dbQueries.removeSpecialUser(id)
+    return [200], 200
 
 if __name__ == '__main__':
    app.run(host='127.0.0.1', port=5002)

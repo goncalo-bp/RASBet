@@ -33,34 +33,25 @@ export default function ListaJogos() {
 
     const [infoRemove, setInfoRemove] = useState({});
 
-    const [nomeNovoJogo, setNomeNovoJogo] = useState('');
-    const [nomeNovaEquipa1, setNomeNovaEquipa1] = useState('');
-    const [nomeNovaEquipa2, setNomeNovaEquipa2] = useState('');
+    const [nomeNovaEquipas, setNomeNovaEquipas] = useState('');
     const [novaDataJogo, setNovaDataJogo] = useState('');
     const [novaHoraJogo, setNovaHoraJogo] = useState('');
 
     const [res, setRes] = useState("");
-    const [infoPromocao, setInfoPromocao] = useState('');
     const [popupAdd, setPopupAdd] = useState(false);
     const [idJogo, setIdJogo] = useState('');
     const [percentagem, setPercentagem] = useState(0);
 
     const [notif, setNotificacoes] = useState([]);
 
-    const handleIdJogo = (e) => {
-        e.preventDefault();
-        setIdJogo(e.target.value);
-    };
-
-
     const handlePercentagem = (e) => {
         e.preventDefault();
         setPercentagem(e.target.value);
     };
 
-    const handleInfoPromocao = (e) => {
+    const handleIdJogo = (e) => {
         var info = e.target.id;
-        setInfoPromocao(info);
+        setIdJogo(info);
         setPopupAdd(true);
     }
 
@@ -70,8 +61,27 @@ export default function ListaJogos() {
             return;
         }
         var perc = percentagem/100;
+        fetch('http://localhost:5002/promocoes/adiciona', {  // Enter your IP address here
+                    method: 'POST', 
+                    mode: 'cors', 
+                    body: JSON.stringify({"idJogo" : idJogo , "aumento" : perc}), // body data type must match "Content-Type" header
+                    headers: {"Content-Type": "application/json"}
+            
+                }).then( (response) => {
+                    if(!response.ok) {
+                        throw Error(response.status);
+                    }
+                    else return response.json();
+                }).then( (data) => {
+                    var desporto = localStorage.getItem('desporto');
+                    localStorage.setItem(desporto, "");
+                    window.location.reload();
+                })
+                .catch( (error,status) => {
+                    console.log("error: ",status);
+                    alert(status);
+                });
         setPopupAdd(false);
-        // TODO adicionar conta com query do flask
     };
 
     const handleNovaHoraJogo = (e) => {
@@ -83,23 +93,15 @@ export default function ListaJogos() {
         setNovaDataJogo(e.target.value);
     }
 
-    const handleNomeNovoJogo = (e) => {
-        setNomeNovoJogo(e.target.value);
-    };
 
-    const handleNomeNovaEquipa1 = (e) => {
-        setNomeNovaEquipa1(e.target.value);
-    };
-
-    const handleNomeNovaEquipa2 = (e) => {
-        setNomeNovaEquipa2(e.target.value);
+    const handleNomeNovaEquipas = (e) => {
+        setNomeNovaEquipas(e.target.value);
     };
 
     const handleAlt = (e) => {
         var info = e.target.id;
 
         var infoArray = info.split("_");
-
         setInfoAltera(info);
         suspenderJogo(1,infoArray[0]);
     }
@@ -191,6 +193,7 @@ export default function ListaJogos() {
                 }
                 else return response.json();
             }).then((data) => {
+                console.log(data);
                 setJogos(data);
                 localStorage.setItem(desporto, JSON.stringify(data));
             })
@@ -201,7 +204,6 @@ export default function ListaJogos() {
 
 
     useEffect(() => {
-
 
         if (localStorage.getItem('isAdmin') === 'true') {
             setAdmin(true);
@@ -294,6 +296,7 @@ export default function ListaJogos() {
                 setAlt_Popup(true);
             }
             else{
+                setAlt_Popup(false);
                 window.location.reload();
             }
         })
@@ -442,24 +445,42 @@ export default function ListaJogos() {
     }
 
     function adicionaJogo() {
-        var nome = document.getElementById("nomeJogo").value;
         var equipas = document.getElementById("nomeEquipas").value;
         var data = document.getElementById("dataJogo").value;
         var hora = document.getElementById("horaJogo").value;
 
-        if(nome === "" || equipas === "" || data === "" || hora === ""){
+        if(equipas === "" || data === "" || hora === ""){
             alert("Preencha todos os campos");
-        }else{
+        }
+        else if((data - new Date())<0){
+            alert("Data inválida");
+        }
+        else{
             equipas = equipas.split(",");
-
-            // ! Adicionar cenas ao Flask
             //////////////////////////////////
             var desporto = localStorage.getItem('desporto');
-            localStorage.setItem(desporto, "");
+            fetch('http://localhost:5002/sports/' + desporto + '/addJogo', {  // Enter your IP address here
+                    method: 'POST', 
+                    mode: 'cors', 
+                    body: JSON.stringify({"equipas" : equipas, "data" : data,"hora" : hora }), // body data type must match "Content-Type" header
+                    headers: {"Content-Type": "application/json"}
+            
+                }).then( (response) => {
+                    if(!response.ok) {
+                        throw Error(response.status);
+                    }
+                    else return response.json();
+                }).then( (data) => {
+                    var desporto = localStorage.getItem('desporto');
+                    localStorage.setItem(desporto, "");
+                    window.location.reload();
+                })
+                .catch( (error,status) => {
+                    console.log("error: ",status);
+                    alert(status);
+                });
             setAbrir_Popup(false);
-            window.location.reload();
         }
-
     }
 
     const handleRes = (e) =>{
@@ -493,13 +514,12 @@ export default function ListaJogos() {
             Adicionar Jogo
             <br/>
             <br/>
-            <input id="nomeJogo" type="text" onChange={handleNomeNovoJogo} placeholder="Nome do Jogo: " />
-            <input id="nomeEquipas" type="text" onChange={handleNomeNovaEquipa1} placeholder="Equipas: " />
+            <input id="nomeEquipas" type="text" onChange={handleNomeNovaEquipas} placeholder="Equipas: " />
             <input
                         onChange={handleNovaDataJogo}
                         id="dataJogo"
                         type="text"
-                        value={date}
+                        value={novaDataJogo}
                         placeholder="Escolha uma data"
                         onClick={setToDate}
             />
@@ -599,9 +619,10 @@ export default function ListaJogos() {
                     <br />
                     <ul id="edit-lista-jogo">
                         {jogos.map((jogo, index1) => {
-                            if (testValidGame(jogo.equipas)) {
+                            {console.log(jogo)}
+                            if (especialista || admin || testValidGame(jogo.equipas)) {
                                 return (
-                                    <li id={"M_" + index1} className='edit-tipo-jogo'>
+                                    <li id={"M_" + index1} className='edit-tipo-jogo' key={index1}>
                                         <div className='jogo-container'>
                                             <div id='nome-jogo'>
                                             <Popup trigger={popupAdd} setTrigger={setPopupAdd}>
@@ -622,7 +643,7 @@ export default function ListaJogos() {
                                                         </div>
                                                     </div>
                                                 </Popup>
-                                                {admin && <Button id={jogo.id} onClick={handleInfoPromocao} className='btn--x--gray--remove--jogo'>%</Button>}
+                                                {admin && <Button id={jogo.id} onClick={handleIdJogo} className='btn--x--gray--remove--jogo'>%</Button>}
                                                 <div id={index1}>{jogo.nome}</div>
                                                 <div id={index1+"_id"} style={{display: 'none'}}>{jogo.id}</div>
                                                 <div id={'Date_'+index1} className='edit-tipo-data'>
@@ -632,22 +653,22 @@ export default function ListaJogos() {
                                             <div className='resultados-container'>
                                             {jogo.equipas.map((equipa,index2) => {
                                                 return (
-                                                    <span>
-                                                {especialista ? 
-                                                    <div id={concat(index1,index2)} className='btn--onclick--white--large'>
-                                                        <div id={index1+index2+"_N"}>{equipa.name}</div> <br/> 
-                                                        {equipa.odd === "0.00" ?
-                                                                <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >Inserir Odd</Button>
-                                                            :
-                                                            <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >{equipa.odd}</Button>
-                                                    }
-                                                    </div>
-                                                        :  
-                                                    <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
-                                                        {equipa.name} <br/>{equipa.odd}
-                                                    </Button>
-                                                }
-                                                </span>
+                                                    <span key={index2}>
+                                                        {especialista ? 
+                                                            <div id={concat(index1,index2)} className='btn--onclick--white--large'>
+                                                                <div id={index1+index2+"_N"}>{equipa.name}</div> <br/> 
+                                                                {equipa.odd === "0.00" ?
+                                                                    <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >Inserir Odd</Button>
+                                                                    :
+                                                                    <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >{equipa.odd}</Button>
+                                                                }
+                                                            </div>
+                                                            :  
+                                                            <Button id={concat(index1,index2)} onClick={handleClickCard} className='btn--onclick--white--large'>
+                                                                {equipa.name} <br/>{equipa.odd}
+                                                            </Button>
+                                                        }
+                                                    </span>
                                                 )})}
                                             </div>
                                         </div>
