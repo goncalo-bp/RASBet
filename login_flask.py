@@ -323,6 +323,43 @@ def get_promotionstodas():
     
     return promotions, 200
 
+@app.route('/conta/getEspeciais', methods = ['GET'])
+@cross_origin()
+def get_contas_especial():
+    contas = []
+    contasRow = dbQueries.getSpecialUser()
+    print(contasRow)
+    for row in contasRow:
+        line = {}
+        line['nome'] = row[0]
+        
+        if row[1] == 1:
+            line['position'] = 'Administrador'
+        else:
+            line['position'] = 'Especialista'
+
+        line['id'] = row[3]
+        contas.append(line)
+
+    return jsonify(contas), 200
+
+@app.route('/conta/registaEspecial', methods = ['POST'])
+@cross_origin()
+def registaContaEspecial():
+    nome = request.json.get("nome", None)
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    isAdmin = request.json.get("isAdmin", None)
+    isEspecialista = request.json.get("isEspecialista", None)
+    dbQueries.registerSpecialUser(nome,email,sha256_crypt.hash(password,salt="RAS2022"),isAdmin,isEspecialista)
+    return 200
+
+@app.route('/conta/eliminaEspecial', methods = ['POST'])
+@cross_origin()
+def eliminaContaEspecial():
+    id = request.json.get("id", None)
+    dbQueries.removeSpecialUser(id)
+    return [200], 200
 
 if __name__ == '__main__':
    app.run(host='127.0.0.1', port=5002)

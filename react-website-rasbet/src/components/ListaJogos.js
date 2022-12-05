@@ -456,7 +456,7 @@ export default function ListaJogos() {
                         {jogos.map((jogo, index1) => {
                             if (testValidGame(jogo.equipas)) {
                                 return (
-                                    <li id={"M_" + index1} className='edit-tipo-jogo'>
+                                    <li id={"M_" + index1} className='edit-tipo-jogo' key={index1}>
                                         <div className='jogo-container'>
                                             <div id='nome-jogo'>
                                             <Popup trigger={popupAdd} setTrigger={setPopupAdd}>
@@ -491,7 +491,7 @@ export default function ListaJogos() {
                                             <div className='resultados-container'>
                                                 {jogo.equipas.map((equipa, index2) => {
                                                     return (
-                                                        <span>
+                                                        <span key={index2}>
                                                             {especialista ?
                                                                 <div id={concat(index1, index2)} className='btn--onclick--white--large'>
                                                                     {equipa.name} <br />
