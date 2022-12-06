@@ -52,6 +52,22 @@ function HistoricoTransacao() {
         getHistorico();
     }, []);
 
+    var lang = localStorage.getItem('lang');
+	const translate = {
+		'pt': {
+            'hist-trans' : 'Histórico de Transações',
+            'saldo' : 'Saldo',
+		},
+		'en': {
+            'hist-trans' : 'Transaction History',
+            'saldo' : 'Balance',
+		},
+		'es': {
+            'hist-trans' : 'Historial de transacciones',
+            'saldo' : 'Saldo',
+		}
+	}
+
     return (
         <div className='container'>
             <div className='box-container'>
@@ -60,10 +76,10 @@ function HistoricoTransacao() {
                         {button && <Button dest='/home/edit' className={'btn--circle--green--small'}><i className="fa-solid fa-arrow-left" ></i></Button>}
                         {!button && <Button dest='/home/edit' className={'btn--circle--green--tiny'}><i className="fa-solid fa-arrow-left" ></i></Button>}
                     </div>
-                    <h1 className='title-text'>Histórico de Transações</h1>
+                    <h1 className='title-text'>{translate[lang]['hist-trans']}</h1>
                 </div>
                 <br/>
-                <h2>Saldo : {localStorage.getItem('wallet')}€</h2>
+                <h2>{translate[lang]['saldo']} : {localStorage.getItem('wallet')}€</h2>
                 <br/>
                 <div className='table-container'>
                     <Table tableData={tableData}/>

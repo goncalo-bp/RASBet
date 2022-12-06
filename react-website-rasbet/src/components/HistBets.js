@@ -56,13 +56,13 @@ function HistoricoApostas() {
     };
 
     const handleSimples = (e) => {
-        {simples.length === 0 ? setEmpty({control : true, msg : 'Ainda não fez apostas simples.'}) : setEmpty({control : false})}
+        {simples.length === 0 ? setEmpty({control : true, msg : translate[lang]['no-simples']}) : setEmpty({control : false})}
         {simples.length > 0 ? setBtnSimples(true) : setBtnSimples(false)}
         setBtnMultipla(false);
     };
 
     const handleMultipla = (e) => {
-        {multipla.length === 0 ? setEmpty({control : true, msg : 'Ainda não fez apostas múltiplas.'}) : setEmpty({control : false})}
+        {multipla.length === 0 ? setEmpty({control : true, msg : translate[lang]['no-multipla']}) : setEmpty({control : false})}
         {multipla.length > 0 ? setBtnMultipla(true) : setBtnMultipla(false)}
         setBtnSimples(false);
     };
@@ -71,6 +71,43 @@ function HistoricoApostas() {
     useEffect(() => {
         getBets();
     }, []);
+
+    var lang = localStorage.getItem('lang');
+	const translate = {
+		'pt': {
+            'hist-bets' : 'Histórico de Apostas',
+            'simples' : 'Simples',
+            'multipla' : 'Múltiplas',
+            'empate' : 'Resultado: Empate',
+            'vencedor' : 'Vencedor:',
+            'montante' : 'Montante apostado: ',
+            'ganhos' : 'Total de ganhos: ',
+            'no-simples' : 'Ainda não fez apostas simples.',
+            'no-multipla' : 'Ainda não fez apostas múltiplas.',
+		},
+		'en': {
+            'hist-bets' : 'Bets History',
+            'simples' : 'Simples',
+            'multipla' : 'Multiple',
+            'empate' : 'Result: Draw',
+            'vencedor' : 'Winner:',
+            'montante' : 'Bet amount: ',
+            'ganhos' : 'Total winnings: ',
+            'no-simples' : 'You haven\'t made any simple bets yet.',
+            'no-multipla' : 'You haven\'t made any multiple bets yet.',
+		},
+		'es': {
+            'hist-bets' : 'Historial de apuestas',
+            'simples' : 'Simples',
+            'multipla' : 'Múltiples',
+            'empate' : 'Resultado: Empate',
+            'vencedor' : 'Ganador:',
+            'montante' : 'Cantidad apostada: ',
+            'ganhos' : 'Total de ganancias: ',
+            'no-simples' : 'Aún no ha realizado apuestas simples.',
+            'no-multipla' : 'Aún no ha realizado apuestas múltiples.',
+		}
+	}
 
     return (
         <div className='container'>
@@ -83,7 +120,7 @@ function HistoricoApostas() {
                     <h1 className='title-text'>{localStorage.getItem('name')}</h1>
                 </div>
                 <br/>
-                <h2>Histórico de Apostas</h2>
+                <h2>{translate[lang]['hist-bets']}</h2>
                 <br/>
                 <span>
                     <div className='bet-type'>
@@ -92,30 +129,30 @@ function HistoricoApostas() {
                             {btnSimples &&
                             <>
                                 <Button className='btn--active--orange--large' onClick={handleSimples}>
-                                    Simples
+                                    {translate[lang]['simples']}
                                 </Button>
                                 <Button className='btn--outline--full--orange--large' onClick={handleMultipla}>
-                                    Múltiplas
+                                    {translate[lang]['multipla']}
                                 </Button>
                             </>
                             }
                             {btnMultipla &&
                             <>
                                 <Button className='btn--outline--full--orange--large' onClick={handleSimples}>
-                                    Simples
+                                    {translate[lang]['simples']}
                                 </Button>
                                 <Button className='btn--active--orange--large' onClick={handleMultipla}>
-                                    Múltiplas
+                                    {translate[lang]['multipla']}
                                 </Button>
                             </>
                             }
                             {!btnSimples && !btnMultipla &&
                             <>
                                 <Button className='btn--outline--full--orange--large' onClick={handleSimples}>
-                                    Simples
+                                    {translate[lang]['simples']}
                                 </Button>
                                 <Button className='btn--outline--full--orange--large' onClick={handleMultipla}>
-                                    Múltiplas
+                                    {translate[lang]['multipla']}
                                 </Button>
                             </>
                             }
@@ -126,30 +163,30 @@ function HistoricoApostas() {
                             {btnSimples &&
                             <>
                                 <Button className='btn--active--orange--medium' onClick={handleSimples}>
-                                    Simples
+                                    {translate[lang]['simples']}
                                 </Button>
                                 <Button className='btn--outline--full--orange--medium' onClick={handleMultipla}>
-                                    Múltiplas
+                                    {translate[lang]['multipla']}
                                 </Button>
                             </>
                             }
                             {btnMultipla &&
                             <>
                                 <Button className='btn--outline--full--orange--medium' onClick={handleSimples}>
-                                    Simples
+                                    {translate[lang]['simples']}
                                 </Button>
                                 <Button className='btn--active--orange--medium' onClick={handleMultipla}>
-                                    Múltiplas
+                                    {translate[lang]['multipla']}
                                 </Button>
                             </>
                             }
                             {!btnSimples && !btnMultipla &&
                             <>
                                 <Button className='btn--outline--full--orange--medium' onClick={handleSimples}>
-                                    Simples
+                                    {translate[lang]['simples']}
                                 </Button>
                                 <Button className='btn--outline--full--orange--medium' onClick={handleMultipla}>
-                                    Múltiplas
+                                    {translate[lang]['multipla']}
                                 </Button>
                             </>
                             }
@@ -172,7 +209,7 @@ function HistoricoApostas() {
                                                             <h3>{value[0]}</h3>
                                                         </div>
                                                         <div className='resultado'>
-                                                            {value[1] === 'Draw' ? `Resultado: Empate` : `Vencedor: ${value[1]}`}
+                                                            {value[1] === 'Draw' ? translate[lang]['empate'] : `${translate[lang]['vencedor']} ${value[1]}`}
                                                         </div>
                                                     </div>
                                                 )})
@@ -180,11 +217,11 @@ function HistoricoApostas() {
                                         </div>
                                         <div className='valores'>
                                             <div className='valores-text'>
-                                                Montante apostado: <div className='montante'>{entry.montante}€</div>
+                                                {translate[lang]['montante']}<div className='montante'>{entry.montante}€</div>
                                             </div>
                                             <br/>
                                             <div className='valores-text'>
-                                                Total de ganhos: <div className='ganho'>{entry.ganho}€</div>
+                                                {translate[lang]['ganhos']}<div className='ganho'>{entry.ganho}€</div>
                                             </div>
                                         </div>
                                     </div>
@@ -205,7 +242,7 @@ function HistoricoApostas() {
                                                             <h3>{value[0]}</h3>
                                                         </div>
                                                         <div className='resultado'>
-                                                            {value[1] === 'Draw' ? `Resultado: Empate` : `Vencedor: ${value[1]}`}
+                                                            {value[1] === 'Draw' ? translate[lang]['empate'] : `${translate[lang]['vencedor']} ${value[1]}`}
                                                         </div>
                                                     </div>
                                                 )})
@@ -213,11 +250,11 @@ function HistoricoApostas() {
                                         </div>
                                         <div className='valores'>
                                             <div className='valores-text'>
-                                                Montante apostado: <div className='montante'>{entry.montante}€</div>
+                                                {translate[lang]['montante']}<div className='montante'>{entry.montante}€</div>
                                             </div>
                                             <br/>
                                             <div className='valores-text'>
-                                                Total de ganhos: <div className='ganho'>{entry.ganho}€</div>
+                                                {translate[lang]['ganhos']}<div className='ganho'>{entry.ganho}€</div>
                                             </div>
                                         </div>
                                     </div>

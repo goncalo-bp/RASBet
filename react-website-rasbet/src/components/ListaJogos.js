@@ -58,7 +58,7 @@ export default function ListaJogos() {
 
     const addProm = (e) => {
         if(percentagem === '') {
-            alert("Preencha todos os campos!");
+            alert(translate[lang]['fill-all-fields']);
             return;
         }
         var perc = percentagem/100;
@@ -328,7 +328,7 @@ export default function ListaJogos() {
         var equipa = infoAltera.split("_")[1];
         var valor = Number(newOdd);
         if (valor === 0 || valor === "") {
-            alert("Insira um valor");
+            alert(translate[lang]['insert-value']);
         }
         else {
             var ok = 0;
@@ -344,7 +344,7 @@ export default function ListaJogos() {
                 }
                 else return response.json();
             }).then( (data) => {
-                alert("Odd alterada com sucesso");
+                alert(translate[lang]['change-odd']);
             })
             .catch( (error,status) => {
                 console.log("error: ",status);
@@ -375,9 +375,9 @@ export default function ListaJogos() {
         return (
             <div className='popup-center'>
                 <div>
-                    <h1>Jogo Supenso</h1>
+                    <h1>{translate[lang]['suspend-game']}</h1>
                     <br />
-                    Por favor, insira a nova odd:
+                    {translate[lang]['insert-new-odd']}
                 </div>
                 <div>
                     <input id="novaOdd" type="number" onChange={handleNewOdd} placeholder="Odd " />
@@ -429,7 +429,7 @@ export default function ListaJogos() {
     function removeJogo(){
 
         if(test_Vencedor() === false){
-            alert("Vencedor Inválido")
+            alert(translate[lang]['vencedor-invalido'])
         }
         else{
             fetch('http://localhost:5002/jogo/fechar', {  // Enter your IP address here
@@ -461,14 +461,13 @@ export default function ListaJogos() {
         var hora = document.getElementById("horaJogo").value;
 
         if(equipas === "" || data === "" || hora === ""){
-            alert("Preencha todos os campos");
+            alert(translate[lang]['preencha-todos-campos']);
         }
         else if((data - new Date())<0){
-            alert("Data inválida");
+            alert(translate[lang]['preencha-todos-campos']);
         }
         else{
             equipas = equipas.split(",");
-            //////////////////////////////////
             var desporto = localStorage.getItem('desporto');
             fetch('http://localhost:5002/sports/' + desporto + '/addJogo', {  // Enter your IP address here
                     method: 'POST', 
@@ -501,7 +500,7 @@ export default function ListaJogos() {
     const fechar = () => {
         return (
             <div className='popup-center'>
-                Deseja fechar o jogo?
+                {translate[lang]['close-game-question']}
                 <br />
                 <br />
                 <input
@@ -509,11 +508,11 @@ export default function ListaJogos() {
                         id="result"
                         type="text"
                         value={res}
-                        placeholder="Resultado"
+                        placeholder={translate[lang]['result']}
                         />
             <div>
-                    <Button onClick={removeJogo} className='btn--outline--full--orange--large'  >Sim</Button>
-                    <Button onClick={closeFecharJogo} className='btn--outline--full--orange--large'  >Não</Button>
+                    <Button onClick={removeJogo} className='btn--outline--full--orange--large'  >{translate[lang]['sim']}</Button>
+                    <Button onClick={closeFecharJogo} className='btn--outline--full--orange--large'  >{translate[lang]['nao']}</Button>
                 </div>
             </div>
         );
@@ -522,22 +521,22 @@ export default function ListaJogos() {
     const abrir = () => {
 		return (
 		<div className='popup-center'>
-            Adicionar Jogo
+            {translate[lang]['add-jogo']}
             <br/>
             <br/>
-            <input id="nomeEquipas" type="text" onChange={handleNomeNovaEquipas} placeholder="Equipas: " />
+            <input id="nomeEquipas" type="text" onChange={handleNomeNovaEquipas} placeholder={translate[lang]['equipas']+':'}  />
             <input
                         onChange={handleNovaDataJogo}
                         id="dataJogo"
                         type="text"
                         value={novaDataJogo}
-                        placeholder="Escolha uma data"
+                        placeholder={translate[lang]['chose-date']}
                         onClick={setToDate}
             />
             <input type="time" id="horaJogo" name="appt" onChange={handleNovaHoraJogo} required></input>
             <br/>
             <br/>
-			<Button onClick={adicionaJogo} className='btn--outline--full--orange--large'  >Confirmar</Button>
+			<Button onClick={adicionaJogo} className='btn--outline--full--orange--large'  >{translate[lang]['confirmar']}</Button>
         </div>
         );
     }
@@ -568,7 +567,7 @@ export default function ListaJogos() {
     const notificacoes = () => {
         return (
             <div className='popup-center'>
-                Notificações
+                {translate[lang]['notif']}
                 {
                 notif.map((notificacao) => {
                     return (
@@ -584,6 +583,86 @@ export default function ListaJogos() {
             </div>
         )
     }
+
+    var lang = localStorage.getItem('lang');
+	const translate = {
+		'pt': {
+            'jogos': 'Jogos',
+            'add-jogo': 'Adicionar Jogo',
+            'data': 'Data',
+            'chose-date': 'Escolha uma data',
+            'pesquisar': 'Pesquisar',
+            'add-promo' : 'Adicionar Promoção',
+            'percentagem' : 'Percentagem',
+            'insert-odd' : 'Insira a odd',
+            'notif' : 'Notificações',
+            'equipas' : 'Equipas',
+            'confirmar' : 'Confirmar',
+            'result' : 'Resultado',
+            'sim' : 'Sim',
+            'nao' : 'Não',
+            'close-game-question' : 'Deseja fechar o jogo?',
+            'data-invalida' : 'Data inválida',
+            'preencha-todos-campos' : 'Preencha todos os campos',
+            'vencedor-invalido' : 'Vencedor inválido',
+            'suspended-game' : 'Jogo suspenso',
+            'insert-new-odd' : 'Por favor, insira uma nova odd:',
+            'insert-value' : 'Insira um valor',
+            'fill-all-fields' : 'Preencha todos os campos!',
+            'change-odd' : 'Odd alterada com sucesso',
+		},
+		'en': {
+            'jogos': 'Games',
+            'add-jogo': 'Add Game',
+            'data': 'Date',
+            'chose-date': 'Choose a date',
+            'pesquisar': 'Search',
+            'add-promo' : 'Add Promotion',
+            'percentagem' : 'Percentage',
+            'insert-odd' : 'Insert the odd',
+            'notif' : 'Notifications',
+            'equipas' : 'Teams',
+            'confirmar' : 'Confirm',
+            'result' : 'Result',
+            'sim' : 'Yes',
+            'nao' : 'No',
+            'close-game-question' : 'Do you want to close the game?',
+            'data-invalida' : 'Invalid date',
+            'preencha-todos-campos' : 'Fill all fields',
+            'vencedor-invalido' : 'Invalid winner',
+            'suspended-game' : 'Suspended game',
+            'insert-new-odd' : 'Please, insert a new odd:',
+            'insert-value' : 'Insert a value',
+            'fill-all-fields' : 'Fill all fields!',
+            'change-odd' : 'Odd changed successfully',
+		},
+		'es': {
+            'jogos': 'Juegos',
+            'add-jogo': 'Añadir Juego',
+            'data': 'Fecha',
+            'chose-date': 'Elija una fecha',
+            'pesquisar': 'Buscar',
+            'add-promo' : 'Añadir Promoción',
+            'percentagem' : 'Porcentaje',
+            'insert-odd' : 'Inserte la odd',
+            'notif' : 'Notificaciones',
+            'equipas' : 'Equipos',
+            'confirmar' : 'Confirmar',
+            'result' : 'Resultado',
+            'sim' : 'Sí',
+            'nao' : 'No',
+            'close-game-question' : '¿Quieres cerrar el juego?',
+            'data-invalida' : 'Fecha inválida',
+            'preencha-todos-campos' : 'Rellene todos los campos',
+            'vencedor-invalido' : 'Ganador inválido',
+            'suspended-game' : 'Juego suspendido',
+            'insert-new-odd' : 'Por favor, inserte una nueva odd:',
+            'insert-value' : 'Inserte un valor',
+            'fill-all-fields' : 'Rellene todos los campos!',
+            'change-odd' : 'Odd cambiada con éxito',
+		}
+	}
+
     return (
         <div className="edit-fundo">
             <form className='edit-content-boletim'>
@@ -603,28 +682,28 @@ export default function ListaJogos() {
                     </Popup>
                     <span className='filters'>
                         <span>
-                            <a>Nome: </a>
+                            <a>{translate[lang]['nome']}: </a>
                             <input
                                 id="search"
                                 type="text"
                                 value={inputText}
                                 onChange={inputHandler}
-                                placeholder="Pesquisar"
+                                placeholder={translate[lang]['pesquisar']}
                             />
                         </span>
                         <span>
-                            Data:
+                            {translate[lang]['data']}:
                             <input
                                 onChange={handleDate}
                                 id="searchDate"
                                 type="text"
                                 value={date}
-                                placeholder="Escolha uma data"
+                                placeholder={translate[lang]['chose-date']}
                                 onClick={setToDate}
                             />
                         </span>
                         {admin && <span>
-                            <Button onClick={handleAbrir} className='btn--outline--full--orange--large' >Adicionar Jogo</Button>
+                            <Button onClick={handleAbrir} className='btn--outline--full--orange--large' >{translate[lang]['add-jogo']}</Button>
                         </span>}
                     </span>
                     <br />
@@ -638,13 +717,13 @@ export default function ListaJogos() {
                                             <Popup trigger={popupAdd} setTrigger={setPopupAdd}>
                                                     <div className='popup-container'>
                                                         <div className='popup-title'>
-                                                            <h1>Adicionar Promoção</h1>
+                                                            <h1>{translate[lang]['add-promo']}</h1>
                                                         </div>
                                                         <div className='popup-form'>
                                                             <form>
                                                                 <div className='form-group'>
-                                                                    <label>Percentagem: </label>
-                                                                    <input onChange={handlePercentagem} type='number' className='form-control' placeholder='Percentagem' />
+                                                                    <label>{translate[lang]['percentagem']}: </label>
+                                                                    <input onChange={handlePercentagem} type='number' className='form-control' placeholder={translate[lang]['perccentagem']} />
                                                                 </div>
                                                                 <div className='add-group'>
                                                                     <Button className={'btn--circle--green--small'} onClick={addProm}><i className="fa-solid fa-plus" ></i></Button>
@@ -668,7 +747,7 @@ export default function ListaJogos() {
                                                             <div id={concat(index1,index2)} className='btn--onclick--white--large'>
                                                                 <div id={index1+index2+"_N"}>{equipa.name}</div> <br/> 
                                                                 {equipa.odd === "0.00" ?
-                                                                    <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >Inserir Odd</Button>
+                                                                    <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >{translate[lang]['insert-odd']}</Button>
                                                                     :
                                                                     <Button id={concat2(jogo.id,equipa.name)} onClick={handleAlt} className='btn--inserir--odd' >{equipa.odd}</Button>
                                                                 }

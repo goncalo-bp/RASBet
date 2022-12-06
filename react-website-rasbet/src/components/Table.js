@@ -2,14 +2,37 @@ import React from 'react';
 import './Table.css';
 
 function Table({tableData}){
+    const translate = {
+		"pt": {
+			"data": "Data",
+			"op" : "Operação",
+            "saldo" : "Saldo",
+            "desc" : "Descrição",
+		},
+		"en": {
+			"data" : "Date",
+			"op": "Operation",
+            "saldo" : "Balance",
+            "desc" : "Description",
+		},
+		"es": {
+			"data" : "Fecha",
+			"op": "Operación",
+            "saldo" : "Saldo",
+            "desc" : "Descripción",
+		}
+	}
+
+    var lang = localStorage.getItem('lang');
+
     return(
         <table className='table'>
             <thead className='thead'>
                 <tr className='tr-head'>
-                    <th className='th'>Data</th>
-                    <th className='th'>Operação</th>
-                    <th className='th'>Saldo após Movimento</th>
-                    <th className='th'>Descrição</th>
+                    <th className='th'>{translate[lang]['data']}</th>
+                    <th className='th'>{translate[lang]['op']}</th>
+                    <th className='th'>{translate[lang]['saldo']}</th>
+                    <th className='th'>{translate[lang]['desc']}</th>
                 </tr>
             </thead>
             <tbody className='tbody'>

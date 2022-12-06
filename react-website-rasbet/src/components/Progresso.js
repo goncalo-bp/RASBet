@@ -66,7 +66,7 @@ export default function Boletim(aposta) {
 			var nome = document.getElementById(aposta[0]).textContent
 
 			return entradaAposta(nome, info.slice(0,-1), info.at(-1), aposta);
-		} ))
+		}));
 	}
 
 	const getOddTotal = () => {
@@ -91,16 +91,17 @@ export default function Boletim(aposta) {
 
 	function entradaAposta(nome, aposta, odd,id){
 		return (
-		<div className='edit-lista-jogo'>
-					<div className='edit-tipo-jogo'>
-						<span>{nome}</span>
-						<span><Button id={concat(id,"rem")} className='btn--x--gray--medium' onClick={handleRemove} >-</Button></span>
-					</div>
-					<div className='edit-tipo-odds'>
-						<span>Resultado: {aposta}</span>
-						<span className='edit-tipo-odd'>{odd}</span>
-					</div>
-		</div>)
+			<div className='edit-lista-jogo'>
+				<div className='edit-tipo-jogo'>
+					<span>{nome}</span>
+					<span><Button id={concat(id,"rem")} className='btn--x--gray--medium' onClick={handleRemove} >-</Button></span>
+				</div>
+				<div className='edit-tipo-odds'>
+					<span>{translate[lang]['resultado']}: {aposta}</span>
+					<span className='edit-tipo-odd'>{odd}</span>
+				</div>
+			</div>
+		)
 	}
 
 	const handleRemove = (e) => {
@@ -157,40 +158,77 @@ export default function Boletim(aposta) {
 	const mensagem = () => {
 		switch(error){
 			case 0:
-				return "Aposta registada com sucesso!";
+				return translate[lang]['error-msg-0'];
 			case 1:
-				return "Saldo insuficiente";
+				return translate[lang]['error-msg-1'];
 			case 2:
-				return "Escolha o tipo de aposta";
+				return translate[lang]['error-msg-2'];
 			case 3:
-				return "Insira o montante a apostar";
+				return translate[lang]['error-msg-3'];
 			case 4:
-				return "Insira pelo menos uma aposta";
+				return translate[lang]['error-msg-4'];
 		}
 	}
 
-return (
-	<form id={aposta.id} className='content-boletim'>
-		<Popup trigger={btnPopup} setTrigger={setBtnPopup}>
-			{mensagem()}
-		</Popup>
-		<div className='edit-header'>
-			<h1 style = {{fontSize:'70px'}}> Progresso</h1>
+	var lang = localStorage.getItem('lang');
+	const translate = {
+		'pt': {
+			'error-msg-0' : 'Aposta registada com sucesso!',
+			'error-msg-1' : 'Saldo insuficiente',
+			'error-msg-2' : 'Escolha o tipo de aposta',
+			'error-msg-3' : 'Insira o montante a apostar',
+			'error-msg-4' : 'Insira pelo menos uma aposta',
+			'progresso' : 'Progresso',
+			'ganhos' : 'Total de Ganhos',
+			'bet-btn' : 'APOSTAR',
+			'resultado' : 'Resultado',
+		},
+		'en': {
+			'error-msg-0' : 'Bet registered successfully!',
+			'error-msg-1' : 'Insufficient balance',
+			'error-msg-2' : 'Choose the type of bet',
+			'error-msg-3' : 'Enter the amount to bet',
+			'error-msg-4' : 'Enter at least one bet',
+			'progresso' : 'Progress',
+			'ganhos' : 'Total Earnings',
+			'bet-btn' : 'BET',
+			'resultado' : 'Result',
+		},
+		'es': {
+			'error-msg-0' : 'Apuesta registrada con éxito!',
+			'error-msg-1' : 'Saldo insuficiente',
+			'error-msg-2' : 'Elija el tipo de apuesta',
+			'error-msg-3' : 'Ingrese la cantidad a apostar',
+			'error-msg-4' : 'Ingrese al menos una apuesta',
+			'progresso' : 'Progreso',
+			'ganhos' : 'Ganancias totales',
+			'bet-btn' : 'APOSTAR',
+			'resultado' : 'Resultado',
+		}
+	}
+
+	return (
+		<form id={aposta.id} className='content-boletim'>
+			<Popup trigger={btnPopup} setTrigger={setBtnPopup}>
+				{mensagem()}
+			</Popup>
+			<div className='edit-header'>
+				<h1 style = {{fontSize:'70px'}}> {translate[lang]['progresso']}</h1>
+				<br/>
+			</div>
 			<br/>
-		</div>
-		<br/>
-		<div className='edit-lista-jogos'>
-			{apostasSelecionadas()} {act_TotalGanhos()}
-		</div>
-		<div className='edit-total-odd'>
-			<span className='edit-odd-total'> <span>Odd:</span>{getOddTotal()}</span>
-			<input id="montante" onChange={handleValue} className="edit-valor-total"
-		value={value} type="value" placeholder='Valor (€):'/>		
-		</div>
-		<div className='edit-total-ganho'>
-			<span className='edit-ganhos'>Total de ganhos: <div id="total">{totalGanhos}</div></span>
-			<Button className='btn--primary--orange--large' onClick={handleAposta}> APOSTAR</Button>
-		</div>
-	</form>
-);
+			<div className='edit-lista-jogos'>
+				{apostasSelecionadas()} {act_TotalGanhos()}
+			</div>
+			<div className='edit-total-odd'>
+				<span className='edit-odd-total'> <span>Odd:</span>{getOddTotal()}</span>
+				<input id="montante" onChange={handleValue} className="edit-valor-total"
+			value={value} type="value" placeholder='Valor (€):'/>		
+			</div>
+			<div className='edit-total-ganho'>
+				<span className='edit-ganhos'>{translate[lang]['ganhos']}: <div id="total">{totalGanhos}</div></span>
+				<Button className='btn--primary--orange--large' onClick={handleAposta}> {translate[lang]['bet-btn']}</Button>
+			</div>
+		</form>
+	);
 }
