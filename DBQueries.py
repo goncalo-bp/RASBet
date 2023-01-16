@@ -227,6 +227,7 @@ class DBQueries:
             odd = self.mydb.query(DBConstants.get_odd_by_game,(idJogo, resultadoApostado))
             oddsTotal = oddsTotal * odd[0][0]
             self.mydb.execute(DBConstants.add_game_to_bet, (numAposta,idJogo,float(odd[0][0]),resultadoApostado))
+            self.addObservador(idUser, idJogo)
         self.mydb.execute(DBConstants.update_odd_total,(float(oddsTotal),numAposta))
         self.mydb.commit()
         
@@ -291,6 +292,12 @@ class DBQueries:
             Atualiza as odds de uma equipa num jogo
         '''
         self.mydb.execute(DBConstants.update_odds,(odd,idJogo,nomeEquipa))
+        userAObservar = [x[0] for x in self.mydb.query(DBConstants.get_observadores,(idJogo,))]
+        titulo = self.getTituloJogo(idJogo)
+
+        for user in userAObservar:
+            self.addNotificacao('Odds mudaram', f'A odd da equipa {nomeEquipa} no jogo {titulo} é agora de {odd}!', user)
+
         self.mydb.commit()
 
     def updateUserField(self, index, value, usrId):
@@ -315,6 +322,26 @@ class DBQueries:
         '''
         return self.mydb.query(DBConstants.get_game_date, (gameId, ))[0]
 
+    def getTituloJogo(self, idJogo):
+        titulo = ""
+
+        game = self.getTeamsGame(idJogo)[0]
+
+        for team in game:
+            if len(game) == 3:
+                if team[2] == 1:
+                    titulo = team[0] + " x " + titulo
+                else:
+                    titulo += team[0]
+
+        if len(game) == 2: # BASQUETEBOL E TENIS
+            titulo = game[0][0] + " x " + game[1][0]
+
+        else: # MOTOGP
+            titulo = "Grand Prix"
+        
+        return titulo
+
     def atualizaResultadoApostas(self, idJogo, winner):
         '''
             Atualiza o resultado das apostas que tem o jogo que terminou
@@ -323,6 +350,11 @@ class DBQueries:
         self.mydb.execute(DBConstants.set_bet_loser,(idJogo, winner))
         apostasOndeEstavaJogoGanho = [x[0] for x in self.mydb.query(DBConstants.get_bets_winner,(idJogo,winner))]
         apostasOndeEstavaJogoPerdido = [x[0] for x in self.mydb.query(DBConstants.get_bets_loser,(idJogo,winner))]
+        userAObservar = [x[0] for x in self.mydb.query(DBConstants.get_observadores,(idJogo,))]
+        titulo = self.getTituloJogo(idJogo)
+
+        for user in userAObservar:
+            self.addNotificacao('Jogo terminado', f'O jogo {titulo} terminou!', user)
 
         for idAposta in apostasOndeEstavaJogoGanho:
             
@@ -431,3 +463,16 @@ class DBQueries:
         self.mydb.execute(DBConstants.add_game, (idJogo,nomeDesporto, dataJogo, suspenso))
         self.mydb.commit()
         return
+
+    def addObservador(self, idUser, idJogo):
+        self.mydb.execute(DBConstants.add_observador, (idUser, idJogo))
+        self.mydb.commit()
+        return
+        
+    def removeObservador(self, idUser, idJogo):
+        self.mydb.execute(DBConstants.remove_observador, (idUser, idJogo))
+        self.mydb.commit()
+        return     
+
+    def getJogosObservados(self, idUser):
+        return self.mydb.query(DBConstants.get_observados, (idUser,))
