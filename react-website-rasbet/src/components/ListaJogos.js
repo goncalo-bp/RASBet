@@ -699,7 +699,7 @@ export default function ListaJogos() {
     return (
         <div className="edit-fundo">
             <form className='edit-content-boletim'>
-                <Button className='btn--notif' onClick={handleNotif}>Notificações</Button>
+                <Button className='btn--notif' onClick={handleNotif}>{translate[lang]['notif']}</Button>
                 <Popup trigger={notif_Popup} setTrigger={setNotif_Popup}>
                     {notificacoes()}
                 </Popup>
@@ -715,7 +715,7 @@ export default function ListaJogos() {
                     </Popup>
                     <span className='filters'>
                         <span>
-                            <a>{translate[lang]['nome']}: </a>
+                            <a>{translate[lang]['pesquisar']}: </a>
                             <input
                                 id="search"
                                 type="text"
@@ -725,7 +725,7 @@ export default function ListaJogos() {
                             />
                         </span>
                         <span>
-                            {translate[lang]['data']}:
+                            <a>{translate[lang]['data']}: </a>
                             <input
                                 onChange={handleDate}
                                 id="searchDate"
