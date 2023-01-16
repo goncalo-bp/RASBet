@@ -15,6 +15,7 @@ export default function ListaJogos() {
 
     const [admin, setAdmin] = useState(false);
     const [especialista, setEspecialista] = useState(false);
+    const [apostador, setApostador] = useState(false);
 
     const [date, setDate] = useState('');
     const [containsDate, setContainsDate] = useState(false);
@@ -54,6 +55,13 @@ export default function ListaJogos() {
         var info = e.target.id;
         setIdJogo(info);
         setPopupAdd(true);
+    }
+
+    const handleAddFollow = (e) => {
+        var info = e.target.id;
+        console.log(info);
+        setIdJogo(info);
+        handleAddFollow();
     }
 
     const addProm = (e) => {
@@ -225,6 +233,7 @@ export default function ListaJogos() {
             //document.getElementById("progresso").style.display="flex";
         }
         else {
+            setApostador(true);
             document.getElementById("boletim").style.display = "flex";
             //document.getElementById("progresso").style.display="none";
         }
@@ -562,6 +571,26 @@ export default function ListaJogos() {
             });
     }
 
+    const sendNewFollow = () => {
+        fetch('http://localhost:5002/observador/adicionar', {  // Enter your IP address here
+                method: 'POST',
+                mode: 'cors', 
+                body: JSON.stringify({"idConta" : localStorage.getItem("id"), "idJogo" : idJogo}), // body data type must match "Content-Type" header
+                headers: {"Content-Type": "application/json"}
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.status);
+            }
+            else return response.json();
+            }).then((data) => {
+                window.location.reload();
+            })
+            .catch(error => {
+                console.log("error: ", error);
+            });
+    }
+
 
 
     const notificacoes = () => {
@@ -738,6 +767,7 @@ export default function ListaJogos() {
                                                 <div id={'Date_'+index1} className='edit-tipo-data'>
                                                     {jogo.date} {jogo.hour}
                                                 </div>
+                                                {apostador && <Button id={jogo.id} onClick={handleAddFollow} className='btn--primary--green--medium'>Seguir</Button>}
                                             </div>
                                             <div className='resultados-container'>
                                             {jogo.equipas.map((equipa,index2) => {
