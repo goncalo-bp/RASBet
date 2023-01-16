@@ -94,8 +94,8 @@ export default function Form_L() {
 	const errorMessage = () => {
 		return (
 		<div>
-			{error === 0 ? <h1>Complete pelo menos um campo</h1> :
-			<h1>Email / Password incorretos</h1>}
+			{error === 0 ? <h1>{translate[lang]['error-0']}</h1> :
+			<h1>{translate[lang]['error-1']}</h1>}
 		</div>
 		);
 	};
@@ -113,8 +113,8 @@ export default function Form_L() {
 		<div className='popup-center'>
 			<input id="ibanL" type="text" placeholder="IBAN"/>
 			<br/>
-			<input id="aLevantar" type="number" placeholder="Valor (€)" />
-			<Button className='btn--outline--full--orange--large' onClick={alertValid} >Levantar</Button>
+			<input id="aLevantar" type="number" placeholder={translate[lang]['valor']} />
+			<Button className='btn--outline--full--orange--large' onClick={alertValid} >{translate[lang]['levantar']}</Button>
 		</div>
 		);
 	}
@@ -131,10 +131,10 @@ export default function Form_L() {
 			console.log(val);
 			console.log(carteira)
 			if(val === ""){
-				alert("Insira um valor");
+				alert(translate[lang]['inserir']);
 			}		
 			else if(Number(val) > Number(carteira))
-				alert("Não tem saldo suficiente");	
+				alert(translate[lang]['no-saldo']);	
 
 			else {
 				// LEVANTAR
@@ -227,21 +227,22 @@ export default function Form_L() {
 		}
 	}
 
+	//TODO alerts + deposit + withdraw
 	function alertValid_Dep() {
 		console.log(deposito);
 		var valor = document.getElementById("aDepositar").value;
 		var ok = false;
 		if (valor === ""){
-			alert("Insira um valor");
+			alert(translate[lang]['inserir']);
 		}else{
 			if(deposito === 0){
 				var telf = document.getElementById("telf").value;
-				telf === "" ? alert("Insira um número de telemóvel") : ok = true;
+				telf === "" ? alert(translate[lang]['inserir-numero']) : ok = true;
 
 			}else if(deposito === 1){
 				var iban = document.getElementById("ibanD").value;
 				var res = isValidIBANNumber(iban);
-				res === -1 ? alert("IBAN inválido") : ok = true;
+				res === -1 ? alert(translate[lang]['invalido']) : ok = true;
 			}
 		}
 
@@ -280,15 +281,76 @@ export default function Form_L() {
 		<div className='popup-center'>
 			<div>
 				<Button id="mbway" className='btn--primary--gray--medium' onClick={tipoDeposito} >MBWay</Button>
-				<Button id="transf" className='btn--primary--gray--medium' onClick={tipoDeposito} >Transferência Bancária</Button>
+				<Button id="transf" className='btn--primary--gray--medium' onClick={tipoDeposito} >{translate[lang]['transf']}</Button>
 			</div>
 			<input id="ibanD" type="text" placeholder="IBAN" style={{display: 'none'}}/>
-			<input id="telf" type="number" placeholder="Telemovel" style={{display: 'none'}}/>
+			<input id="telf" type="number" placeholder={translate[lang]['telemovel']} style={{display: 'none'}}/>
 			<br/>
-			<input id="aDepositar" type="number" placeholder="Valor (€)" />
-			<Button className='btn--outline--full--orange--large' onClick={alertValid_Dep} >Depositar</Button>
+			<input id="aDepositar" type="number" placeholder={translate[lang]['valor']} />
+			<Button className='btn--outline--full--orange--large' onClick={alertValid_Dep} >{translate[lang]['depositar']}</Button>
 		</div>
 		);
+	}
+
+	var lang = localStorage.getItem('lang');
+	const translate = {
+		'pt': {
+			'saldo': 'Saldo',
+			'levantar': 'Levantar',
+			'depositar': 'Depositar',
+			'hist-trans': 'Histórico de Transações',
+			'hist-bets': 'Histórico de Apostas',
+			'new-name': 'Novo Nome',
+			'new-pass': 'Nova Password',
+			'edit' : 'Mudar Dados',
+			'error-0' : 'Complete pelo menos um campo',
+			'error-1' : 'Email / Password incorretos',
+			'valor' : 'Valor (€)',
+			'telemovel' : 'Telemóvel',
+			'transf' : 'Transferência Bancária',
+			'inserir' : 'Insira um valor',
+			'invalido' : 'IBAN inválido',
+			'inserir-numero' : 'Insira um número de telemóvel',
+			'no-saldo' : 'Não tem saldo suficiente',
+		},
+		'en': {
+			'saldo': 'Balance',
+			'levantar': 'Withdraw',
+			'depositar': 'Deposit',
+			'hist-trans': 'Transaction History',
+			'hist-bets': 'Bet History',
+			'new-name': 'New Name',
+			'new-pass': 'New Password',
+			'edit' : 'Edit Data',
+			'error-0' : 'Complete at least one field',
+			'error-1' : 'Email / Password incorrect',
+			'valor' : 'Value (€)',
+			'telemovel' : 'Mobile',
+			'transf' : 'Bank Transfer',
+			'inserir' : 'Insert a value',
+			'invalido' : 'Invalid IBAN',
+			'inserir-numero' : 'Insert a mobile number',
+			'no-saldo' : 'You do not have enough balance',
+		},
+		'es': {
+			'saldo': 'Saldo',
+			'levantar': 'Retirar',
+			'depositar': 'Depositar',
+			'hist-trans': 'Historial de Transacciones',
+			'hist-bets': 'Historial de Apuestas',
+			'new-name': 'Nuevo Nombre',
+			'new-pass': 'Nueva Contraseña',
+			'edit' : 'Cambiar Datos',
+			'error-0' : 'Complete al menos un campo',
+			'error-1' : 'Email / Password incorrectos',
+			'valor' : 'Valor (€)',
+			'telemovel' : 'Teléfono',
+			'transf' : 'Transferencia Bancaria',
+			'inserir' : 'Inserte un valor',
+			'invalido' : 'IBAN inválido',
+			'inserir-numero' : 'Inserte un número de teléfono',
+			'no-saldo' : 'No tiene saldo suficiente',
+		}
 	}
 
 
@@ -307,7 +369,7 @@ export default function Form_L() {
 				<div className='edit-header'>
 					<h1>{localStorage.getItem("name")}</h1>
 					<br/>
-					<h2 id="saldo">Saldo : {localStorage.getItem("wallet")}€</h2>
+					<h2 id="saldo">{translate[lang]['saldo']} : {localStorage.getItem("wallet")}€</h2>
 					<br/>
 					<hr style={{
 						color: '#E0E0E0',
@@ -319,21 +381,21 @@ export default function Form_L() {
 				<br/>
 				<br/>
 				<div className='edit-form'>
-					<Button onClick={handleLev} className="btn--primary--orange--large">Levantar</Button>
-					<Button onClick={handleDep} className="btn--primary--orange--large">Depositar</Button>
+					<Button onClick={handleLev} className="btn--primary--orange--large">{translate[lang]['levantar']}</Button>
+					<Button onClick={handleDep} className="btn--primary--orange--large">{translate[lang]['depositar']}</Button>
 				</div>
 				<br/>
 				<div className='edit-form'>
-					<Button dest="/home/historico" className="btn--primary--green--large">Histórico de Transações <i className='far fa-play-circle'/></Button>
-					<Button dest="/home/apostas" className="btn--primary--green--large">Histórico de Apostas <i className='far fa-play-circle'/></Button>
+					<Button dest="/home/historico" className="btn--primary--green--large">{translate[lang]['hist-trans']} <i className='far fa-play-circle'/></Button>
+					<Button dest="/home/apostas" className="btn--primary--green--large">{translate[lang]['hist-bets']} <i className='far fa-play-circle'/></Button>
 				</div>
 					
 				<input onChange={handleNome} className="input--conta"
-				value={nome} type="email" placeholder='Novo Nome'/>
+				value={nome} type="email" placeholder={translate[lang]['new-name']}/>
 				<input onChange={handleNewPassword} className="input--conta"
-				value={newPassword} type="newPassword" placeholder='Nova Palavra-passe' />
+				value={newPassword} type="newPassword" placeholder={translate[lang]['new-pass']} />
 				<Button onClick={handleSubmit} className="btn--primary--orange--large" type="submit">
-				Mudar Dados
+				{translate[lang]['edit']}
 				</Button>
 			</form>
 		</div>

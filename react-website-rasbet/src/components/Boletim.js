@@ -190,31 +190,62 @@ export default function Boletim(aposta) {
 		}
 	}
 
+	var lang = localStorage.getItem('lang');
+	const translate = {
+		'pt': {
+			'apostar': 'APOSTAR',
+			'boletim': 'Boletim',
+			'valor' : 'Valor (€):',
+			'total-ganhos': 'Total de ganhos: ',
+			'odd': 'Odd:',
+			'simples': 'Simples',
+			'multipla': 'Múltipla',
+		},
+		'en': {
+			'apostar': 'BET',
+			'boletim': 'Report Card',
+			'valor' : 'Value (€):',
+			'total-ganhos': 'Total winnings: ',
+			'odd': 'Odd:',
+			'simples': 'Simple',
+			'multipla': 'Multiple',
+		},
+		'es': {
+            'apostar' : 'APOSTAR',
+			'boletim' : 'Boletín',
+			'valor' : 'Valor (€):',
+            'total-ganhos' : 'Total de ganancias: ',
+			'odd' : 'Odd:',
+            'simples' : 'Simple',
+            'multipla' : 'Múltiple',
+		}
+	}
+
 return (
 	<form id={aposta.id} className='content-boletim'>
 		<Popup trigger={btnPopup} setTrigger={setBtnPopup}>
 			{mensagem()}
 		</Popup>
 		<div className='edit-header'>
-			<h1 style = {{fontSize:'70px'}}> Boletim</h1>
+			<h1 style = {{fontSize:'70px'}}> {translate[lang]['boletim']}</h1>
 			<br/>
 		</div>
 		<div className='edit-tipo-aposta'>
-			<Button id={"tipo1"} className="btn--primary--gray--medium" onClick={handleType}>Simples</Button>
-			<Button id={"tipo2"} className="btn--primary--gray--medium" onClick={handleType}>Múltipla</Button>
+			<Button id={"tipo1"} className="btn--primary--gray--medium" onClick={handleType}>{translate[lang]['simples']}</Button>
+			<Button id={"tipo2"} className="btn--primary--gray--medium" onClick={handleType}>{translate[lang]['multipla']}</Button>
 		</div>
 		<br/>
 		<div className='edit-lista-jogos'>
 			{apostasSelecionadas()} {act_TotalGanhos()}
 		</div>
 		<div className='edit-total-odd'>
-			<span className='edit-odd-total'> <span>Odd:</span>{getOddTotal()}</span>
+			<span className='edit-odd-total'> <span>{translate[lang]['odd']}</span>{getOddTotal()}</span>
 			<input id="montante" onChange={handleValue} className="edit-valor-total"
-		value={value} type="value" placeholder='Valor (€):'/>		
+		value={value} type="value" placeholder={translate[lang]['valor']}/>
 		</div>
 		<div className='edit-total-ganho'>
-			<span className='edit-ganhos'>Total de ganhos: <div id="total">{totalGanhos}</div></span>
-			<Button className='btn--primary--orange--large' onClick={handleAposta}> APOSTAR</Button>
+			<span className='edit-ganhos'>{translate[lang]['total-ganhos']}<div id="total">{totalGanhos}</div></span>
+			<Button className='btn--primary--orange--large' onClick={handleAposta}> {translate[lang]['apostar']}</Button>
 		</div>
 	</form>
 );
