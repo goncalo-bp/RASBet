@@ -325,22 +325,24 @@ class DBQueries:
     def getTituloJogo(self, idJogo):
         titulo = ""
 
-        game = self.getTeamsGame(idJogo)[0]
+        game = self.getTeamsGame(idJogo)
 
         for team in game:
             if len(game) == 3:
-                if team[2] == 1:
-                    titulo = team[0] + " x " + titulo
-                else:
-                    titulo += team[0]
+                if team[3] == 1:
+                    titulo = team[1] + " x " + titulo
+                    print(titulo)
+                elif team[1] != 'Draw':
+                    titulo += team[1]
+                    print(titulo)
 
         if len(game) == 2: # BASQUETEBOL E TENIS
-            titulo = game[0][0] + " x " + game[1][0]
+            titulo = game[0][1] + " x " + game[1][1]
 
-        else: # MOTOGP
+        elif len(game) != 3: # MOTOGP
             titulo = "Grand Prix"
         
-        return titulo
+        return titulo   
 
     def atualizaResultadoApostas(self, idJogo, winner):
         '''
