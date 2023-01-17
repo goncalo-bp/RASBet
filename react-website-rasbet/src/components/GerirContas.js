@@ -46,7 +46,10 @@ export default function GerirContas() {
 
     const getContas = (e) => {
         //e.preventDefault();
-        fetch('http://localhost:5002/conta/getEspeciais', {method: 'GET',})
+        fetch('http://localhost:5002/conta/getEspeciais', {
+            method: 'GET', 
+            headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
+        })
         .then((response) => {
             if(!response.ok) {
                 throw Error(response.status);
@@ -106,7 +109,7 @@ export default function GerirContas() {
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify(toJson2(nome, email, password, isAdmin, 1-isAdmin)),
-            headers: {"Content-Type": "application/json"}
+            headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
         })
         .then((response) => {
             getContas();
@@ -129,7 +132,7 @@ export default function GerirContas() {
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify(toJson(id)),
-            headers: {"Content-Type": "application/json"}
+            headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
         })
         .then((response) => {
             getContas();

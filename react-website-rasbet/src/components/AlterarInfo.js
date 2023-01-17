@@ -71,7 +71,7 @@ export default function Form_L() {
 			method: 'POST', 
 			mode: 'cors', 
 			body: JSON.stringify(toJson(nome, newPassword)), // body data type must match "Content-Type" header
-			headers: {"Content-Type": "application/json"}
+			headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
 			})
 			.then( (response) => {
 				if(!response.ok) {
@@ -143,7 +143,7 @@ export default function Form_L() {
 				method: 'POST', 
 				mode: 'cors', 
 				body: JSON.stringify(toJsonT(Number(val)*(-1), "L")), // body data type must match "Content-Type" header
-				headers: {"Content-Type": "application/json"}
+				headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
 				})
 				.then( (response) => {
 					if(!response.ok) {
@@ -253,7 +253,7 @@ export default function Form_L() {
 				method: 'POST', 
 				mode: 'cors', 
 				body: JSON.stringify(toJsonT(Number(valor), "D")), // body data type must match "Content-Type" header
-				headers: {"Content-Type": "application/json"}
+				headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
 				})
 				.then( (response) => {
 					if(!response.ok) {
