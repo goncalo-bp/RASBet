@@ -460,15 +460,16 @@ def adicionaObservador():
 def removeObservador():
     idJogo = request.json.get("idJogo", None)
     idUser = request.json.get("idUser", None)
-    dbQueries.addObservador(idUser, idJogo)
+    dbQueries.removeObservador(idUser, idJogo)
     return [200], 200
 
 @app.route('/observador/', methods = ['POST'])
 @cross_origin()
 def getObservadores():
     idUser = request.json.get("idUser", None)
+    print(idUser)
     listaJogos = dbQueries.getJogosObservados(idUser)
-    return [x[0] for x in listaJogos], 200
-
+    dict1 = {'listaObservados': [x[0] for x in listaJogos]}
+    return dict1,200
 if __name__ == '__main__':
    app.run(host='127.0.0.1', port=5002)
