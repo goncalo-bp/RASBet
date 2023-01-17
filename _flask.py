@@ -6,10 +6,10 @@ from passlib.hash import sha256_crypt
 import string 
 import random
 import time
-# from flask_jwt_extended import create_access_token
-# from flask_jwt_extended import get_jwt_identity
-# from flask_jwt_extended import jwt_required
-# from flask_jwt_extended import JWTManager
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
 import os
 
 app = Flask(__name__)
@@ -17,8 +17,8 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['JSON_AS_ASCII'] = False
 # Setup the Flask-JWT-Extended extension
-#app.config["JWT_SECRET_KEY"] = "dadwadadadadadadadadadadadadadadadadada" #os.environ.get('JWT_SECRET')
-#jwt = JWTManager(app)
+app.config["JWT_SECRET_KEY"] = "dadwadadadadadadadadadadadadadadadadada" #os.environ.get('JWT_SECRET')
+jwt = JWTManager(app)
 dbQueries = DBQueries()
 emUso = 0
 
@@ -49,8 +49,8 @@ def login():
     else:
         saldo = dbQueries.getBalance(usrId)
 
-    #access_token = create_access_token(identity=usrId)
-    return jsonify(id=usrId,isAdmin=vIsAdmin,isEspecialista=vIsEspecialista,name=nome,wallet=saldo,), 200
+    access_token = create_access_token(identity=usrId)
+    return jsonify(id=usrId,isAdmin=vIsAdmin,isEspecialista=vIsEspecialista,name=nome,wallet=saldo, token=access_token), 200
 
 @app.route('/register', methods = ['POST'])
 @cross_origin()
@@ -77,7 +77,7 @@ def register():
     
 @app.route('/transactions', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def get_historico_transacoes():
     dbQueries = DBQueries()
     id = request.json.get("id", None)
@@ -110,7 +110,7 @@ def get_historico_transacoes():
 
 @app.route('/saldoCarteira', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def get_saldoCarteira():
     dbQueries = DBQueries()
     id = request.json.get("id", None)
@@ -124,7 +124,7 @@ def get_saldoCarteira():
 
 @app.route('/registoaposta', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def register_aposta():
     dbQueries = DBQueries()
     listaJogos = request.json.get("listaJogos", None)
@@ -137,7 +137,7 @@ def register_aposta():
 
 @app.route('/apostas', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def get_betListId():
     id = request.json.get("id", None)
     dict = {}
@@ -194,7 +194,7 @@ def getBetListId(id,tipo):
 
 @app.route('/sports/<sport>', methods = ['GET'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def get_gamess(sport):
     global emUso
     while(emUso == 1):
@@ -269,7 +269,7 @@ def get_gamess(sport):
 
 @app.route('/mudarcampo', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def mudar_campo():
     dbQueries = DBQueries()
     changePassword = True
@@ -294,7 +294,7 @@ def mudar_campo():
 
 @app.route('/transacao', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def get_desportos():
     dbQueries = DBQueries()
     id = request.json.get("id", None)
@@ -307,7 +307,7 @@ def get_desportos():
 
 @app.route('/apostas/registo/<tipo>', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def get_betList(tipo):
     dbQueries = DBQueries()
     id = request.json.get("id", None)
@@ -328,7 +328,7 @@ def get_betList(tipo):
 
 @app.route('/jogo/suspender/<valor>', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def suspende_jogo(valor):
     dbQueries = DBQueries()
     print(valor)
@@ -338,7 +338,7 @@ def suspende_jogo(valor):
 
 @app.route('/jogo/eliminar', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def elimina_jogo():
     dbQueries = DBQueries()
     idJogo = request.json.get("idJogo", None)
@@ -348,7 +348,7 @@ def elimina_jogo():
 
 @app.route('/jogo/fechar', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def fecha_jogo():
     dbQueries = DBQueries()
     idJogo = request.json.get("idJogo", None)
@@ -358,7 +358,7 @@ def fecha_jogo():
 
 @app.route('/conta/registaEspecial', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def registaContaEspecial():
     dbQueries = DBQueries()
     nome = request.json.get("nome", None)
@@ -372,7 +372,7 @@ def registaContaEspecial():
 
 @app.route('/jogo/mudaOdd', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def muda_odd():
     dbQueries = DBQueries()
     idJogo = request.json.get("idJogo", None)
@@ -384,7 +384,7 @@ def muda_odd():
 
 @app.route('/conta/getEspeciais', methods = ['GET'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def get_contas_especial():
     dbQueries = DBQueries()
     contas = []
@@ -407,7 +407,7 @@ def get_contas_especial():
 
 @app.route('/promocoes', methods = ['GET'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def get_promotionstodas():
     dbQueries = DBQueries()
     promotions = []
@@ -433,7 +433,7 @@ def get_promotionstodas():
 
 @app.route('/sports/<sport>/addJogo', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def add_Jogo(sport):
     dbQueries = DBQueries()
     random.seed(datetime.now())
@@ -456,7 +456,7 @@ def add_Jogo(sport):
 
 @app.route('/promocoes/adiciona', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def adiciona_promocao():
     dbQueries = DBQueries()
     idJogo = request.json.get("idJogo", None)
@@ -466,7 +466,7 @@ def adiciona_promocao():
 
 @app.route('/promocoes/remove', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def remove_promocao():
     dbQueries = DBQueries()
     idPromo = request.json.get("idPromo", None)
@@ -475,7 +475,7 @@ def remove_promocao():
 
 @app.route('/notificacoes/adiciona', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def adiciona_notificacao():
     dbQueries = DBQueries()
     titulo = request.json.get("titulo", None)
@@ -485,7 +485,7 @@ def adiciona_notificacao():
 
 @app.route('/notificacoes', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def get_notifs_todas():
     dbQueries = DBQueries()
     idConta = request.json.get("idConta", None)
@@ -503,7 +503,7 @@ def get_notifs_todas():
 
 @app.route('/conta/eliminaEspecial', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def eliminaContaEspecial():
     dbQueries = DBQueries()
     id = request.json.get("id", None)
@@ -512,7 +512,7 @@ def eliminaContaEspecial():
 
 @app.route('/observador/adicionar', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def adicionaObservador():
     global emUso
     idJogo = request.json.get("idJogo", None)
@@ -529,7 +529,7 @@ def adicionaObservador():
 
 @app.route('/observador/remover', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def removeObservador():
     global emUso
     idJogo = request.json.get("idJogo", None)
@@ -544,7 +544,7 @@ def removeObservador():
 
 @app.route('/observador/', methods = ['POST'])
 @cross_origin()
-#@jwt_required()
+@jwt_required()
 def getObservadores():
     global emUso
     while emUso == 1:

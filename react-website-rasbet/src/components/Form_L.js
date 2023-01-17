@@ -55,6 +55,7 @@ export default function Form_L() {
 				localStorage.setItem('desporto',"Futebol");
 				localStorage.setItem('isAdmin', data.isAdmin);
 				localStorage.setItem('isEspecialista', data.isEspecialista);
+				localStorage.setItem('token', data.token);
 				window.location.replace('http://localhost:3000/home');
 			})
 			.catch( (error,status) => {
