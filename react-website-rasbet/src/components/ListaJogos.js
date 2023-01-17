@@ -45,6 +45,10 @@ export default function ListaJogos() {
     const [percentagem, setPercentagem] = useState(0);
 
     const [notif, setNotificacoes] = useState([]);
+    const [listaSeguidos, setListaSeguidos] = useState([]);
+
+
+
 
     const handlePercentagem = (e) => {
         e.preventDefault();
@@ -59,9 +63,8 @@ export default function ListaJogos() {
 
     const handleAddFollow = (e) => {
         var info = e.target.id;
-        console.log(info);
         setIdJogo(info);
-        handleAddFollow();
+        sendNewFollow();
     }
 
     const addProm = (e) => {
@@ -252,6 +255,7 @@ export default function ListaJogos() {
         } else {
             setJogos(JSON.parse(localStorage.getItem(desportoAtual)));
             setNumJogos(JSON.parse(localStorage.getItem(desportoAtual)).length);
+            setListaSeguidos(JSON.parse(localStorage.getItem(listaSeguidos)));
         }
 
     }, []);
@@ -768,7 +772,8 @@ export default function ListaJogos() {
                                                 <div id={'Date_'+index1} className='edit-tipo-data'>
                                                     {jogo.date} {jogo.hour}
                                                 </div>
-                                                {apostador && <Button id={jogo.id} onClick={handleAddFollow} className='btn--primary--green--medium'>Seguir</Button>}
+                                                {apostador && listaSeguidos.includes(jogo.id) &&  <Button id={jogo.id} onClick={handleAddFollow} className='btn--primary--green--medium'>Seguido</Button>}
+                                                {apostador && !(listaSeguidos.includes(jogo.id)) && <Button id={jogo.id} onClick={handleAddFollow} className='btn--primary--green--medium'>Seguir</Button>}
                                             </div>
                                             <div className='resultados-container'>
                                             {jogo.equipas.map((equipa,index2) => {

@@ -65,3 +65,7 @@ class DBConstants:
     close_game_t       = 'UPDATE Jogo SET finalizado=1 WHERE idJogo=%s'
     add_game           = 'INSERT INTO Jogo(idJogo, nomeDesporto, dataJogo, suspenso) VALUES(%s, %s, %s, %s);'
     get_special_users  = 'SELECT email, isAdmin, isEspecialista, idUser FROM Utilizador WHERE (isEspecialista=1 or isAdmin=1);'
+    get_observadores   = 'SELECT idUser FROM observador WHERE idJogo=%s;'
+    add_observador     = 'INSERT INTO observador(idUser, idJogo) VALUES(%s, %s);'
+    remove_observador  = 'DELETE FROM observador WHERE idUser=%s AND idJogo=%s;'
+    get_observados     = 'SELECT idJogo FROM observador WHERE idUser=%s;'
