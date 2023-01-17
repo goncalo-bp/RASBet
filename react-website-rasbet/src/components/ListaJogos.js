@@ -47,8 +47,15 @@ export default function ListaJogos() {
     const [notif, setNotificacoes] = useState([]);
     const [listaObservados, setListaObservados] = useState([]);
 
+    const [contador, setContador] = useState(0);
 
+    const incrementContador = () => {
+        setContador(contador + 1);
+    }
 
+    const subtractContador = () => {
+        setContador(contador - 1);
+    }
 
     const handlePercentagem = (e) => {
         e.preventDefault();
@@ -339,33 +346,40 @@ export default function ListaJogos() {
 
     function addAposta(id) {
         var new_aposta = apostas.concat(id);
+        incrementContador();
         setApostas(new_aposta);
         return new_aposta;
     }
 
     function remAposta(id) {
         var new_aposta = apostas.filter(item => item !== id);
+        subtractContador();
         setApostas(new_aposta);
         return new_aposta;
     }
 
     const handleClickCard = (e) => {
-        var id = e.target.id;
-        if (id === undefined) {
-            id = e.id;
+        if(contador >= 20){
+            alert("Limite de apostas atingido");
+            return;
         }
-        if (e.target.className === "btn--onclick--white--large") {
-            document.getElementById(id).classList.add('btn--onclick');
-            document.getElementById(id).classList.remove('btn--onclick--white--large');
+        else{
+            var id = e.target.id;
+            if (id === undefined) {
+                id = e.id;
+            }
+            if (e.target.className === "btn--onclick--white--large") {
+                document.getElementById(id).classList.add('btn--onclick');
+                document.getElementById(id).classList.remove('btn--onclick--white--large');
 
-            addAposta(id);
-        }
-        else {
-            document.getElementById(id).classList.add('btn--onclick--white--large');
-            document.getElementById(id).classList.remove('btn--onclick');
+                addAposta(id);
+            }
+            else {
+                document.getElementById(id).classList.add('btn--onclick--white--large');
+                document.getElementById(id).classList.remove('btn--onclick');
 
-            remAposta(id);
-        }
+                remAposta(id);
+            }}
     };
 
     const concat = (e1, e2) => {
