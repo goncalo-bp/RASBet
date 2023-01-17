@@ -72,7 +72,7 @@ export default function ListaJogos() {
                 method: 'POST',
                 mode: 'cors', 
                 body: JSON.stringify({"idUser" : localStorage.getItem("id"), "idJogo" : idJogo}), // body data type must match "Content-Type" header
-                headers: {"Content-Type": "application/json"}
+                headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
         })
         .then((response) => {
             if (!response.ok) {
@@ -98,7 +98,7 @@ export default function ListaJogos() {
                 method: 'POST',
                 mode: 'cors', 
                 body: JSON.stringify({"idUser" : localStorage.getItem("id"), "idJogo" : idJogo}), // body data type must match "Content-Type" header
-                headers: {"Content-Type": "application/json"}
+                headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
         })
         .then((response) => {
             if (!response.ok) {
@@ -125,7 +125,7 @@ export default function ListaJogos() {
                     method: 'POST', 
                     mode: 'cors', 
                     body: JSON.stringify({"idJogo" : idJogo , "aumento" : perc}), // body data type must match "Content-Type" header
-                    headers: {"Content-Type": "application/json"}
+                    headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
             
                 }).then( (response) => {
                     if(!response.ok) {
@@ -252,6 +252,7 @@ export default function ListaJogos() {
 
         fetch('http://localhost:5002/sports/' + desporto, {  // Enter your IP address here
             method: 'GET',
+            headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
         })
             .then((response) => {
                 if (!response.ok) {
@@ -379,7 +380,7 @@ export default function ListaJogos() {
             method: 'POST', 
             mode: 'cors', 
             body: JSON.stringify({"idJogo" : idJogo}), // body data type must match "Content-Type" header
-            headers: {"Content-Type": "application/json"}
+            headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
         }).then( (response) => {
             if(!response.ok) {
                 throw Error(response.status);
@@ -421,7 +422,7 @@ export default function ListaJogos() {
                 method: 'POST', 
                 mode: 'cors', 
                 body: JSON.stringify({"idJogo" : id , "nomeEquipa" : equipa , "newOdd" : valor}), // body data type must match "Content-Type" header
-                headers: {"Content-Type": "application/json"}
+                headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
         
             }).then( (response) => {
                 if(!response.ok) {
@@ -521,7 +522,7 @@ export default function ListaJogos() {
                     method: 'POST', 
                     mode: 'cors', 
                     body: JSON.stringify({"idJogo" : infoRemove , "vencedor" : res}), // body data type must match "Content-Type" header
-                    headers: {"Content-Type": "application/json"}
+                    headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
             
                 }).then( (response) => {
                     if(!response.ok) {
@@ -558,7 +559,7 @@ export default function ListaJogos() {
                     method: 'POST', 
                     mode: 'cors', 
                     body: JSON.stringify({"equipas" : equipas, "data" : data,"hora" : hora }), // body data type must match "Content-Type" header
-                    headers: {"Content-Type": "application/json"}
+                    headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
             
                 }).then( (response) => {
                     if(!response.ok) {
@@ -631,7 +632,7 @@ export default function ListaJogos() {
                 method: 'POST',
                 mode: 'cors', 
                 body: JSON.stringify({"idConta" : localStorage.getItem("id")}), // body data type must match "Content-Type" header
-                headers: {"Content-Type": "application/json"}
+                headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
         })
         .then((response) => {
             if (!response.ok) {

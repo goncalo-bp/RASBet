@@ -38,7 +38,7 @@ function HistoricoApostas() {
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify(toJson(localStorage.getItem('id'))),
-            headers: {"Content-Type": "application/json"}
+            headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
         })
         .then((response) => {
             if(!response.ok) {

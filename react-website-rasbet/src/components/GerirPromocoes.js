@@ -26,7 +26,10 @@ export default function GerirContas() {
     const getPromocoes = (e) => {
         //e.preventDefault();
         
-        fetch('http://localhost:5002/promocoes', {get: 'POST',})
+        fetch('http://localhost:5002/promocoes', {
+            get: 'POST',
+            headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
+        })
         .then((response) => {
             if(!response.ok) {
                 throw Error(response.status);
@@ -45,25 +48,24 @@ export default function GerirContas() {
         var idPromo = e.target.id;
         console.log(idPromo);
         fetch('http://localhost:5002/promocoes/remove', {  // Enter your IP address here
-                    method: 'POST', 
-                    mode: 'cors', 
-                    body: JSON.stringify({"idPromo" : idPromo}), // body data type must match "Content-Type" header
-                    headers: {"Content-Type": "application/json"}
-            
-                }).then( (response) => {
-                    if(!response.ok) {
-                        throw Error(response.status);
-                    }
-                    else return response.json();
-                }).then( (data) => {
-                    var desporto = localStorage.getItem('desporto');
-                    localStorage.setItem(desporto, "");
-                    window.location.reload();
-                })
-                .catch( (error,status) => {
-                    console.log("error: ",status);
-                    alert(status);
-                });
+            method: 'POST', 
+            mode: 'cors', 
+            body: JSON.stringify({"idPromo" : idPromo}), // body data type must match "Content-Type" header
+            headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ' + localStorage.getItem('token'),}
+        }).then( (response) => {
+            if(!response.ok) {
+                throw Error(response.status);
+            }
+            else return response.json();
+        }).then( (data) => {
+            var desporto = localStorage.getItem('desporto');
+            localStorage.setItem(desporto, "");
+            window.location.reload();
+        })
+        .catch( (error,status) => {
+            console.log("error: ",status);
+            alert(status);
+        });
     };
 
     useEffect(() => {
