@@ -14,12 +14,21 @@
 
 .popup-inner {
     position: relative;
+    max-height: 60%;
     padding: 32px;
     width: 100%;
     max-width: 640px;
     background-color: #fff;
     border-radius: 10px;
     z-index: 3;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+.popup-inner::-webkit-scrollbar {
+    display: none;
 }
 
 .close-btn {

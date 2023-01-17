@@ -63,16 +63,15 @@ export default function ListaJogos() {
 
     const handleAddFollow = (e) => {
         var info = e.target.id;
-        setIdJogo(info);
-        console.log(info)
-        sendNewFollow();
+        console.log(info);
+        sendNewFollow(info);
     }
 
-    const sendNewFollow = () => {
+    const sendNewFollow = (id_jogo) => {
         fetch('http://localhost:5002/observador/adicionar', {  // Enter your IP address here
                 method: 'POST',
                 mode: 'cors', 
-                body: JSON.stringify({"idUser" : localStorage.getItem("id"), "idJogo" : idJogo}), // body data type must match "Content-Type" header
+                body: JSON.stringify({"idUser" : localStorage.getItem("id"), "idJogo" : id_jogo}), // body data type must match "Content-Type" header
                 headers: {"Content-Type": "application/json", }
         })
         .then((response) => {
@@ -90,15 +89,14 @@ export default function ListaJogos() {
 
     const handleRemoveFollow = (e) => {
         var info = e.target.id;
-        setIdJogo(info);
-        sendUnfollow();
+        sendUnfollow(info);
     }
 
-    const sendUnfollow = () => {
+    const sendUnfollow = (id_jogo) => {
         fetch('http://localhost:5002/observador/remover', {  // Enter your IP address here
                 method: 'POST',
                 mode: 'cors', 
-                body: JSON.stringify({"idUser" : localStorage.getItem("id"), "idJogo" : idJogo}), // body data type must match "Content-Type" header
+                body: JSON.stringify({"idUser" : localStorage.getItem("id"), "idJogo" : id_jogo}), // body data type must match "Content-Type" header
                 headers: {"Content-Type": "application/json",}
         })
         .then((response) => {
@@ -150,7 +148,6 @@ export default function ListaJogos() {
     }
 
     const handleNovaDataJogo = (e) => {
-        console.log(e.target.value);
         setNovaDataJogo(e.target.value);
     }
 
@@ -179,9 +176,8 @@ export default function ListaJogos() {
         var bool = false;
         if(list.length === 0){return false;}
         else{
-            console.log("cona")
             list.forEach(element => {
-            if(element.idJogo === id) {
+            if(element === id) {
                 bool = true;
             }
         });}
@@ -273,7 +269,6 @@ export default function ListaJogos() {
                 }
                 else return response.json();
             }).then((data) => {
-                console.log(data);
                 setJogos(data);
                 setNumJogos(data.length);
                 localStorage.setItem(desporto, JSON.stringify(data));
@@ -296,7 +291,6 @@ export default function ListaJogos() {
                 }
                 else return response.json();
             }).then((data) => {
-                console.log(data);
                 setListaObservados(data.listaObservados);
             })
             .catch(error => {
@@ -322,7 +316,6 @@ export default function ListaJogos() {
             setApostador(true);
             document.getElementById("boletim").style.display = "flex";
             getListaObservados();
-            console.log(listaObservados);
             //document.getElementById("progresso").style.display="none";
         }
 
@@ -414,7 +407,6 @@ export default function ListaJogos() {
 
     function desSuspender(){
         var id = infoAltera.split("_")[0];
-        console.log(id);
         var desporto = localStorage.getItem('desporto');
         localStorage.setItem(desporto, "");
         suspenderJogo(0,id)
@@ -501,7 +493,6 @@ export default function ListaJogos() {
 
     const handleInfoRemove = (e) => {
         var info = e.target.id;
-        console.log(info);
         setInfoRemove(info);
         setFech_Popup(true);
     }
@@ -512,7 +503,6 @@ export default function ListaJogos() {
             if(jogo !== null){
                 if(jogo.id === infoRemove){
                     for(var j = 0; j < jogo.equipas.length; j++){
-                        console.log(jogo.equipas[j]);
                         if(jogos[i].equipas[j].name === res){
                             return true;
                         }
@@ -663,7 +653,7 @@ export default function ListaJogos() {
 
     const notificacoes = () => {
         return (
-            <div className='popup-center'>
+            <div className='popup-notif'>
                 {translate[lang]['notif']}
                 {
                 notif.map((notificacao) => {
